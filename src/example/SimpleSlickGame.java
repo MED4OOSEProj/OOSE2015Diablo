@@ -16,7 +16,9 @@ public class SimpleSlickGame extends BasicGame
 	}
 
 	@Override
-	public void init(GameContainer gc) throws SlickException {}
+	public void init(GameContainer gc) throws SlickException {
+		astar.surprise();
+	}
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {}
@@ -25,19 +27,19 @@ public class SimpleSlickGame extends BasicGame
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
 		g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
+		
 	}
 
 	public static void main(String[] args)
 	{
 		try
 		{
-			//wtflol
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
 			appgc.setDisplayMode(640, 480, false);
 			appgc.setAlwaysRender(true);
-			//lool
 			appgc.start();
+			
 		}
 		catch (SlickException ex)
 		{

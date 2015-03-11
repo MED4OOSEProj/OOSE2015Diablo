@@ -1,7 +1,7 @@
 package example;
 
 public class astar {
-	public static void main(String[] args)
+	public static void surprise()
 	{
 	System.out.println("SURPRISE MADAFAKA!!");
 	}
