@@ -33,8 +33,7 @@ public class SimpleSlickGame extends BasicGame
 	{
 		try
 		{
-			//wtf
-			// Mothertrucker
+			//wtflol
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
 			appgc.setDisplayMode(640, 480, false);
