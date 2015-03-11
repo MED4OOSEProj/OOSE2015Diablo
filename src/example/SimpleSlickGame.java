@@ -6,10 +6,13 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame
 {
+	Image treeimg;
+	
 	public SimpleSlickGame(String gamename)
 	{
 		super(gamename);
@@ -17,16 +20,23 @@ public class SimpleSlickGame extends BasicGame
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		//Called once, upon starting the program
 		astar.surprise();
+		treeimg = new Image("Textures/tree1.png");
 	}
 
 	@Override
-	public void update(GameContainer gc, int i) throws SlickException {}
+	public void update(GameContainer gc, int i) throws SlickException {
+		//Makes changes to models, is called once per something milliseconds
+		
+	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
+		//Is called every time a render has completed, so as fast as the hardware can do it.
+		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
+		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
 		
 	}
 
