@@ -1,6 +1,7 @@
 package example;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -23,7 +24,7 @@ public class SimpleSlickGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		g.drawString("Hello World!", 250, 200);
+		g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
 	}
 
 	public static void main(String[] args)
@@ -33,6 +34,7 @@ public class SimpleSlickGame extends BasicGame
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
 			appgc.setDisplayMode(640, 480, false);
+			appgc.setAlwaysRender(true);
 			appgc.start();
 		}
 		catch (SlickException ex)
