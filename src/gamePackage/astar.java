@@ -1,4 +1,4 @@
-package example;
+package gamePackage;
 
 public class astar {
 	public static void surprise()

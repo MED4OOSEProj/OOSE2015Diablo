@@ -1,4 +1,4 @@
-package example;
+package gamePackage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +12,7 @@ import org.newdawn.slick.SlickException;
 public class SimpleSlickGame extends BasicGame
 {
 	Image treeimg;
+	String str;
 	
 	public SimpleSlickGame(String gamename)
 	{
