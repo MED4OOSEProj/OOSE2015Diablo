@@ -9,13 +9,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class SimpleSlickGame extends BasicGame
+public class Game extends BasicGame
 {
 	Image treeimg;
 	String str;
-	EquipmentType[] equipment = new EquipmentType[10];
+	GameLevel gamelevel;
 	
-	public SimpleSlickGame(String gamename)
+	public Game(String gamename)
 	{
 		super(gamename);
 	}
@@ -42,13 +42,13 @@ public class SimpleSlickGame extends BasicGame
 		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
 		
 	}
-
+	
 	public static void main(String[] args)
 	{
 		try
 		{
 			AppGameContainer appgc;
-			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
+			appgc = new AppGameContainer(new Game("Simple Slick Game"));
 			appgc.setDisplayMode(640, 480, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
@@ -56,7 +56,7 @@ public class SimpleSlickGame extends BasicGame
 		}
 		catch (SlickException ex)
 		{
-			Logger.getLogger(SimpleSlickGame.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }

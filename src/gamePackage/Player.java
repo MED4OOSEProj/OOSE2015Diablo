@@ -10,19 +10,27 @@ public class Player extends Character{
 	public int attribute_dexterity;
 	public int attribute_vitality;
 	public int attributepoints;
+	public GameLevel level;
 
 	public Player(){
 		
 	}
 	
-	public void attackMove(Enemy target){
+	public void moveAndPickUp(Item target){
+		//Player.equipment[EquipmentType.FEET] = 
 	}
+	
+	public void moveAndAttack(Enemy target){
+		
+	}
+	
 	public void move(int x, int y){
 		
 	}
 	public void dropItem(Item item){
 		
 	}
+	
 	public void kill(){
 		
 	}

@@ -10,7 +10,5 @@ public class Item extends GameObject {
 	public String attribute_description;
 	public Sound sound_drop;
 
-	public void pickUp(){
-		
-	}
+	
 }
