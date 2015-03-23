@@ -11,6 +11,10 @@ public class Player extends Character{
 	public int attribute_vitality;
 	public int attributepoints;
 
+	public Player(){
+		
+	}
+	
 	public void attackMove(Enemy target){
 	}
 	public void move(int x, int y){
