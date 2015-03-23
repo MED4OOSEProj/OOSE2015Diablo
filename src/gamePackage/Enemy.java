@@ -9,6 +9,9 @@ public class Enemy extends Character{
 	// public Armor gear_armor;
 	public Weapon gear_weapon;
 	
+	public Enemy(){
+		
+	}
 	
 	public void attack(){
 		
