@@ -13,6 +13,7 @@ public class SimpleSlickGame extends BasicGame
 {
 	Image treeimg;
 	String str;
+	EquipmentType[] equipment = new EquipmentType[10];
 	
 	public SimpleSlickGame(String gamename)
 	{
@@ -23,6 +24,7 @@ public class SimpleSlickGame extends BasicGame
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
 		astar.surprise();
+		
 		treeimg = new Image("Textures/tree1.png");
 	}
 
