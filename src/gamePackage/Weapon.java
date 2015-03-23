@@ -1,6 +1,6 @@
 package gamePackage;
 
-public class Weapon {
+public class Weapon extends Item {
 	
 	public int attribute_attackdmg;
 	public float attribute_attackspeed;
