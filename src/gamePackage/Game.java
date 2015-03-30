@@ -79,6 +79,22 @@ public class Game extends BasicGame
 		
 		//
 		
+		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
+		if (menuId == 0){
+			for(Button button : mainMenu){
+				g.setColor(org.newdawn.slick.Color.darkGray);
+				g.fillRect(button.posX, button.posY, button.width, button.height);
+				g.setColor(org.newdawn.slick.Color.black);
+				g.drawString(button.text, button.posX, button.posY);
+			}
+		} else if (menuId == 1){
+			for(Button button : loadMenu){
+				g.setColor(org.newdawn.slick.Color.darkGray);
+				g.fillRect(button.posX, button.posY, button.width, button.height);
+				g.setColor(org.newdawn.slick.Color.black);
+				g.drawString(button.text, button.posX, button.posY);
+			}
+		} 
 	}
 	
 	public static void main(String[] args)
