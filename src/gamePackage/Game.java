@@ -1,4 +1,5 @@
 package gamePackage;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +15,7 @@ public class Game extends BasicGame
 	Image treeimg;
 	String str;
 	GameLevel gamelevel;
+	ArrayList<Button> buttons = new ArrayList<Button>();
 	
 	public Game(String gamename)
 	{
@@ -26,6 +28,7 @@ public class Game extends BasicGame
 		astar.surprise();
 		
 		treeimg = new Image("Textures/tree1.png");
+		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
 	}
 
 	@Override
@@ -52,6 +55,7 @@ public class Game extends BasicGame
 			appgc.setDisplayMode(640, 480, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
+			appgamecontainer = appgc;
 			
 		}
 		catch (SlickException ex)
