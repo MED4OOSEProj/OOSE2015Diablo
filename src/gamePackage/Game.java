@@ -55,7 +55,6 @@ public class Game extends BasicGame
 			appgc.setDisplayMode(640, 480, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
-			appgamecontainer = appgc;
 			
 		}
 		catch (SlickException ex)
