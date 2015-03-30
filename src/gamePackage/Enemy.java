@@ -6,7 +6,7 @@ public class Enemy extends Character{
 	public int reward_gold;
 	public int reward_experience;
 	public int attributepoints;
-	// public Armor gear_armor;
+	public Armor gear_armor;
 	public Weapon gear_weapon;
 	
 	public Enemy(){

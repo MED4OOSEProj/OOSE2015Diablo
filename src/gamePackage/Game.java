@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.scene.paint.Color;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -43,7 +45,12 @@ public class Game extends BasicGame
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
 		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
-		
+		for(Button button : buttons){
+			g.setColor(org.newdawn.slick.Color.red);
+			g.fillRect(button.posX, button.posY, button.width, button.height);
+			g.setColor(org.newdawn.slick.Color.blue);
+			g.drawString(button.text, button.posX, button.posY);
+		}
 	}
 	
 	public static void main(String[] args)
