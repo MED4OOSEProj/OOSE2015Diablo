@@ -17,7 +17,9 @@ public class Game extends BasicGame
 	Image treeimg;
 	String str;
 	GameLevel gamelevel;
-	ArrayList<Button> buttons = new ArrayList<Button>();
+	ArrayList<Button> mainMenu = new ArrayList<Button>();
+	ArrayList<Button> loadMenu = new ArrayList<Button>();
+	int menuId = 0;
 	
 	public Game(String gamename)
 	{
@@ -30,9 +32,12 @@ public class Game extends BasicGame
 		astar.surprise();
 		
 		treeimg = new Image("Textures/tree1.png");
-		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
-		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
-		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
+		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
+		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
+		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
+		loadMenu.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
+		loadMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
+		loadMenu.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
 	}
 
 	@Override
@@ -47,12 +52,24 @@ public class Game extends BasicGame
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
 		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
-		for(Button button : buttons){
-			g.setColor(org.newdawn.slick.Color.red);
-			g.fillRect(button.posX, button.posY, button.width, button.height);
-			g.setColor(org.newdawn.slick.Color.blue);
-			g.drawString(button.text, button.posX, button.posY);
-		}
+		
+		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
+		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
+		if (menuId == 0){
+			for(Button button : mainMenu){
+				g.setColor(org.newdawn.slick.Color.darkGray);
+				g.fillRect(button.posX, button.posY, button.width, button.height);
+				g.setColor(org.newdawn.slick.Color.black);
+				g.drawString(button.text, button.posX, button.posY);
+			}
+		} else if (menuId == 1){
+			for(Button button : loadMenu){
+				g.setColor(org.newdawn.slick.Color.darkGray);
+				g.fillRect(button.posX, button.posY, button.width, button.height);
+				g.setColor(org.newdawn.slick.Color.black);
+				g.drawString(button.text, button.posX, button.posY);
+			}
+		} 
 	}
 	
 	public static void main(String[] args)
