@@ -31,6 +31,8 @@ public class Game extends BasicGame
 		
 		treeimg = new Image("Textures/tree1.png");
 		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
+		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
+		buttons.add(new Button(gc.getWidth()/2, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
 	}
 
 	@Override
