@@ -20,8 +20,7 @@ public class Game extends BasicGame
 	Image treeimg;
 	String str;
 	GameLevel gamelevel;
-	ArrayList<Button> mainMenu_buttons = new ArrayList<Button>();
-	ArrayList<Button> loadMenu_buttons = new ArrayList<Button>();
+	ArrayList<Button> buttons = new ArrayList<Button>();
 	int menuId = 0;
 	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
 	TrueTypeFont buttonFont;
@@ -38,12 +37,8 @@ public class Game extends BasicGame
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
-		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
-		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
-		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
-		loadMenu_buttons.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
-		loadMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
-		loadMenu_buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
+		goToMainMenu(gc);
+		
 	}
 
 	@Override
@@ -62,20 +57,34 @@ public class Game extends BasicGame
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
 		if (menuId == 0){
-			for(Button button : mainMenu_buttons){
+			for(Button button : buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
 				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
 		} else if (menuId == 1){
-			for(Button button : loadMenu_buttons){
+			for(Button button : buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
 				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
 		} 
+	}
+	
+	public void goToMainMenu(GameContainer gc){
+		buttons = new ArrayList<Button>();
+		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
+		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
+		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
+	}
+	
+	public void goToLoadMenu(GameContainer gc){
+		buttons = new ArrayList<Button>();
+		buttons.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
+		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
+		buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
 	}
 	
 	public static void main(String[] args)
@@ -93,5 +102,20 @@ public class Game extends BasicGame
 		{
 			Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	public void mousePressed(int button,int x,int y){
+		
+		if(button == 0){
+			for(Button guibutton : buttons){
+				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
+					buttonClicked(guibutton);
+				}
+			}
+		}
+	}
+	
+	public void buttonClicked(Button clickedbutton){
+		System.out.println(clickedbutton.text + " clicked!");
 	}
 }
