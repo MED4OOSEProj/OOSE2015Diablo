@@ -27,6 +27,7 @@ public class Player extends Character{
 	public void move(int x, int y){
 		
 	}
+	
 	public void dropItem(Item item){
 		
 	}
