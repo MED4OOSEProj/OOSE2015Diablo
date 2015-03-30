@@ -20,8 +20,8 @@ public class Game extends BasicGame
 	Image treeimg;
 	String str;
 	GameLevel gamelevel;
-	ArrayList<Button> mainMenu = new ArrayList<Button>();
-	ArrayList<Button> loadMenu = new ArrayList<Button>();
+	ArrayList<Button> mainMenu_buttons = new ArrayList<Button>();
+	ArrayList<Button> loadMenu_buttons = new ArrayList<Button>();
 	int menuId = 0;
 	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
 	TrueTypeFont buttonFont;
@@ -38,12 +38,12 @@ public class Game extends BasicGame
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
-		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
-		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
-		mainMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
-		loadMenu.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
-		loadMenu.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
-		loadMenu.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
+		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
+		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
+		mainMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
+		loadMenu_buttons.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
+		loadMenu_buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
+		loadMenu_buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
 	}
 
 	@Override
@@ -60,39 +60,20 @@ public class Game extends BasicGame
 		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
 		
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
-				// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
-				if (menuId == 0){
-					for(Button button : mainMenu){
-						g.setColor(org.newdawn.slick.Color.darkGray);
-						g.fillRect(button.posX, button.posY, button.width, button.height);
-						g.setColor(org.newdawn.slick.Color.black);
-						FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
-					}
-				} else if (menuId == 1){
-					for(Button button : loadMenu){
-						g.setColor(org.newdawn.slick.Color.darkGray);
-						g.fillRect(button.posX, button.posY, button.width, button.height);
-						g.setColor(org.newdawn.slick.Color.black);
-						FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
-					}
-				} 
-		
-		//
-		
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
 		if (menuId == 0){
-			for(Button button : mainMenu){
+			for(Button button : mainMenu_buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
-				g.drawString(button.text, button.posX, button.posY);
+				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
 		} else if (menuId == 1){
-			for(Button button : loadMenu){
+			for(Button button : loadMenu_buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
-				g.drawString(button.text, button.posX, button.posY);
+				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
 		} 
 	}
