@@ -53,6 +53,7 @@ public class Game extends BasicGame
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		//Makes changes to models, is called once per something milliseconds
+		//updates stuff
 		
 	}
 
@@ -83,7 +84,9 @@ public class Game extends BasicGame
 		}
 		else if (menuId == 2){
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
-				
+				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80,y*40-x*40);
+				}
 			}
 		}
 	}
@@ -132,5 +135,13 @@ public class Game extends BasicGame
 	
 	public void buttonClicked(Button clickedbutton){
 		System.out.println(clickedbutton.text + " clicked!");
+		switch(clickedbutton.id){
+		case "StartButton": menuId = 2;
+			break;
+		case "LoadButton": menuId = 1;
+			break;
+		case "QuitButton": //quit?
+			break;
+		}
 	}
 }
