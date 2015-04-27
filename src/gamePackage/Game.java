@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.FontUtils;
 import org.newdawn.slick.util.pathfinding.Path;
@@ -28,8 +29,11 @@ public class Game extends BasicGame
 	static TerrainType[] terrainTypes = new TerrainType[6];
 	GameLevel[] gameLevels = new GameLevel[3];
 	int currentLevel = 0;
-	int playerpos_x = 0;
-	int playerpos_y = 0;
+	int playerpos_x = 2;
+	int playerpos_y = 4;
+	int windowWidth;
+	int windowHeight;
+	Player player = new Player();
 	
 	public Game(String gamename)
 	{
@@ -39,10 +43,16 @@ public class Game extends BasicGame
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
+		windowWidth = gc.getWidth();
+		windowHeight = gc.getHeight();
+		
+		//Sets the player attributes
+		player.sprite_idle = new SpriteSheet(new Image("Textures/testchar.png"),96,96);
 		
 		//Creates different types of terrains
-		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
+		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
+		
 		
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
@@ -73,7 +83,9 @@ public class Game extends BasicGame
 	{
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
-		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
+		//treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
+		
+		
 		
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
@@ -96,9 +108,11 @@ public class Game extends BasicGame
 		else if (menuId == 2){
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80-(playerpos_x*80+playerpos_y*80),y*40-x*40+(playerpos_y*40-playerpos_x*40));
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80-(playerpos_x*80+playerpos_y*80)+windowWidth/2-80,y*40-x*40+(playerpos_y*40-playerpos_x*40)+windowHeight/2-40);
 				}
 			}
+			//draw the player
+			player.sprite_idle.draw(windowWidth/2-45, windowHeight/2-70);
 		}
 	}
 	
@@ -122,7 +136,7 @@ public class Game extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new Game("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(1024, 768, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
 			
@@ -135,11 +149,21 @@ public class Game extends BasicGame
 	
 	public void mousePressed(int button,int x,int y){
 		
+		//left click
 		if(button == 0){
 			for(Button guibutton : buttons){
-				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
+				if(menuId == 0 && guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
 					buttonClicked(guibutton);
 				}
+			}
+			
+			//click a tile
+			if(menuId == 2){
+				float shifted_x = x-windowWidth/2+80;
+				float shifted_y = y-windowHeight/2+40;
+				System.out.println("x tile:"+(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x)+" y tile:"+(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+				playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
+				playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
 			}
 		}
 	}
