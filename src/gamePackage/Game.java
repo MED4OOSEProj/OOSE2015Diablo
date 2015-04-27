@@ -26,6 +26,7 @@ public class Game extends BasicGame
 	TrueTypeFont buttonFont;
 	static TerrainType[] terrainTypes = new TerrainType[6];
 	GameLevel[] gameLevels = new GameLevel[3];
+	int currentLevel = 0;
 	
 	public Game(String gamename)
 	{
@@ -63,7 +64,7 @@ public class Game extends BasicGame
 		treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
 		
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
-		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu.
+		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
 		if (menuId == 0){
 			for(Button button : buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
@@ -71,14 +72,20 @@ public class Game extends BasicGame
 				g.setColor(org.newdawn.slick.Color.black);
 				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
-		} else if (menuId == 1){
+		} 
+		else if (menuId == 1){
 			for(Button button : buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
 				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
-		} 
+		}
+		else if (menuId == 2){
+			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
+				
+			}
+		}
 	}
 	
 	public void goToMainMenu(GameContainer gc){

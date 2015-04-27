@@ -10,6 +10,8 @@ public class GameLevel implements TileBasedMap {
 	public ArrayList<GameObject>[][] grid_objects;
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
+	int levelWidth = 10;
+	int levelHeight = 10;
 	
 	public GameLevel(){
 		createRandomMap();
@@ -47,13 +49,13 @@ public class GameLevel implements TileBasedMap {
 	@Override
 	public int getHeightInTiles() {
 		// TODO Auto-generated method stub
-		return 0;
+		return levelWidth;
 	}
 
 	@Override
 	public int getWidthInTiles() {
 		// TODO Auto-generated method stub
-		return 0;
+		return levelHeight;
 	}
 
 	@Override
