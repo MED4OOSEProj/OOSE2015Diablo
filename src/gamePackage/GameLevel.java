@@ -12,7 +12,6 @@ public class GameLevel implements TileBasedMap {
 	}
 	
 	public void createRandomMap(){
-		
 		//temporary map generation
 		grid_terrainIDs = new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},
@@ -33,27 +32,27 @@ public class GameLevel implements TileBasedMap {
 	public Sound sound_track;
 	
 	@Override
-	public boolean blocked(PathFindingContext ctx, int y, int x) {
+	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		return grid_terrainIDs[y][x] != 0;
+		return false;
 	}
 
 	@Override
 	public float getCost(PathFindingContext arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		return 1.0f;
+		return 0;
 	}
 
 	@Override
 	public int getHeightInTiles() {
 		// TODO Auto-generated method stub
-		return 10;
+		return 0;
 	}
 
 	@Override
 	public int getWidthInTiles() {
 		// TODO Auto-generated method stub
-		return 10;
+		return 0;
 	}
 
 	@Override
