@@ -7,8 +7,13 @@ import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 public class GameLevel implements TileBasedMap {
+	public ArrayList<GameObject>[][] grid_objects;
+	public int[][] grid_terrainIDs;
+	public Sound sound_track;
+	
 	public GameLevel(){
 		createRandomMap();
+		
 	}
 	
 	public void createRandomMap(){
@@ -27,20 +32,16 @@ public class GameLevel implements TileBasedMap {
 		    };
 	}
 	
-	public ArrayList<GameObject>[][] grid_objects;
-	public int[][] grid_terrainIDs;
-	public Sound sound_track;
-	
 	@Override
 	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		return false;
+		return Game.terrainTypes[grid_terrainIDs[arg1][arg2]].blocksPath;
 	}
 
 	@Override
 	public float getCost(PathFindingContext arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1.0f;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class Game extends BasicGame
 	int menuId = 0;
 	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
 	TrueTypeFont buttonFont;
-	TerrainType[] terrainTypes = new TerrainType[6];
+	static TerrainType[] terrainTypes = new TerrainType[6];
 	GameLevel[] gameLevels = new GameLevel[3];
 	
 	public Game(String gamename)
@@ -36,12 +36,12 @@ public class Game extends BasicGame
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
 		
-		//Creates game levels
-		gameLevels[0] = new GameLevel();
-		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
 		terrainTypes[1] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
+		
+		//Creates game levels
+		gameLevels[0] = new GameLevel();
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
