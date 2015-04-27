@@ -15,21 +15,24 @@ public class GameLevel implements TileBasedMap {
 	int levelWidth = 10;
 	int levelHeight = 10;
 	
+	// Stops the function from making infinite paths. (not incredibly important for such a small game)
     private static final int maxPathLength = 100;
 
+    /**
     private static final int startX = 1;
     private static final int startY = 1;
 
     private static final int goalX = 1;
     private static final int goalY = 6;
-	
+	*/
+    
 	public GameLevel(){
 		createRandomMap();
 		
 	}
 
-	public Path getPath(TileBasedMap map){
-        AStarPathFinder pathFinder = new AStarPathFinder(map, maxPathLength, false);
+	public Path getPath(TileBasedMap map, int startX, int startY, int goalX, int goalY){
+		AStarPathFinder pathFinder = new AStarPathFinder(map, maxPathLength, false);
         Path path = pathFinder.findPath(null, startX, startY, goalX, goalY);
         return path;
 	}
