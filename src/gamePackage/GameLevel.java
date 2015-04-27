@@ -3,8 +3,10 @@ package gamePackage;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.util.pathfinding.PathFindingContext;
+import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
-public class GameLevel {
+public class GameLevel implements TileBasedMap {
 	public GameLevel(){
 		createRandomMap();
 	}
@@ -28,4 +30,34 @@ public class GameLevel {
 	public ArrayList<GameObject>[][] grid_objects;
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
+	
+	@Override
+	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public float getCost(PathFindingContext arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getHeightInTiles() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getWidthInTiles() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void pathFinderVisited(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 }

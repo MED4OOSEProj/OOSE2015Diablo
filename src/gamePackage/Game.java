@@ -43,6 +43,7 @@ public class Game extends BasicGame
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"));
 		
+		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
 		goToMainMenu(gc);
