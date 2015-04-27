@@ -3,6 +3,8 @@ package gamePackage;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
@@ -13,10 +15,25 @@ public class GameLevel implements TileBasedMap {
 	int levelWidth = 10;
 	int levelHeight = 10;
 	
+    private static final int maxPathLength = 100;
+
+    private static final int startX = 1;
+    private static final int startY = 1;
+
+    private static final int goalX = 1;
+    private static final int goalY = 6;
+	
 	public GameLevel(){
 		createRandomMap();
 		
 	}
+
+	public Path getPath(TileBasedMap map){
+        AStarPathFinder pathFinder = new AStarPathFinder(map, maxPathLength, false);
+        Path path = pathFinder.findPath(null, startX, startY, goalX, goalY);
+        return path;
+	}
+
 	
 	public void createRandomMap(){
 		//temporary map generation
