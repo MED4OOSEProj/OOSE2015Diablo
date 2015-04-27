@@ -35,7 +35,6 @@ public class Game extends BasicGame
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
-		astar.surprise();
 		
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
