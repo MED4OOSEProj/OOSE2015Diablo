@@ -27,6 +27,8 @@ public class Game extends BasicGame
 	static TerrainType[] terrainTypes = new TerrainType[6];
 	GameLevel[] gameLevels = new GameLevel[3];
 	int currentLevel = 0;
+	int playerpos_x = 0;
+	int playerpos_y = 0;
 	
 	public Game(String gamename)
 	{
@@ -85,7 +87,7 @@ public class Game extends BasicGame
 		else if (menuId == 2){
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80,y*40-x*40);
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80-(playerpos_x*80+playerpos_y*80),y*40-x*40+(playerpos_y*40-playerpos_x*40));
 				}
 			}
 		}
