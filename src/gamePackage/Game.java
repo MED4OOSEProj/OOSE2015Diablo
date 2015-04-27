@@ -12,6 +12,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.FontUtils;
+import org.newdawn.slick.util.pathfinding.Path;
 
 import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
@@ -40,11 +41,19 @@ public class Game extends BasicGame
 		//Called once, upon starting the program
 		
 		//Creates different types of terrains
-		terrainTypes[0] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
-		terrainTypes[1] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
+		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
+		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
 		
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
+		
+		// testing path
+		 Path path = gameLevels[currentLevel].getPath(1,1,1,6);
+	        System.out.println("Found path of length: " + path.getLength() + ".");
+
+	        for(int i = 0; i < path.getLength(); i++) {
+	            System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");
+	        }
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
