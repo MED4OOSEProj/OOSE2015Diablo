@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -47,7 +48,8 @@ public class Game extends BasicGame
 		windowHeight = gc.getHeight();
 		
 		//Sets the player attributes
-		player.sprite_idle = new SpriteSheet(new Image("Textures/testchar.png"),96,96);
+		player.sprite_idle = new SpriteSheet(new Image("Textures/player_idle_1.png"),96,96);
+		player.anim_idle_1 = new Animation(player.sprite_idle,200);
 		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
@@ -75,6 +77,7 @@ public class Game extends BasicGame
 	public void update(GameContainer gc, int i) throws SlickException {
 		//Makes changes to models, is called once per something milliseconds
 		//updates stuff
+		player.anim_idle_1.update(i);
 		
 	}
 
@@ -112,7 +115,7 @@ public class Game extends BasicGame
 				}
 			}
 			//draw the player
-			player.sprite_idle.draw(windowWidth/2-45, windowHeight/2-70);
+			player.anim_idle_1.draw(windowWidth/2-45, windowHeight/2-70);
 		}
 	}
 	

@@ -1,4 +1,5 @@
 package gamePackage;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 
@@ -7,6 +8,7 @@ public class Character extends GameObject {
 	public SpriteSheet sprite_attacking;
 	public SpriteSheet sprite_dying;
 	public SpriteSheet sprite_moving;
+	public Animation anim_idle_1;
 	public Sound sound_movement;
 	public Sound sound_attacking;
 	public Sound sound_dying;
