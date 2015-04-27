@@ -49,13 +49,13 @@ public class GameLevel implements TileBasedMap {
 	@Override
 	public int getHeightInTiles() {
 		// TODO Auto-generated method stub
-		return levelWidth;
+		return levelHeight;
 	}
 
 	@Override
 	public int getWidthInTiles() {
 		// TODO Auto-generated method stub
-		return levelHeight;
+		return levelWidth;
 	}
 
 	@Override
