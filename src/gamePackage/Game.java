@@ -40,8 +40,7 @@ public class Game extends BasicGame
 		gameLevels[0] = new GameLevel();
 		
 		//Creates different types of terrains
-		terrainTypes[0] = new TerrainType("Wall",1,"The wall blocks your path", new Image("Textures/tile_ground.png"),true);
-		terrainTypes[1] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
+		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"));
 		
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
