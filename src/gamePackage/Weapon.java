@@ -3,6 +3,7 @@ package gamePackage;
 import java.util.Random;
 
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 public class Weapon extends Item {
 	
@@ -11,7 +12,7 @@ public class Weapon extends Item {
 	public int attribute_durability_max;
 	public int attribute_durability_current;
 	public boolean attribute_isRanged;
-	
+	public static Image[] weaponIcons;
 	
 	// Don't add more names to the arrays without changing the if-statements.
 	// MUST have an EVEN number of names in the arrays.
@@ -21,18 +22,27 @@ public class Weapon extends Item {
 	public static String[] weaponType = new String[]{"Axe","Sword","Mace","Club","War Staff","Javelin","Crossbow","Bow","Longbow","Throwing Knife"};
 	
 	// 0-2 are high dmg, 3-5 are fast weapons, 6-8 are durable, 10 is the most powerful EVeR! 
-	
 	public static String[] suffix = new String[]{" of Mightiness"," of Slaying"," of Great Strength"," of Swiftslaying"," of Quicksilver"," of Quickness"," of Unreliable Power"," of the Unbreakable Vow"," of Diamond Endurance"," of Godslaying"};
-	
-	/**public static Image[] weaponIcons = new Image[10];
 
 	
-	for(int i = 0; i < 10; i++){
-		weaponIcons[i] = Image("Textures/tree1.png");
-	}*/
-	
+
 	public Weapon (){
-	
+		try {
+	         weaponIcons = new Image[] {
+	               new Image("Textures/weapon_Axe"),
+	               new Image("Textures/weapon_Sword"),
+	               new Image("Textures/weapon_Mace"),
+	               new Image("Textures/weapon_Club"),
+	               new Image("Textures/weapon_War_Staff"),
+	               new Image("Textures/weapon_Javelin"),
+	               new Image("Textures/weapon_Crossbow"),
+	               new Image("Textures/weapon_Bow"),
+	               new Image("Textures/weapon_Long_Bow"),
+	               new Image("Textures/weapon_Throwing_Knife"),
+	               };
+	      } catch (SlickException e) {
+	    	  e.printStackTrace();
+	      }
 	}
 	
 	
@@ -52,11 +62,19 @@ public class Weapon extends Item {
 		// determine what name the weapon should have: 
 		// BEWARE, here be magic numbers:
 		String a = prefix[rnd.nextInt(prefix.length)];
+
 		String b;
-		if (weapon.attribute_isRanged == true)
-			b = weaponType[rnd.nextInt(weaponType.length/2)+weaponType.length/2];
-		else 
-			b = weaponType[rnd.nextInt(weaponType.length/2)];
+		int temp;
+		if (weapon.attribute_isRanged == true){
+			temp = rnd.nextInt(weaponType.length/2)+weaponType.length/2;
+			b = weaponType[temp];
+			weapon.sprite_thumbnail = weaponIcons[temp];
+		} else {
+			temp = rnd.nextInt(weaponType.length/2);
+			b = weaponType[temp];
+			weapon.sprite_thumbnail = weaponIcons[temp];
+		}
+		
 		
 		String c;
 		if ( weapon.attribute_attackdmg >= 9 && weapon.attribute_attackspeed >= 0.40f){
