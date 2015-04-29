@@ -39,6 +39,8 @@ public class Game extends BasicGame
 	Player player;
 	Path path;
 	int nextStep = 0;
+	int nextStep_x = -1;
+	int nextStep_y = -1;
 	float movespeed = 0.002f;
 	
 	public Game(String gamename)
@@ -87,7 +89,9 @@ public class Game extends BasicGame
 
 				if(path.getLength() > nextStep){
 					player.setAction(Action.WALKING);
-					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < deltamovespeed && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < deltamovespeed){
+					nextStep_x = path.getStep(nextStep).getX();
+					nextStep_y = path.getStep(nextStep).getY();
+					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < deltamovespeed*2 && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < deltamovespeed*2){
 						
 						playerpos_x = path.getStep(nextStep).getX();
 						playerpos_y = path.getStep(nextStep).getY();
@@ -180,13 +184,17 @@ public class Game extends BasicGame
 	public void moveTo(int start_x, int start_y, int end_x, int end_y){
 		path = gameLevels[currentLevel].getPath(start_x,start_y,end_x,end_y);
 		if(path!= null){
-		nextStep = 1;
-			        System.out.println("Found path of length: " + path.getLength() + ".");
-
-			        for(int i = 0; i < path.getLength(); i++) {
-			            System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");
-			            
-			        }
+			//if one player position variable does not change, skip the first move
+			if(playerpos_y == path.getStep(1).getY() || playerpos_x == path.getStep(1).getX())
+				nextStep = 1;
+			else nextStep = 0;
+			/*
+			System.out.println("Found path of length: " + path.getLength() + ".");
+	
+			for(int i = 0; i < path.getLength(); i++) {
+				System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
+			}
+			*/
 		}
 	}
 	
@@ -215,10 +223,11 @@ public class Game extends BasicGame
 			if(menuId == 2){
 				float shifted_x = x-windowWidth/2+80;
 				float shifted_y = y-windowHeight/2+40;
-				System.out.println("x tile:"+(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x)+" y tile:"+(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+				System.out.println("player x:"+playerpos_x+" player y:"+playerpos_y);
 				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
 				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
-				moveTo((int)playerpos_x,(int)playerpos_y,(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x),(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+				
+				moveTo(Math.round(playerpos_x),Math.round(playerpos_y),(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x),(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
 			}
 			
 			
