@@ -30,18 +30,12 @@ public class Game extends BasicGame
 	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
 	TrueTypeFont buttonFont;
 	static TerrainType[] terrainTypes = new TerrainType[6];
-	GameLevel[] gameLevels = new GameLevel[3];
-	int currentLevel = 0;
-	float playerpos_x = 2;
-	float playerpos_y = 4.0f;
+	public static GameLevel[] gameLevels = new GameLevel[3];
+	public static int currentLevel = 0;
 	int windowWidth;
 	int windowHeight;
 	Player player;
-	Path path;
-	int nextStep = 0;
-	int nextStep_x = -1;
-	int nextStep_y = -1;
-	float movespeed = 0.002f;
+
 	
 	public Game(String gamename)
 	{
@@ -83,45 +77,7 @@ public class Game extends BasicGame
 		
 		if(menuId == 2){
 			//movement
-			float deltamovespeed = movespeed*i;
-			if(path != null){
-				//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
-
-				if(path.getLength() > nextStep){
-					player.setAction(Action.WALKING);
-					nextStep_x = path.getStep(nextStep).getX();
-					nextStep_y = path.getStep(nextStep).getY();
-					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < deltamovespeed*2 && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < deltamovespeed*2){
-						
-						playerpos_x = path.getStep(nextStep).getX();
-						playerpos_y = path.getStep(nextStep).getY();
-						nextStep += 1;
-					}
-					else if(playerpos_x < path.getStep(nextStep).getX()){
-						player.setDirection(0);
-						playerpos_x += deltamovespeed;
-					}
-					else if(playerpos_x > path.getStep(nextStep).getX()){
-						player.setDirection(2);
-						playerpos_x -= deltamovespeed;
-					}
-					else if(playerpos_y < path.getStep(nextStep).getY()){
-						player.setDirection(3);
-						playerpos_y += deltamovespeed;
-					}
-					else if(playerpos_y > path.getStep(nextStep).getY()){
-						player.setDirection(1);
-						playerpos_y -= deltamovespeed;
-					}
-					
-				
-				}
-				else {
-					player.setAction(Action.IDLE);
-					path = null;
-				}
-			}
-			else player.setAction(Action.IDLE);
+			player.move(i);
 		}
 		
 	}
@@ -159,7 +115,7 @@ public class Game extends BasicGame
 			//tiles
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(playerpos_x*80+playerpos_y*80)+windowWidth/2-80),Math.round(y*40-x*40+(playerpos_y*40-playerpos_x*40)+windowHeight/2-40));
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80),Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
 				}
 			}
 			//draw the player
@@ -181,22 +137,7 @@ public class Game extends BasicGame
 		buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
 	}
 	
-	public void moveTo(int start_x, int start_y, int end_x, int end_y){
-		path = gameLevels[currentLevel].getPath(start_x,start_y,end_x,end_y);
-		if(path!= null){
-			//if one player position variable does not change, skip the first move
-			if(playerpos_y == path.getStep(1).getY() || playerpos_x == path.getStep(1).getX())
-				nextStep = 1;
-			else nextStep = 0;
-			/*
-			System.out.println("Found path of length: " + path.getLength() + ".");
 	
-			for(int i = 0; i < path.getLength(); i++) {
-				System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
-			}
-			*/
-		}
-	}
 	
 	public static void main(String[] args)
 	{
@@ -223,11 +164,11 @@ public class Game extends BasicGame
 			if(menuId == 2){
 				float shifted_x = x-windowWidth/2+80;
 				float shifted_y = y-windowHeight/2+40;
-				System.out.println("player x:"+playerpos_x+" player y:"+playerpos_y);
+				System.out.println("player x:"+player.position_x+" player y:"+player.position_y);
 				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
 				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
 				
-				moveTo(Math.round(playerpos_x),Math.round(playerpos_y),(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x),(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+				player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 			}
 			
 			

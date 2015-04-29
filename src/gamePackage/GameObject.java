@@ -3,8 +3,8 @@ import org.newdawn.slick.SpriteSheet;
 
 public class GameObject {
 	public SpriteSheet sprite_idle;
-	public int pos_x;
-	public int pos_y;
+	private int pos_x;
+	private int pos_y;
 	public int width;
 	public int height;
 	

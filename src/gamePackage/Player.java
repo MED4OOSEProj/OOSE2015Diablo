@@ -31,6 +31,8 @@ public class Player extends Character{
 			anim_walking[1] = new Animation(new SpriteSheet(new Image("Textures/player_walking_1.png"),96,112),200);
 			anim_walking[2] = new Animation(new SpriteSheet(new Image("Textures/player_walking_2.png"),96,112),200);
 			anim_walking[3] = new Animation(new SpriteSheet(new Image("Textures/player_walking_3.png"),96,112),200);
+			position_x = 2;
+			position_y = 4;
 	}
 	
 	public void moveAndPickUp(Item target){
