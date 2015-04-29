@@ -29,10 +29,12 @@ public class Character extends GameObject {
 	}
 	
 	public void setAction(Action action){
+		if(action != currentAction)
 		currentAction = action;
 	}
 	
 	public void setDirection(int direction){
+		if(direction != this.direction)
 		this.direction = direction;
 	}
 	

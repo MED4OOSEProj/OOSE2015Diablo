@@ -39,7 +39,7 @@ public class Game extends BasicGame
 	Player player;
 	Path path;
 	int nextStep = 0;
-	float movespeed = 0.003f;
+	float movespeed = 0.002f;
 	
 	public Game(String gamename)
 	{
@@ -117,6 +117,7 @@ public class Game extends BasicGame
 					path = null;
 				}
 			}
+			else player.setAction(Action.IDLE);
 		}
 		
 	}
