@@ -72,19 +72,21 @@ public class Game extends BasicGame
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
 		
+		/*
 		// Testing generation of weapon:
-		// Weapon wep1 = Weapon.generateWeapon();
-		// System.out.println(wep1.attribute_attackdmg);
-		// System.out.println(wep1.attribute_attackspeed);
-		// System.out.println(wep1.attribute_description);
-		// System.out.println(wep1.attribute_durability_max);
-		// System.out.println(wep1.attribute_isRanged);
+		 Weapon wep1 = Weapon.generateWeapon();
+		 System.out.println(wep1.attribute_attackdmg);
+		 System.out.println(wep1.attribute_attackspeed);
+		 System.out.println(wep1.attribute_description);
+		 System.out.println(wep1.attribute_durability_max);
+		 System.out.println(wep1.attribute_isRanged);
 		
 		// Testing the generateArmor: 
-		//Armor arm1 = Armor.generateArmor();
-		//System.out.println(arm1.attribute_damagereduction);	
-		//System.out.println(arm1.attribute_description);	
-		//System.out.println(arm1.attribute_durability_max);	
+		Armor arm1 = Armor.generateArmor();
+		System.out.println(arm1.attribute_damagereduction);	
+		System.out.println(arm1.attribute_description);	
+		System.out.println(arm1.attribute_durability_max);	
+		*/
 		
 		goToMainMenu(gc);
 		
@@ -157,7 +159,7 @@ public class Game extends BasicGame
 				if(character instanceof Enemy){
 					//draw red edge when hovered
 					if(isObjectHovered(character))
-					character.getCurrentAnimation().drawFlash(character.screenPosition_x,character.screenPosition_y,character.getCurrentAnimation().getWidth()*1.08f, character.getCurrentAnimation().getHeight()*1.04f, Color.red);
+					character.getCurrentAnimation().drawFlash(character.screenPosition_x,character.screenPosition_y,character.getCurrentAnimation().getWidth()*1.05f, character.getCurrentAnimation().getHeight()*1.04f, Color.red);
 								  
 					//draw
 					character.getCurrentAnimation().draw(character.screenPosition_x+3,character.screenPosition_y+3);
