@@ -27,23 +27,23 @@ public class Armor extends Item {
 	public Armor (){
 		try {
 	         armorIcons = new Image[] {
-	               new Image("Textures/armor_Breast_Plate"),
-	               new Image("Textures/armor_Cape"),
-	               new Image("Textures/armor_Chain_Mail"),
-	               new Image("Textures/armor_Cloak"),
-	               new Image("Textures/armor_Full_Plate_Mail"),
-	               new Image("Textures/armor_Gothic_plate"),
-	               new Image("Textures/armor_Rags"),
-	               new Image("Textures/armor_Ring_Mail"),
-	               new Image("Textures/armor_Robe"),
-	               new Image("Textures/armor_Studded_Leather_Armor"),
+	               new Image("Textures/armor_Breast_Plate.png"),
+	               new Image("Textures/armor_Cape.png"),
+	               new Image("Textures/armor_Chain_Mail.png"),
+	               new Image("Textures/armor_Cloak.png"),
+	               new Image("Textures/armor_Full_Plate_Mail.png"),
+	               new Image("Textures/armor_Gothic_plate.png"),
+	               new Image("Textures/armor_Rags.png"),
+	               new Image("Textures/armor_Ring_Mail.png"),
+	               new Image("Textures/armor_Robe.png"),
+	               new Image("Textures/armor_Studded_Leather_Armor.png"),
 	               };
 	      } catch (SlickException e) {
 	    	  e.printStackTrace();
 	      }
 	}
 
-	public static void generateArmor(){
+	public static Armor generateArmor(){
 		Armor armor = new Armor();
 		Random rnd = new Random();
 		
@@ -84,6 +84,6 @@ public class Armor extends Item {
 		
 		// Combine strings to make the name: 
 		armor.attribute_description = a + b + c;
-		
+		return armor;
 	}
 }

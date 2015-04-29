@@ -29,16 +29,16 @@ public class Weapon extends Item {
 	public Weapon (){
 		try {
 	         weaponIcons = new Image[] {
-	               new Image("Textures/weapon_Axe"),
-	               new Image("Textures/weapon_Sword"),
-	               new Image("Textures/weapon_Mace"),
-	               new Image("Textures/weapon_Club"),
-	               new Image("Textures/weapon_War_Staff"),
-	               new Image("Textures/weapon_Javelin"),
-	               new Image("Textures/weapon_Crossbow"),
-	               new Image("Textures/weapon_Bow"),
-	               new Image("Textures/weapon_Long_Bow"),
-	               new Image("Textures/weapon_Throwing_Knife"),
+	               new Image("Textures/weapon_Axe.png"),
+	               new Image("Textures/weapon_Sword.png"),
+	               new Image("Textures/weapon_Mace.png"),
+	               new Image("Textures/weapon_Club.png"),
+	               new Image("Textures/weapon_War_Staff.png"),
+	               new Image("Textures/weapon_Javelin.png"),
+	               new Image("Textures/weapon_Crossbow.png"),
+	               new Image("Textures/weapon_Bow.png"),
+	               new Image("Textures/weapon_Long_Bow.png"),
+	               new Image("Textures/weapon_Throwing_Knife.png"),
 	               };
 	      } catch (SlickException e) {
 	    	  e.printStackTrace();
@@ -46,7 +46,7 @@ public class Weapon extends Item {
 	}
 	
 	
-	public static void generateWeapon(){
+	public static Weapon generateWeapon(){
 		Weapon weapon = new Weapon();
 		Random rnd = new Random();
 		
@@ -94,5 +94,6 @@ public class Weapon extends Item {
 		}
 		
 		weapon.attribute_description = a + b + c;
+		return weapon;
 	}
 }
