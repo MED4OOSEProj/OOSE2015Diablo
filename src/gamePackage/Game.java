@@ -71,6 +71,21 @@ public class Game extends BasicGame
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
+		
+		// Testing generation of weapon:
+		// Weapon wep1 = Weapon.generateWeapon();
+		// System.out.println(wep1.attribute_attackdmg);
+		// System.out.println(wep1.attribute_attackspeed);
+		// System.out.println(wep1.attribute_description);
+		// System.out.println(wep1.attribute_durability_max);
+		// System.out.println(wep1.attribute_isRanged);
+		
+		// Testing the generateArmor: 
+		//Armor arm1 = Armor.generateArmor();
+		//System.out.println(arm1.attribute_damagereduction);	
+		//System.out.println(arm1.attribute_description);	
+		//System.out.println(arm1.attribute_durability_max);	
+		
 		goToMainMenu(gc);
 		
 	}
