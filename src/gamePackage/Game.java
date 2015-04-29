@@ -35,6 +35,7 @@ public class Game extends BasicGame
 	int windowWidth;
 	int windowHeight;
 	Player player;
+	Enemy enemy1;
 
 	
 	public Game(String gamename)
@@ -50,6 +51,7 @@ public class Game extends BasicGame
 		//gc.setTargetFrameRate(300);
 		
 		player = new Player();
+		enemy1 = new Enemy(3,1);
 		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
@@ -72,12 +74,14 @@ public class Game extends BasicGame
 		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
 		player.getCurrentAnimation().update(i);
+		enemy1.getCurrentAnimation().update(i);
 		
 		//System.out.println("delta: "+i);
 		
 		if(menuId == 2){
 			//movement
 			player.move(i);
+			enemy1.move(i);
 		}
 		
 	}
@@ -115,11 +119,15 @@ public class Game extends BasicGame
 			//tiles
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80),Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80),
+																								   Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
 				}
 			}
 			//draw the player
 			player.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
+			//draw an enemy
+			enemy1.getCurrentAnimation().draw(Math.round(enemy1.position_x*80+enemy1.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+35,
+											  Math.round(enemy1.position_x*40-enemy1.position_y*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40)-45);
 		}
 	}
 	
@@ -167,6 +175,7 @@ public class Game extends BasicGame
 				System.out.println("player x:"+player.position_x+" player y:"+player.position_y);
 				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
 				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
+				enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 				
 				player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 			}

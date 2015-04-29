@@ -47,8 +47,9 @@ public class Character extends GameObject {
 	}
 	
 	public void move(int i){
-		float deltamovespeed = movespeed*i;
+		
 		if(path != null){
+			float deltamovespeed = movespeed*i;
 			//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
 
 			if(path.getLength() > nextStep){
