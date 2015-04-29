@@ -1,4 +1,6 @@
 package gamePackage;
+import gamePackage.Character.Action;
+
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -34,10 +36,10 @@ public class Game extends BasicGame
 	float playerpos_y = 4.0f;
 	int windowWidth;
 	int windowHeight;
-	Player player = new Player();
+	Player player;
 	Path path;
 	int nextStep = 0;
-	float movespeed = 0.03f;
+	float movespeed = 0.003f;
 	
 	public Game(String gamename)
 	{
@@ -49,11 +51,9 @@ public class Game extends BasicGame
 		//Called once, upon starting the program
 		windowWidth = gc.getWidth();
 		windowHeight = gc.getHeight();
-		gc.setTargetFrameRate(60);
+		//gc.setTargetFrameRate(300);
 		
-		//Sets the player attributes
-		player.sprite_idle = new SpriteSheet(new Image("Textures/player_idle_1.png"),96,96);
-		player.anim_idle_1 = new Animation(player.sprite_idle,200);
+		player = new Player();
 		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
@@ -73,38 +73,49 @@ public class Game extends BasicGame
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
-		//Makes changes to models, is called once per something milliseconds
+		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
-		player.anim_idle_1.update(i);
+		player.getCurrentAnimation().update(i);
+		
+		//System.out.println("delta: "+i);
 		
 		if(menuId == 2){
 			//movement
+			float deltamovespeed = movespeed*i;
 			if(path != null){
 				//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
 
 				if(path.getLength() > nextStep){
-					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < movespeed && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < movespeed){
+					player.setAction(Action.WALKING);
+					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < deltamovespeed && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < deltamovespeed){
 						
 						playerpos_x = path.getStep(nextStep).getX();
 						playerpos_y = path.getStep(nextStep).getY();
 						nextStep += 1;
 					}
 					else if(playerpos_x < path.getStep(nextStep).getX()){
-						playerpos_x += movespeed;
+						player.setDirection(0);
+						playerpos_x += deltamovespeed;
 					}
 					else if(playerpos_x > path.getStep(nextStep).getX()){
-						playerpos_x -= movespeed;
+						player.setDirection(2);
+						playerpos_x -= deltamovespeed;
 					}
 					else if(playerpos_y < path.getStep(nextStep).getY()){
-						playerpos_y += movespeed;
+						player.setDirection(3);
+						playerpos_y += deltamovespeed;
 					}
 					else if(playerpos_y > path.getStep(nextStep).getY()){
-						playerpos_y -= movespeed;
+						player.setDirection(1);
+						playerpos_y -= deltamovespeed;
 					}
 					
 				
 				}
-				else path = null;
+				else {
+					player.setAction(Action.IDLE);
+					path = null;
+				}
 			}
 		}
 		
@@ -147,7 +158,7 @@ public class Game extends BasicGame
 				}
 			}
 			//draw the player
-			player.anim_idle_1.draw(windowWidth/2-45, windowHeight/2-70);
+			player.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
 		}
 	}
 	
