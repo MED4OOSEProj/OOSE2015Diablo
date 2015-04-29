@@ -50,9 +50,9 @@ public class Weapon extends Item {
 		Weapon weapon = new Weapon();
 		Random rnd = new Random();
 		
-		// how much damage per attack: (modifies the characters attackdamage)
+		// how much damage per attack: (modifies the character's attackdamage)
 		weapon.attribute_attackdmg = rnd.nextInt(10); 
-		// How many attacks per second (modifies the characters attackspeed)
+		// How many attacks per second (modifies the character's attackspeed)
 		weapon.attribute_attackspeed = rnd.nextFloat()*0.5f; 
 		// How many hits you can make with the weapon before it breaks: 
 		weapon.attribute_durability_max = rnd.nextInt(10)*2; 
