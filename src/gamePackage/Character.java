@@ -19,14 +19,13 @@ public class Character extends GameObject implements Comparable<Character>{
 	public String attribute_name;
 	private int direction = 1;
 	private Action currentAction = Action.IDLE;
-	public float position_x;
-	public float position_y;
+	
 	Path path;
 	int nextStep = 0;
 	int nextStep_x = -1;
 	int nextStep_y = -1;
 	float movespeed = 0.002f;
-	float collision_size = 0.4f;
+	float collision_size = 0.5f;
 	
 	public enum Action{
 		IDLE,ATTACKING,DYING,WALKING
@@ -96,6 +95,7 @@ public class Character extends GameObject implements Comparable<Character>{
 					else setAction(Action.IDLE);
 					
 				}
+				
 			}
 			else {
 				setAction(Action.IDLE);
@@ -103,6 +103,13 @@ public class Character extends GameObject implements Comparable<Character>{
 			}
 		}
 		else setAction(Action.IDLE);
+		
+	}
+	
+	public void calculateScreenPos(){
+		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+32;
+		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)-48;
+		
 	}
 	
 	public void moveTo(int start_x, int start_y, int end_x, int end_y){

@@ -9,7 +9,6 @@ import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 public class GameLevel implements TileBasedMap {
-	public ArrayList<GameObject>[][] grid_objects;
 	public ArrayList<Character> charactersInLevel = new ArrayList<Character>();
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;

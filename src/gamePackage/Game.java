@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -33,10 +34,12 @@ public class Game extends BasicGame
 	static TerrainType[] terrainTypes = new TerrainType[6];
 	public static GameLevel[] gameLevels = new GameLevel[3];
 	public static int currentLevel = 0;
-	int windowWidth;
-	int windowHeight;
-	Player player;
+	static int windowWidth;
+	static int windowHeight;
+	static Player player;
 	Enemy enemy1;
+	int mouse_position_x;
+	int mouse_position_y;
 
 	
 	public Game(String gamename)
@@ -84,7 +87,9 @@ public class Game extends BasicGame
 		if(menuId == 2){
 			//movement
 			player.move(i);
+			player.calculateScreenPos();
 			enemy1.move(i);
+			enemy1.calculateScreenPos();
 		}
 		
 	}
@@ -135,13 +140,25 @@ public class Game extends BasicGame
 				}
 				//draw enemies
 				if(character instanceof Enemy){
-					character.getCurrentAnimation().draw(Math.round(enemy1.position_x*80+enemy1.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+35,
-							  Math.round(enemy1.position_x*40-enemy1.position_y*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40)-45);
+					//draw red edge when hovered
+					if(isObjectHovered(character))
+					character.getCurrentAnimation().drawFlash(character.screenPosition_x,character.screenPosition_y,character.getCurrentAnimation().getWidth()*1.08f, character.getCurrentAnimation().getHeight()*1.04f, Color.red);
+								  
+					//draw
+					character.getCurrentAnimation().draw(character.screenPosition_x+3,character.screenPosition_y+3);
 				}
 			}
 			
 
 		}
+	}
+	
+	public boolean isObjectHovered(GameObject obj){
+		if(Math.abs(obj.screenPosition_x - 5 + obj.frameWidth/2-mouse_position_x) < obj.pixelWidth &&
+		   Math.abs(obj.screenPosition_y + obj.frameHeight/2-mouse_position_y) < obj.pixelHeight){
+			return true;
+		}
+		return false;
 	}
 	
 	public void goToMainMenu(GameContainer gc){
@@ -177,6 +194,26 @@ public class Game extends BasicGame
 		}
 	}
 	
+	/*
+	public GameObject getObjectHovered(){
+		GameObject returnobj;
+		float shifted_x = mouse_position_x-windowWidth/2+80;
+		float shifted_y = mouse_position_y-windowHeight/2+40;
+		float tilepos_x = (shifted_x/80+shifted_y/40-1)/2+player.position_x;
+		float tilepos_y = (int)((shifted_x/80-shifted_y/40+1)/2+player.position_y);
+		for(Character character : gameLevels[currentLevel].charactersInLevel){
+			if(character instanceof Enemy){
+				float charscreenpos_x = Math.round(character.position_x*80+character.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+32;
+			}
+		}
+		return returnobj;
+	}*/
+	
+	public void mouseMoved(int oldx, int oldy, int newx, int newy){
+		mouse_position_x = newx;
+		mouse_position_y = newy;
+	}
+	
 	public void mousePressed(int button,int x,int y){
 		
 		//left click
@@ -188,7 +225,7 @@ public class Game extends BasicGame
 				System.out.println("player x:"+player.position_x+" player y:"+player.position_y);
 				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
 				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
-				enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
+				//enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 				
 				player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 			}
