@@ -10,6 +10,7 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 public class GameLevel implements TileBasedMap {
 	public ArrayList<GameObject>[][] grid_objects;
+	public ArrayList<Character> charactersInLevel = new ArrayList<Character>();
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
 	int levelWidth = 10;
@@ -53,6 +54,21 @@ public class GameLevel implements TileBasedMap {
 		        {1,0,0,0,0,0,0,0,0,0},
 		        {1,1,1,1,1,1,1,1,1,0}
 		    };
+	}
+	
+	public boolean colliding(Character character, float x, float y){
+		for(Character othercharacter : charactersInLevel){
+			//Exclude the colliding character
+			if(othercharacter != character){
+				//Check if x and y is within another character's collision size
+				if(Math.abs(othercharacter.position_x - x) < othercharacter.collision_size &&
+				   Math.abs(othercharacter.position_y - y) < othercharacter.collision_size){
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override

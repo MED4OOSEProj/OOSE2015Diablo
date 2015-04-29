@@ -26,6 +26,7 @@ public class Character extends GameObject {
 	int nextStep_x = -1;
 	int nextStep_y = -1;
 	float movespeed = 0.002f;
+	float collision_size = 0.4f;
 	
 	public enum Action{
 		IDLE,ATTACKING,DYING,WALKING
@@ -53,7 +54,6 @@ public class Character extends GameObject {
 			//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
 
 			if(path.getLength() > nextStep){
-				setAction(Action.WALKING);
 				nextStep_x = path.getStep(nextStep).getX();
 				nextStep_y = path.getStep(nextStep).getY();
 				if(Math.abs((position_x - path.getStep(nextStep).getX())) < deltamovespeed*2 && Math.abs((position_y - path.getStep(nextStep).getY())) < deltamovespeed*2){
@@ -64,19 +64,37 @@ public class Character extends GameObject {
 				}
 				else if(position_x < path.getStep(nextStep).getX()){
 					setDirection(0);
-					position_x += deltamovespeed;
+					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x+deltamovespeed, position_y)){
+						setAction(Action.WALKING);
+						position_x += deltamovespeed;
+					}
+					else setAction(Action.IDLE);
 				}
 				else if(position_x > path.getStep(nextStep).getX()){
 					setDirection(2);
-					position_x -= deltamovespeed;
+					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x-deltamovespeed, position_y)){
+						setAction(Action.WALKING);
+						position_x -= deltamovespeed;
+					}
+					else setAction(Action.IDLE);
 				}
 				else if(position_y < path.getStep(nextStep).getY()){
 					setDirection(3);
-					position_y += deltamovespeed;
+					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x, position_y+deltamovespeed)){
+						setAction(Action.WALKING);
+						position_y += deltamovespeed;
+					}
+					else setAction(Action.IDLE);
+					
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
 					setDirection(1);
-					position_y -= deltamovespeed;
+					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x, position_y-deltamovespeed)){
+						setAction(Action.WALKING);
+						position_y -= deltamovespeed;
+					}
+					else setAction(Action.IDLE);
+					
 				}
 			}
 			else {

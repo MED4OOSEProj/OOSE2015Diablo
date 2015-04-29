@@ -53,6 +53,7 @@ public class Game extends BasicGame
 		player = new Player();
 		enemy1 = new Enemy(3,1);
 		
+		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
 		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
@@ -61,7 +62,8 @@ public class Game extends BasicGame
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
 		
-		
+		gameLevels[0].charactersInLevel.add(player);
+		gameLevels[0].charactersInLevel.add(enemy1);
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
