@@ -13,7 +13,7 @@ public class Item extends GameObject {
 	public Sound sound_drop;
 
 	// consider adding a variable to define what type of item to generate and spawn
-	public void generateItem(int posX, int posY){
+	public void generateItem(){
 		Random rnd = new Random();
 		int n = rnd.nextInt(2);
 		if (n == 0){

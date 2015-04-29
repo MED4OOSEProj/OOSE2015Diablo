@@ -18,14 +18,18 @@ public class Weapon extends Item {
 	public static String[] prefix = new String[]{"Brunhilde's ","The Powerful ","Unyielding ","The Monsterbane ","Death's ","Skullsplitter ","Spinecracking ","The Seagold ","Cursed ","Holy "}; 
 	
 	// weapontype 0-4 are melee, 5-9 are ranged
-	public static String[] weaponType = new String[]{"Axe","Sword","Mace","Pike","Spear","Javelin","Crossbow","Bow","Longbow","Throwing Knife"};
+	public static String[] weaponType = new String[]{"Axe","Sword","Mace","Club","War Staff","Javelin","Crossbow","Bow","Longbow","Throwing Knife"};
 	
 	// 0-2 are high dmg, 3-5 are fast weapons, 6-8 are durable, 10 is the most powerful EVeR! 
 	
 	public static String[] suffix = new String[]{" of Mightiness"," of Slaying"," of Great Strength"," of Swiftslaying"," of Quicksilver"," of Quickness"," of Unreliable Power"," of the Unbreakable Vow"," of Diamond Endurance"," of Godslaying"};
 	
-	// Arbejder på ikonerne lige nu 
-	// public static Image[] weaponIcons = new Image[]{"Textures/tree1.png", "Textures/tree1.png"};
+	/**public static Image[] weaponIcons = new Image[10];
+
+	
+	for(int i = 0; i < 10; i++){
+		weaponIcons[i] = Image("Textures/tree1.png");
+	}*/
 	
 	public Weapon (){
 	
