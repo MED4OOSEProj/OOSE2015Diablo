@@ -4,7 +4,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.pathfinding.Path;
 
-public class Character extends GameObject {
+public class Character extends GameObject implements Comparable<Character>{
 	// variables
 	public Animation[] anim_attacking = new Animation[4];
 	public Animation anim_dying;
@@ -135,5 +135,13 @@ public class Character extends GameObject {
 		default:
 			return anim_idle[direction];
 		}
+	}
+
+	@Override
+	public int compareTo(Character comparedCharacter) {
+		float height = position_y-position_x;
+		float comparedCharHeight = comparedCharacter.position_y-comparedCharacter.position_x;
+		//return in descending order
+		return (int)(comparedCharHeight*100-height*100);
 	}
 }

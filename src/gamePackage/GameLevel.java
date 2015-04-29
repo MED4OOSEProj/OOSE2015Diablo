@@ -29,7 +29,6 @@ public class GameLevel implements TileBasedMap {
     
 	public GameLevel(){
 		createRandomMap();
-		
 	}
 
 	public Path getPath(int startX, int startY, int goalX, int goalY){

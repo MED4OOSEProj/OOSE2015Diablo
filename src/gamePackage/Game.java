@@ -3,6 +3,7 @@ import gamePackage.Character.Action;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -125,11 +126,21 @@ public class Game extends BasicGame
 																								   Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
 				}
 			}
-			//draw the player
-			player.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
-			//draw an enemy
-			enemy1.getCurrentAnimation().draw(Math.round(enemy1.position_x*80+enemy1.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+35,
-											  Math.round(enemy1.position_x*40-enemy1.position_y*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40)-45);
+			//sorts the characters by their height position on the screen, so that the characters in front are drawn last
+			Collections.sort(gameLevels[currentLevel].charactersInLevel);
+			for(Character character : gameLevels[currentLevel].charactersInLevel){
+				//draw the player
+				if(character instanceof Player){
+					character.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
+				}
+				//draw enemies
+				if(character instanceof Enemy){
+					character.getCurrentAnimation().draw(Math.round(enemy1.position_x*80+enemy1.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+35,
+							  Math.round(enemy1.position_x*40-enemy1.position_y*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40)-45);
+				}
+			}
+			
+
 		}
 	}
 	
