@@ -30,11 +30,14 @@ public class Game extends BasicGame
 	static TerrainType[] terrainTypes = new TerrainType[6];
 	GameLevel[] gameLevels = new GameLevel[3];
 	int currentLevel = 0;
-	int playerpos_x = 2;
-	int playerpos_y = 4;
+	float playerpos_x = 2;
+	float playerpos_y = 4.0f;
 	int windowWidth;
 	int windowHeight;
 	Player player = new Player();
+	Path path;
+	int nextStep = 0;
+	float movespeed = 0.03f;
 	
 	public Game(String gamename)
 	{
@@ -46,6 +49,7 @@ public class Game extends BasicGame
 		//Called once, upon starting the program
 		windowWidth = gc.getWidth();
 		windowHeight = gc.getHeight();
+		gc.setTargetFrameRate(60);
 		
 		//Sets the player attributes
 		player.sprite_idle = new SpriteSheet(new Image("Textures/player_idle_1.png"),96,96);
@@ -59,13 +63,7 @@ public class Game extends BasicGame
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
 		
-		// testing path
-		 Path path = gameLevels[currentLevel].getPath(1,1,1,6);
-	        System.out.println("Found path of length: " + path.getLength() + ".");
-
-	        for(int i = 0; i < path.getLength(); i++) {
-	            System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");
-	        }
+		
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
@@ -78,6 +76,37 @@ public class Game extends BasicGame
 		//Makes changes to models, is called once per something milliseconds
 		//updates stuff
 		player.anim_idle_1.update(i);
+		
+		if(menuId == 2){
+			//movement
+			if(path != null){
+				//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
+
+				if(path.getLength() > nextStep){
+					if(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < movespeed && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < movespeed){
+						
+						playerpos_x = path.getStep(nextStep).getX();
+						playerpos_y = path.getStep(nextStep).getY();
+						nextStep += 1;
+					}
+					else if(playerpos_x < path.getStep(nextStep).getX()){
+						playerpos_x += movespeed;
+					}
+					else if(playerpos_x > path.getStep(nextStep).getX()){
+						playerpos_x -= movespeed;
+					}
+					else if(playerpos_y < path.getStep(nextStep).getY()){
+						playerpos_y += movespeed;
+					}
+					else if(playerpos_y > path.getStep(nextStep).getY()){
+						playerpos_y -= movespeed;
+					}
+					
+				
+				}
+				else path = null;
+			}
+		}
 		
 	}
 
@@ -109,9 +138,12 @@ public class Game extends BasicGame
 			}
 		}
 		else if (menuId == 2){
+			
+			
+			//tiles
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(x*80+y*80-(playerpos_x*80+playerpos_y*80)+windowWidth/2-80,y*40-x*40+(playerpos_y*40-playerpos_x*40)+windowHeight/2-40);
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(playerpos_x*80+playerpos_y*80)+windowWidth/2-80),Math.round(y*40-x*40+(playerpos_y*40-playerpos_x*40)+windowHeight/2-40));
 				}
 			}
 			//draw the player
@@ -131,6 +163,19 @@ public class Game extends BasicGame
 		buttons.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
 		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
 		buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
+	}
+	
+	public void moveTo(int start_x, int start_y, int end_x, int end_y){
+		path = gameLevels[currentLevel].getPath(start_x,start_y,end_x,end_y);
+		if(path!= null){
+		nextStep = 1;
+			        System.out.println("Found path of length: " + path.getLength() + ".");
+
+			        for(int i = 0; i < path.getLength(); i++) {
+			            System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");
+			            
+			        }
+		}
 	}
 	
 	public static void main(String[] args)
@@ -154,20 +199,24 @@ public class Game extends BasicGame
 		
 		//left click
 		if(button == 0){
+			//click a tile
+			if(menuId == 2){
+				float shifted_x = x-windowWidth/2+80;
+				float shifted_y = y-windowHeight/2+40;
+				System.out.println("x tile:"+(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x)+" y tile:"+(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
+				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
+				moveTo((int)playerpos_x,(int)playerpos_y,(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x),(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
+			}
+			
+			
 			for(Button guibutton : buttons){
 				if(menuId == 0 && guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
 					buttonClicked(guibutton);
 				}
 			}
 			
-			//click a tile
-			if(menuId == 2){
-				float shifted_x = x-windowWidth/2+80;
-				float shifted_y = y-windowHeight/2+40;
-				System.out.println("x tile:"+(int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x)+" y tile:"+(int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y));
-				playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
-				playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
-			}
+			
 		}
 	}
 	

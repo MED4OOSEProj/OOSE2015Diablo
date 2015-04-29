@@ -32,6 +32,7 @@ public class GameLevel implements TileBasedMap {
 	}
 
 	public Path getPath(int startX, int startY, int goalX, int goalY){
+		
 		AStarPathFinder pathFinder = new AStarPathFinder(this, maxPathLength, false);
         Path path = pathFinder.findPath(null, startX, startY, goalX, goalY);
         return path;
@@ -58,6 +59,9 @@ public class GameLevel implements TileBasedMap {
 	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		//System.out.println("x:"+arg2+"y:"+arg1+" terraintype: "+grid_terrainIDs[arg2][arg1]);
+		if(arg1 < 0 || arg2 < 0 || arg1 > levelHeight-1 || arg2 > levelWidth-1)
+			return true;
+		
 		return Game.terrainTypes[grid_terrainIDs[arg2][arg1]].blocksPath;
 	}
 
