@@ -18,7 +18,7 @@ public class Item extends GameObject {
 		int n = rnd.nextInt(2);
 		if (n == 0){
 			// create armor
-				//Armor.generateArmor();
+			Armor.generateArmor();
 		} else if (n == 1){
 			// create potion
 				//Potion.generatePotion();
