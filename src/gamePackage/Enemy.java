@@ -15,11 +15,11 @@ public class Enemy extends Character{
 	public Weapon gear_weapon;
 	public boolean mouse_hovered = true;
 	
-	public Enemy(float pos_x, float pos_y) throws SlickException{
+	public Enemy(float tile_x, float tile_y) throws SlickException{
 		frameWidth = 128;
 		frameHeight = 112;
-		position_x = pos_x;
-		position_y = pos_y;
+		position_x = tile_x;
+		position_y = tile_y;
 		sprite_idle = new SpriteSheet(new Image("Textures/goatman_idle_0.png"),frameWidth,frameHeight);
 		anim_idle[0] = new Animation(sprite_idle,200);
 		anim_idle[1] = new Animation(new SpriteSheet(new Image("Textures/goatman_idle_1.png"),frameWidth,frameHeight),200);
@@ -32,6 +32,8 @@ public class Enemy extends Character{
 		attribute_name = "EnemyName";
 		pixelWidth = 30;
 		pixelHeight = 55;
+		pixelTranslation_x = 30;
+		pixelTranslation_y = -45;
 	}
 	
 	public void attack(){

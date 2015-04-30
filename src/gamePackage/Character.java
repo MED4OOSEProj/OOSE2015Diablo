@@ -4,7 +4,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.pathfinding.Path;
 
-public class Character extends GameObject implements Comparable<Character>{
+public class Character extends GameObject{
 	// variables
 	public Animation[] anim_attacking = new Animation[4];
 	public Animation anim_dying;
@@ -25,7 +25,7 @@ public class Character extends GameObject implements Comparable<Character>{
 	int nextStep_x = -1;
 	int nextStep_y = -1;
 	float movespeed = 0.002f;
-	float collision_size = 0.5f;
+	
 	
 	public enum Action{
 		IDLE,ATTACKING,DYING,WALKING
@@ -63,7 +63,7 @@ public class Character extends GameObject implements Comparable<Character>{
 				}
 				else if(position_x < path.getStep(nextStep).getX()){
 					setDirection(0);
-					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x+deltamovespeed, position_y)){
+					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x+deltamovespeed, position_y) == null){
 						setAction(Action.WALKING);
 						position_x += deltamovespeed;
 					}
@@ -71,7 +71,7 @@ public class Character extends GameObject implements Comparable<Character>{
 				}
 				else if(position_x > path.getStep(nextStep).getX()){
 					setDirection(2);
-					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x-deltamovespeed, position_y)){
+					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x-deltamovespeed, position_y) == null){
 						setAction(Action.WALKING);
 						position_x -= deltamovespeed;
 					}
@@ -79,7 +79,7 @@ public class Character extends GameObject implements Comparable<Character>{
 				}
 				else if(position_y < path.getStep(nextStep).getY()){
 					setDirection(3);
-					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x, position_y+deltamovespeed)){
+					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y+deltamovespeed) == null){
 						setAction(Action.WALKING);
 						position_y += deltamovespeed;
 					}
@@ -88,7 +88,7 @@ public class Character extends GameObject implements Comparable<Character>{
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
 					setDirection(1);
-					if(!Game.gameLevels[Game.currentLevel].colliding(this, position_x, position_y-deltamovespeed)){
+					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y-deltamovespeed) == null){
 						setAction(Action.WALKING);
 						position_y -= deltamovespeed;
 					}
@@ -107,8 +107,8 @@ public class Character extends GameObject implements Comparable<Character>{
 	}
 	
 	public void calculateScreenPos(){
-		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+32;
-		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)-48;
+		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+pixelTranslation_x;
+		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)+pixelTranslation_y;
 		
 	}
 	
@@ -119,16 +119,24 @@ public class Character extends GameObject implements Comparable<Character>{
 			if(position_y == path.getStep(1).getY() || position_x == path.getStep(1).getX())
 				nextStep = 1;
 			else nextStep = 0;
-			/*
+			
 			System.out.println("Found path of length: " + path.getLength() + ".");
 	
 			for(int i = 0; i < path.getLength(); i++) {
 				System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
 			}
-			*/
+			
 		}
+		else if(!Game.gameLevels[Game.currentLevel].blocked(null, end_x, end_y)){
+			//if the player clicks the same tile as he is supposedly standing on, create a path of 1 length to it
+				path = new Path();
+				path.appendStep(start_x, start_y);
+				nextStep = 0;
+		}
+		
 	}
 	
+	@Override
 	public Animation getCurrentAnimation(){
 		switch(currentAction){
 		case IDLE:
@@ -142,13 +150,5 @@ public class Character extends GameObject implements Comparable<Character>{
 		default:
 			return anim_idle[direction];
 		}
-	}
-
-	@Override
-	public int compareTo(Character comparedCharacter) {
-		float height = position_y-position_x;
-		float comparedCharHeight = comparedCharacter.position_y-comparedCharacter.position_x;
-		//return in descending order
-		return (int)(comparedCharHeight*100-height*100);
 	}
 }

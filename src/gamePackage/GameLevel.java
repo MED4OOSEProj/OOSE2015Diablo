@@ -9,7 +9,7 @@ import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 public class GameLevel implements TileBasedMap {
-	public ArrayList<Character> charactersInLevel = new ArrayList<Character>();
+	public ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
 	int levelWidth = 10;
@@ -43,8 +43,8 @@ public class GameLevel implements TileBasedMap {
 		grid_terrainIDs = new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},
 		        {1,0,0,0,0,0,1,1,1,1},
-		        {1,0,1,1,1,0,1,1,1,1},
-		        {1,0,1,1,1,0,0,0,1,1},
+		        {1,0,0,0,0,0,1,1,1,1},
+		        {1,0,0,0,1,0,0,0,1,1},
 		        {1,0,0,0,1,1,1,0,1,1},
 		        {1,1,1,0,1,1,1,0,0,0},
 		        {1,0,1,0,0,0,0,0,1,0},
@@ -54,19 +54,19 @@ public class GameLevel implements TileBasedMap {
 		    };
 	}
 	
-	public boolean colliding(Character character, float x, float y){
-		for(Character othercharacter : charactersInLevel){
+	public GameObject collidingObject(Character character, float x, float y){
+		for(GameObject colliderObject : objectsInLevel){
 			//Exclude the colliding character
-			if(othercharacter != character){
+			if(colliderObject != character){
 				//Check if x and y is within another character's collision size
-				if(Math.abs(othercharacter.position_x - x) < othercharacter.collision_size &&
-				   Math.abs(othercharacter.position_y - y) < othercharacter.collision_size){
-					return true;
+				if(Math.abs(colliderObject.position_x - x) < colliderObject.collision_size &&
+				   Math.abs(colliderObject.position_y - y) < colliderObject.collision_size){
+					return colliderObject;
 				}
 			}
 		}
 		
-		return false;
+		return null;
 	}
 	
 	@Override

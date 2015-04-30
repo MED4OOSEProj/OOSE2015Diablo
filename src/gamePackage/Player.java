@@ -37,6 +37,8 @@ public class Player extends Character{
 			position_x = 2;
 			position_y = 4;
 			attribute_name = "PlayerName";
+			pixelTranslation_x = 32;
+			pixelTranslation_y = -48;
 	}
 	
 	public void moveAndPickUp(Item target){

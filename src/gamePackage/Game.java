@@ -1,5 +1,4 @@
 package gamePackage;
-import gamePackage.Character.Action;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -7,7 +6,6 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -15,12 +13,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.FontUtils;
-import org.newdawn.slick.util.pathfinding.Path;
-
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 public class Game extends BasicGame
 {
@@ -40,6 +34,7 @@ public class Game extends BasicGame
 	Enemy enemy1;
 	int mouse_position_x;
 	int mouse_position_y;
+	GameObject currentHoveredObject;
 
 	
 	public Game(String gamename)
@@ -66,8 +61,8 @@ public class Game extends BasicGame
 		//Creates game levels
 		gameLevels[0] = new GameLevel();
 		
-		gameLevels[0].charactersInLevel.add(player);
-		gameLevels[0].charactersInLevel.add(enemy1);
+		gameLevels[0].objectsInLevel.add(player);
+		gameLevels[0].objectsInLevel.add(enemy1);
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
@@ -148,22 +143,27 @@ public class Game extends BasicGame
 																								   Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
 				}
 			}
-			//sorts the characters by their height position on the screen, so that the characters in front are drawn last
-			Collections.sort(gameLevels[currentLevel].charactersInLevel);
-			for(Character character : gameLevels[currentLevel].charactersInLevel){
+			//sorts the objects by their height position on the screen, so that the objects in front are drawn last
+			Collections.sort(gameLevels[currentLevel].objectsInLevel);
+			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
+				GameObject tempHoveredObject = null;
 				//draw the player
-				if(character instanceof Player){
-					character.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
+				if(gameobj instanceof Player){
+					gameobj.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
 				}
 				//draw enemies
-				if(character instanceof Enemy){
+				if(gameobj instanceof Enemy){
 					//draw red edge when hovered
-					if(isObjectHovered(character))
-					character.getCurrentAnimation().drawFlash(character.screenPosition_x,character.screenPosition_y,character.getCurrentAnimation().getWidth()*1.05f, character.getCurrentAnimation().getHeight()*1.04f, Color.red);
+					if(isObjectHovered(gameobj)){
+						gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
+						tempHoveredObject = gameobj;
+					}
 								  
 					//draw
-					character.getCurrentAnimation().draw(character.screenPosition_x+3,character.screenPosition_y+3);
+					gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
 				}
+				
+				currentHoveredObject = tempHoveredObject;
 			}
 			
 
@@ -210,21 +210,6 @@ public class Game extends BasicGame
 			Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	/*
-	public GameObject getObjectHovered(){
-		GameObject returnobj;
-		float shifted_x = mouse_position_x-windowWidth/2+80;
-		float shifted_y = mouse_position_y-windowHeight/2+40;
-		float tilepos_x = (shifted_x/80+shifted_y/40-1)/2+player.position_x;
-		float tilepos_y = (int)((shifted_x/80-shifted_y/40+1)/2+player.position_y);
-		for(Character character : gameLevels[currentLevel].charactersInLevel){
-			if(character instanceof Enemy){
-				float charscreenpos_x = Math.round(character.position_x*80+character.position_y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80)+32;
-			}
-		}
-		return returnobj;
-	}*/
 	
 	public void mouseMoved(int oldx, int oldy, int newx, int newy){
 		mouse_position_x = newx;
