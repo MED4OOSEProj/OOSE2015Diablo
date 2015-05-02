@@ -19,6 +19,10 @@ public class Character extends GameObject{
 	public String attribute_name;
 	private int direction = 1;
 	private Action currentAction = Action.IDLE;
+	public Character attackTarget;
+	public Item pickupTarget;
+	float lastAttackTime;
+	float attackSpeed = 2000;
 	
 	Path path;
 	int nextStep = 0;
@@ -47,7 +51,6 @@ public class Character extends GameObject{
 	}
 	
 	public void move(int i){
-		
 		if(path != null){
 			float deltamovespeed = movespeed*i;
 			//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
@@ -63,35 +66,43 @@ public class Character extends GameObject{
 				}
 				else if(position_x < path.getStep(nextStep).getX()){
 					setDirection(0);
-					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x+deltamovespeed, position_y) == null){
+					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x+deltamovespeed, position_y);
+					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_x += deltamovespeed;
 					}
+					else if(collisionObject == attackTarget) startAttack();
 					else setAction(Action.IDLE);
 				}
 				else if(position_x > path.getStep(nextStep).getX()){
 					setDirection(2);
-					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x-deltamovespeed, position_y) == null){
+					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x-deltamovespeed, position_y);
+					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_x -= deltamovespeed;
 					}
+					else if(collisionObject == attackTarget) startAttack();
 					else setAction(Action.IDLE);
 				}
 				else if(position_y < path.getStep(nextStep).getY()){
 					setDirection(3);
-					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y+deltamovespeed) == null){
+					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y+deltamovespeed);
+					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_y += deltamovespeed;
 					}
+					else if(collisionObject == attackTarget) startAttack();
 					else setAction(Action.IDLE);
 					
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
 					setDirection(1);
-					if(Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y-deltamovespeed) == null){
+					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y-deltamovespeed);
+					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_y -= deltamovespeed;
 					}
+					else if(collisionObject == attackTarget) startAttack();
 					else setAction(Action.IDLE);
 					
 				}
@@ -106,13 +117,28 @@ public class Character extends GameObject{
 		
 	}
 	
+	public void startAttack(){
+		//System.out.println("attacktimer: "+((float)(System.nanoTime()/1000000)-lastAttackTime));
+		if((float)(System.nanoTime()/1000000)-lastAttackTime > attackSpeed){
+			//ATTACK!!
+			setAction(Action.ATTACKING);
+		}
+	}
+	
+	public void attackMove(Character attackTarget){
+		
+		this.attackTarget = attackTarget;
+		moveTo(Math.round(Game.player.position_x), Math.round(Game.player.position_y), Math.round(attackTarget.position_x),Math.round(attackTarget.position_y), true);
+	}
+	
 	public void calculateScreenPos(){
 		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+pixelTranslation_x;
 		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)+pixelTranslation_y;
 		
 	}
 	
-	public void moveTo(int start_x, int start_y, int end_x, int end_y){
+	public void moveTo(int start_x, int start_y, int end_x, int end_y, boolean attacking){
+		if(!attacking) attackTarget = null;
 		path = Game.gameLevels[Game.currentLevel].getPath(start_x,start_y,end_x,end_y);
 		if(path!= null){
 			//if one player position variable does not change, skip the first move

@@ -76,6 +76,17 @@ public class GameLevel implements TileBasedMap {
 		if(arg1 < 0 || arg2 < 0 || arg1 > levelHeight-1 || arg2 > levelWidth-1)
 			return true;
 		
+		//if an enemy occupies the space, and the player is not attacking it, count the tile as blocked, in order to move around it.
+		for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
+			if(gameobj instanceof Enemy){
+				if((int)gameobj.position_x == arg1 && (int)gameobj.position_y == arg2){
+					if(Game.player.attackTarget != gameobj){
+						return true;
+					}
+				}
+			}
+		}
+		
 		return Game.terrainTypes[grid_terrainIDs[arg2][arg1]].blocksPath;
 	}
 

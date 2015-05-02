@@ -145,8 +145,9 @@ public class Game extends BasicGame
 			}
 			//sorts the objects by their height position on the screen, so that the objects in front are drawn last
 			Collections.sort(gameLevels[currentLevel].objectsInLevel);
+			GameObject tempHoveredObject = null;
 			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
-				GameObject tempHoveredObject = null;
+				
 				//draw the player
 				if(gameobj instanceof Player){
 					gameobj.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
@@ -163,8 +164,9 @@ public class Game extends BasicGame
 					gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
 				}
 				
-				currentHoveredObject = tempHoveredObject;
+				
 			}
+			currentHoveredObject = tempHoveredObject;
 			
 
 		}
@@ -228,8 +230,16 @@ public class Game extends BasicGame
 				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
 				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
 				//enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
-				
-				player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
+				if(currentHoveredObject != null){
+					if(currentHoveredObject instanceof Enemy){
+						System.out.println("calling attack move");
+						player.attackMove((Character)currentHoveredObject);
+					}
+					if(currentHoveredObject instanceof Item){
+						
+					}
+				}
+				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
 			}
 			
 			
