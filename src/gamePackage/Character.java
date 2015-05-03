@@ -21,8 +21,8 @@ public class Character extends GameObject{
 	private Action currentAction = Action.IDLE;
 	public Character attackTarget;
 	public Item pickupTarget;
-	float lastAttackTime;
-	float attackSpeed = 2000;
+	long lastAttackTime;
+	long attackSpeed = 2000;
 	
 	Path path;
 	int nextStep = 0;
@@ -118,9 +118,11 @@ public class Character extends GameObject{
 	}
 	
 	public void startAttack(){
-		//System.out.println("attacktimer: "+((float)(System.nanoTime()/1000000)-lastAttackTime));
-		if((float)(System.nanoTime()/1000000)-lastAttackTime > attackSpeed){
+		
+		if(System.currentTimeMillis()-lastAttackTime > attackSpeed){
+			System.out.println("attacktimer: "+System.currentTimeMillis());
 			//ATTACK!!
+			lastAttackTime = System.currentTimeMillis();
 			setAction(Action.ATTACKING);
 		}
 	}

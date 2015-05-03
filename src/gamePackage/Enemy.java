@@ -34,7 +34,6 @@ public class Enemy extends Character{
 		pixelHeight = 55;
 		pixelTranslation_x = 30;
 		pixelTranslation_y = -45;
-		lastAttackTime = (float)(System.nanoTime()/1000000);
 	}
 	
 	public void attack(){
