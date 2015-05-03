@@ -39,7 +39,6 @@ public class Player extends Character{
 			attribute_name = "PlayerName";
 			pixelTranslation_x = 32;
 			pixelTranslation_y = -48;
-			lastAttackTime = (float)(System.nanoTime()/1000000);
 	}
 	
 	public void moveAndPickUp(Item target){
