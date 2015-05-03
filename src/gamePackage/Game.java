@@ -69,19 +69,31 @@ public class Game extends BasicGame
 		
 		/*
 		// Testing generation of weapon:
-		 Weapon wep1 = Weapon.generateWeapon();
-		 System.out.println(wep1.attribute_attackdmg);
-		 System.out.println(wep1.attribute_attackspeed);
-		 System.out.println(wep1.attribute_description);
-		 System.out.println(wep1.attribute_durability_max);
-		 System.out.println(wep1.attribute_isRanged);
+		Weapon wep1 = Weapon.generateWeapon();
+		System.out.println(wep1.attribute_description);
+		System.out.println(wep1.attribute_attackdmg);
+		System.out.println(wep1.attribute_attackspeed);
+		System.out.println(wep1.attribute_durability_max);
 		
 		// Testing the generateArmor: 
-		Armor arm1 = Armor.generateArmor();
-		System.out.println(arm1.attribute_damagereduction);	
+		Armor arm1 = Armor.generateArmor();	
 		System.out.println(arm1.attribute_description);	
+		System.out.println(arm1.attribute_damage_reduction);
 		System.out.println(arm1.attribute_durability_max);	
-		*/
+		
+		// Testing the generateArmor: 
+		Jewelry jew1 = Jewelry.generateJewelry();
+		System.out.println(jew1.attribute_description);	
+		System.out.println(jew1.attribute_strength);	
+		System.out.println(jew1.attribute_dexterity);	
+		System.out.println(jew1.attribute_vitality);	
+		System.out.println(jew1.attribute_damage_reduction);	
+		
+		// Testing the generatePotion: 
+		// PROBLEM WITH POTION. attribute_amount = 0
+		Potion pot1 = Potion.generatePotion();
+		System.out.println(pot1.attribute_description);	
+		System.out.println(pot1.attribute_amount);	*/
 		
 		goToMainMenu(gc);
 		

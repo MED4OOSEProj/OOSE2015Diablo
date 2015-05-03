@@ -7,7 +7,7 @@ import org.newdawn.slick.SlickException;
 
 public class Armor extends Item {
 	
-	public int attribute_damagereduction;
+	public int attribute_damage_reduction;
 	public int attribute_durability_max;
 	public int attribute_durability_current;
 	public int attribute_location;
@@ -48,8 +48,9 @@ public class Armor extends Item {
 		Random rnd = new Random();
 		
 		// How much does the armor reduce incoming damage?
-		armor.attribute_damagereduction = rnd.nextInt(5)+2;
-		
+		armor.attribute_damage_reduction = rnd.nextInt(5)+2;
+		// Where should it be placed on the body?
+		armor.attribute_location = 1;
 		// How many hits can the armor take before it breaks?
 		armor.attribute_durability_max = rnd.nextInt(10)*2;
 		armor.attribute_durability_current = armor.attribute_durability_max;
@@ -69,10 +70,10 @@ public class Armor extends Item {
 		armor.sprite_thumbnail = armorIcons[temp];
 			
 		String c;
-		if ( armor.attribute_damagereduction >= 6 && armor.attribute_durability_max >= 18){
+		if ( armor.attribute_damage_reduction >= 6 && armor.attribute_durability_max >= 18){
 			//  Is the armor the most powerful possible? Add " of Godskin" 
 			c = suffix[9];
-		} else if ( armor.attribute_damagereduction >= 4 ){
+		} else if ( armor.attribute_damage_reduction >= 4 ){
 			//nextInt(4) because of four damage reduction related names on 0,1,2,3
 			c = suffix[rnd.nextInt(4)];
 		} else if ( armor.attribute_durability_max >= 10){
