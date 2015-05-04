@@ -49,7 +49,7 @@ public class Enemy extends Character{
 		pixelTranslation_y = -45;
 		screenPosTranslationWhenAttacking_x = 0;
 		roamSize = 4;
-		
+		attribute_damage = 3;
 		roamIdleTimeBase = 3000;
 		roamIdleTime = roamIdleTimeBase;
 		createRoamArea();

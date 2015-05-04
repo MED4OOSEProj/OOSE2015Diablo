@@ -36,7 +36,11 @@ public class Game extends BasicGame
 	int mouse_position_x;
 	int mouse_position_y;
 	GameObject currentHoveredObject;
-
+	Image menu2_overlay_left;
+	Image menu2_overlay_right;
+	Image menu2_overlay_extender;
+	Image menu2_overlay_life;
+	float yscale = 0.1f;
 	
 	public Game(String gamename)
 	{
@@ -56,6 +60,11 @@ public class Game extends BasicGame
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
 		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
+		
+		menu2_overlay_left = new Image("Textures/menu2_overlay_left.png");
+		menu2_overlay_right = new Image("Textures/menu2_overlay_right.png");
+		menu2_overlay_extender = new Image("Textures/menu2_overlay_extender.png");
+		menu2_overlay_life = new Image("Textures/menu2_overlay_life.png");
 		
 		
 		//Creates game levels
@@ -189,7 +198,18 @@ public class Game extends BasicGame
 			}
 			currentHoveredObject = tempHoveredObject;
 			
-
+			//interface
+			yscale = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
+			menu2_overlay_life.draw(93,windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight()*yscale,
+									93+menu2_overlay_life.getWidth(),windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight(),
+									0,menu2_overlay_life.getHeight()*yscale,
+									menu2_overlay_life.getWidth(),menu2_overlay_life.getHeight());
+			menu2_overlay_left.draw(0,windowHeight-menu2_overlay_left.getHeight());
+			for(int x = 0; x <= ((windowWidth-menu2_overlay_right.getWidth()-menu2_overlay_left.getWidth())/menu2_overlay_extender.getWidth()); x++){
+				menu2_overlay_extender.draw(menu2_overlay_left.getWidth()+x*menu2_overlay_extender.getWidth(),windowHeight-menu2_overlay_left.getHeight());
+			}
+			menu2_overlay_right.draw(windowWidth-menu2_overlay_right.getWidth(),windowHeight-menu2_overlay_right.getHeight());
+			
 		}
 	}
 	

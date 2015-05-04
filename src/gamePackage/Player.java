@@ -6,8 +6,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 public class Player extends Character{
-	public Item[][] inventory;
-	public Item[] equipment;
+	public Item[][] inventory = new Item[6][4];
+	public Item[] equipment = new Item[4];
 	public int gold;
 	public int attribute_level;
 	public int attribute_experience;
@@ -15,7 +15,6 @@ public class Player extends Character{
 	public int attribute_dexterity;
 	public int attribute_vitality;
 	public int attributepoints;
-	public GameLevel level;
 
 	public Player() throws SlickException{
 		//Sets the player attributes
@@ -38,6 +37,19 @@ public class Player extends Character{
 			pixelTranslation_x = 32;
 			pixelTranslation_y = -48;
 			screenPosTranslationWhenAttacking_x = -16;
+			attribute_strength = 10;
+			attribute_dexterity = 10;
+			attribute_vitality = 10;
+			
+			equipment[EquipmentType.WEAPON] = new Weapon();
+			calculateStats();
+			attribute_health_current = attribute_health_max;
+	}
+	
+	public void calculateStats(){
+		attribute_health_max = attribute_vitality*5;
+		attribute_damage = ((Weapon)equipment[EquipmentType.WEAPON]).attribute_attackdmg +(int)(attribute_strength/4);
+		attribute_attackSpeed = ((Weapon)equipment[EquipmentType.WEAPON]).attribute_attackspeed;
 	}
 	
 	public void moveAndPickUp(Item target){

@@ -1,7 +1,6 @@
 package gamePackage;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 
@@ -15,15 +14,17 @@ public class Character extends GameObject implements Mover{
 	public Sound sound_attacking;
 	public Sound sound_dying;
 	public boolean dead;
-	public int attribute_health_max;
+	public int attribute_health_max =5;
 	public int attribute_health_current;
+	public int attribute_damage;
+	public int attribute_attackSpeed = 1000;
 	public String attribute_name;
 	private int direction = 1;
 	public Action currentAction = Action.IDLE;
 	public Character attackTarget;
 	public Item pickupTarget;
 	long lastAttackTime;
-	long attackSpeed = 1000;
+	
 	boolean attackRequested = false;
 	boolean damageDealt = false;
 	public int screenPosTranslationWhenAttacking_x;
@@ -112,15 +113,16 @@ public class Character extends GameObject implements Mover{
 				path = null;
 			}
 		}
-		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime <= attackSpeed){
+		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime <= attribute_attackSpeed){
 			//attack NOT finished
 			if(anim_attacking[direction].getFrame() >= 8 && !damageDealt){
 				//attack animation has reached frame 8 (0 indexed), which is when the character's weapon is furthest away
-				System.out.println("DAMAGE");
+				System.out.println(attribute_name + " attacking " + attackTarget.attribute_name + " for "+ attribute_damage +" dmg");
+				attackTarget.attribute_health_current = attackTarget.attribute_health_current - attribute_damage;
 				damageDealt = true;
 			}
 		}
-		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime > attackSpeed){
+		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime > attribute_attackSpeed){
 			//attack finished
 			setAction(Action.IDLE);
 			path = null;
@@ -142,10 +144,10 @@ public class Character extends GameObject implements Mover{
 	
 	public void startAttack(){
 		
-		if(System.currentTimeMillis()-lastAttackTime > attackSpeed && attackRequested){
+		if(System.currentTimeMillis()-lastAttackTime > attribute_attackSpeed && attackRequested){
 			//System.out.println("attacktimer: "+System.currentTimeMillis());
 			//ATTACK!!
-			int frameduration = (int)(attackSpeed/anim_attacking[direction].getFrameCount());
+			int frameduration = (int)(attribute_attackSpeed/anim_attacking[direction].getFrameCount());
 			//System.out.println("frameduration: "+frameduration);
 			
 			for(int frame = 0; frame < anim_attacking[direction].getFrameCount(); frame++)
