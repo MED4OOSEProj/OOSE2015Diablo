@@ -195,7 +195,7 @@ public class Game extends BasicGame
 	
 	public boolean isObjectHovered(GameObject obj){
 		if(Math.abs(obj.screenPosition_x - 5 + obj.getCurrentAnimation().getCurrentFrame().getWidth()/2-mouse_position_x) < obj.pixelWidth &&
-		   Math.abs(obj.screenPosition_y + obj.frameHeight/2-mouse_position_y) < obj.pixelHeight){
+		   Math.abs(obj.screenPosition_y + obj.getCurrentAnimation().getCurrentFrame().getHeight()/2-mouse_position_y) < obj.pixelHeight){
 			return true;
 		}
 		return false;

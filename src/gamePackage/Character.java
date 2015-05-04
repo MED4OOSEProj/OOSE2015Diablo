@@ -27,7 +27,6 @@ public class Character extends GameObject implements Mover{
 	boolean attackRequested = false;
 	boolean damageDealt = false;
 	public int screenPosTranslationWhenAttacking_x;
-	
 	Path path;
 	int nextStep = 0;
 	int nextStep_x = -1;
@@ -48,6 +47,7 @@ public class Character extends GameObject implements Mover{
 		if(action != currentAction){
 			currentAction = action;
 		}
+		
 	}
 	
 	public void setDirection(int direction){
@@ -61,6 +61,7 @@ public class Character extends GameObject implements Mover{
 			//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
 			setAction(Action.IDLE);
 			if(path.getLength() > nextStep){
+				
 				nextStep_x = path.getStep(nextStep).getX();
 				nextStep_y = path.getStep(nextStep).getY();
 				if(Math.abs((position_x - path.getStep(nextStep).getX())) < deltamovespeed*2 && Math.abs((position_y - path.getStep(nextStep).getY())) < deltamovespeed*2){
@@ -125,7 +126,15 @@ public class Character extends GameObject implements Mover{
 			path = null;
 			//System.out.println("stopping attack after "+(System.currentTimeMillis()-lastAttackTime + " ms"));
 		}
-		else setAction(Action.IDLE);
+		else if(this instanceof Enemy && 
+				Math.abs(Game.player.position_x - position_x) < 1 &&
+				Math.abs(Game.player.position_y - position_y) < 1){
+			//fixes an enemy blocking another enemy when it's attacking, allowing it to attack when the player is near
+			startAttack();
+		}
+		else {
+			setAction(Action.IDLE);
+		}
 		
 		
 		
@@ -181,8 +190,8 @@ public class Character extends GameObject implements Mover{
 			*/
 			
 		}
-		else if(!Game.gameLevels[Game.currentLevel].blocked(null, end_x, end_y)){
-			//if the player clicks the same tile as he is supposedly standing on, create a path of 1 length to it
+		else if(!Game.gameLevels[Game.currentLevel].blockedChar(this, end_x, end_y)){
+			//if the character is moving to the same tile as he is supposedly standing on, create a path of 1 length to it
 				path = new Path();
 				path.appendStep(start_x, start_y);
 				nextStep = 0;

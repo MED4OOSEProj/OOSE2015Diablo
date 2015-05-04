@@ -15,6 +15,7 @@ public class GameLevel implements TileBasedMap {
 	public Sound sound_track;
 	int levelWidth = 10;
 	int levelHeight = 10;
+	Mover moverChar;
 	
 	// Stops the function from making infinite paths. (not incredibly important for such a small game)
     private static final int maxPathLength = 100;
@@ -60,8 +61,8 @@ public class GameLevel implements TileBasedMap {
 			//Exclude the colliding character
 			if(colliderObject != character){
 				//Check if x and y is within another character's collision size
-				if(Math.abs(colliderObject.position_x - x) < colliderObject.collision_size &&
-				   Math.abs(colliderObject.position_y - y) < colliderObject.collision_size){
+				if(Math.abs(colliderObject.position_x - x) < colliderObject.collision_size + character.collision_size &&
+				   Math.abs(colliderObject.position_y - y) < colliderObject.collision_size + character.collision_size){
 					return colliderObject;
 				}
 			}
@@ -76,7 +77,7 @@ public class GameLevel implements TileBasedMap {
 		if(arg0 != null)
 			mover = arg0.getMover();
 		else
-			mover = Game.player;
+			mover = moverChar;
 		// TODO Auto-generated method stub
 		//System.out.println("x:"+arg2+"y:"+arg1+" terraintype: "+grid_terrainIDs[arg2][arg1]);
 		if(arg1 < 0 || arg2 < 0 || arg1 > levelHeight-1 || arg2 > levelWidth-1)
@@ -94,6 +95,11 @@ public class GameLevel implements TileBasedMap {
 		}
 		
 		return Game.terrainTypes[grid_terrainIDs[arg2][arg1]].blocksPath;
+	}
+	
+	public boolean blockedChar(Character character, int end_x, int end_y) {
+		moverChar = character;
+		return blocked(null, end_x, end_y);
 	}
 
 	@Override
@@ -119,4 +125,6 @@ public class GameLevel implements TileBasedMap {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

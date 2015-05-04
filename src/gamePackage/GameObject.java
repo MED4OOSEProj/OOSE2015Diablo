@@ -8,13 +8,11 @@ public class GameObject implements Comparable<GameObject>{
 	public float position_y;
 	public float screenPosition_x;
 	public float screenPosition_y;
-	//public int frameWidth;
-	public int frameHeight;
 	public int pixelWidth;
 	public int pixelHeight;
 	public int pixelTranslation_x;
 	public int pixelTranslation_y;
-	float collision_size = 0.5f;
+	float collision_size = 0.30f;
 	
 	public GameObject(){}
 	
