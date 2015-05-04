@@ -93,7 +93,7 @@ public class Game extends BasicGame
 		// PROBLEM WITH POTION. attribute_amount = 0
 		Potion pot1 = Potion.generatePotion();
 		System.out.println(pot1.attribute_description);	
-		System.out.println(pot1.attribute_amount);	*/
+		System.out.println(pot1.attribute_amount);foanfkweaf 	*/
 		
 		goToMainMenu(gc);
 		
