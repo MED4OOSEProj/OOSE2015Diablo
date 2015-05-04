@@ -2,9 +2,10 @@ package gamePackage;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 
-public class Character extends GameObject{
+public class Character extends GameObject implements Mover{
 	// variables
 	public Animation[] anim_attacking = new Animation[4];
 	public Animation anim_dying;
@@ -18,11 +19,14 @@ public class Character extends GameObject{
 	public int attribute_health_current;
 	public String attribute_name;
 	private int direction = 1;
-	private Action currentAction = Action.IDLE;
+	public Action currentAction = Action.IDLE;
 	public Character attackTarget;
 	public Item pickupTarget;
 	long lastAttackTime;
-	long attackSpeed = 2000;
+	long attackSpeed = 1000;
+	boolean attackRequested = false;
+	boolean damageDealt = false;
+	public int screenPosTranslationWhenAttacking_x;
 	
 	Path path;
 	int nextStep = 0;
@@ -41,8 +45,9 @@ public class Character extends GameObject{
 	}
 	
 	public void setAction(Action action){
-		if(action != currentAction)
-		currentAction = action;
+		if(action != currentAction){
+			currentAction = action;
+		}
 	}
 	
 	public void setDirection(int direction){
@@ -51,10 +56,10 @@ public class Character extends GameObject{
 	}
 	
 	public void move(int i){
-		if(path != null){
+		if(path != null && currentAction != Action.ATTACKING){
 			float deltamovespeed = movespeed*i;
 			//System.out.println(Math.abs((playerpos_x - path.getStep(nextStep).getX())) < 0.05f && Math.abs((playerpos_y - path.getStep(nextStep).getY())) < 0.05f);
-
+			setAction(Action.IDLE);
 			if(path.getLength() > nextStep){
 				nextStep_x = path.getStep(nextStep).getX();
 				nextStep_y = path.getStep(nextStep).getY();
@@ -72,7 +77,6 @@ public class Character extends GameObject{
 						position_x += deltamovespeed;
 					}
 					else if(collisionObject == attackTarget) startAttack();
-					else setAction(Action.IDLE);
 				}
 				else if(position_x > path.getStep(nextStep).getX()){
 					setDirection(2);
@@ -82,7 +86,6 @@ public class Character extends GameObject{
 						position_x -= deltamovespeed;
 					}
 					else if(collisionObject == attackTarget) startAttack();
-					else setAction(Action.IDLE);
 				}
 				else if(position_y < path.getStep(nextStep).getY()){
 					setDirection(3);
@@ -92,7 +95,6 @@ public class Character extends GameObject{
 						position_y += deltamovespeed;
 					}
 					else if(collisionObject == attackTarget) startAttack();
-					else setAction(Action.IDLE);
 					
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
@@ -103,56 +105,80 @@ public class Character extends GameObject{
 						position_y -= deltamovespeed;
 					}
 					else if(collisionObject == attackTarget) startAttack();
-					else setAction(Action.IDLE);
-					
 				}
-				
 			}
 			else {
-				setAction(Action.IDLE);
 				path = null;
 			}
 		}
+		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime <= attackSpeed){
+			//attack NOT finished
+			if(anim_attacking[direction].getFrame() >= 8 && !damageDealt){
+				//attack animation has reached frame 8 (0 indexed), which is when the character's weapon is furthest away
+				System.out.println("DAMAGE");
+				damageDealt = true;
+			}
+		}
+		else if(currentAction == Action.ATTACKING && System.currentTimeMillis()-lastAttackTime > attackSpeed){
+			//attack finished
+			setAction(Action.IDLE);
+			path = null;
+			//System.out.println("stopping attack after "+(System.currentTimeMillis()-lastAttackTime + " ms"));
+		}
 		else setAction(Action.IDLE);
+		
+		
 		
 	}
 	
 	public void startAttack(){
 		
-		if(System.currentTimeMillis()-lastAttackTime > attackSpeed){
-			System.out.println("attacktimer: "+System.currentTimeMillis());
+		if(System.currentTimeMillis()-lastAttackTime > attackSpeed && attackRequested){
+			//System.out.println("attacktimer: "+System.currentTimeMillis());
 			//ATTACK!!
+			int frameduration = (int)(attackSpeed/anim_attacking[direction].getFrameCount());
+			//System.out.println("frameduration: "+frameduration);
+			
+			for(int frame = 0; frame < anim_attacking[direction].getFrameCount(); frame++)
+				anim_attacking[direction].setDuration(frame, frameduration*2);
+			attackRequested = false;
+			damageDealt = false;
 			lastAttackTime = System.currentTimeMillis();
+			anim_attacking[direction].restart();
 			setAction(Action.ATTACKING);
 		}
+
 	}
 	
 	public void attackMove(Character attackTarget){
-		
+		attackRequested = true;
 		this.attackTarget = attackTarget;
-		moveTo(Math.round(Game.player.position_x), Math.round(Game.player.position_y), Math.round(attackTarget.position_x),Math.round(attackTarget.position_y), true);
+		moveTo(Math.round(position_x), Math.round(position_y), Math.round(attackTarget.position_x),Math.round(attackTarget.position_y), true);
 	}
 	
 	public void calculateScreenPos(){
 		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+pixelTranslation_x;
+		//fixing attack frames being 128 pixels wide rather than 96 pixels.
+		if(currentAction == Action.ATTACKING) screenPosition_x += screenPosTranslationWhenAttacking_x;
 		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)+pixelTranslation_y;
 		
 	}
 	
 	public void moveTo(int start_x, int start_y, int end_x, int end_y, boolean attacking){
 		if(!attacking) attackTarget = null;
-		path = Game.gameLevels[Game.currentLevel].getPath(start_x,start_y,end_x,end_y);
+		path = Game.gameLevels[Game.currentLevel].getPath(this, start_x,start_y,end_x,end_y);
 		if(path!= null){
 			//if one player position variable does not change, skip the first move
 			if(position_y == path.getStep(1).getY() || position_x == path.getStep(1).getX())
 				nextStep = 1;
 			else nextStep = 0;
-			
+			/*
 			System.out.println("Found path of length: " + path.getLength() + ".");
 	
 			for(int i = 0; i < path.getLength(); i++) {
 				System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
 			}
+			*/
 			
 		}
 		else if(!Game.gameLevels[Game.currentLevel].blocked(null, end_x, end_y)){

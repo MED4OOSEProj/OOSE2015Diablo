@@ -1,5 +1,7 @@
 package gamePackage;
 
+import gamePackage.Character.Action;
+
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +33,6 @@ public class Game extends BasicGame
 	static int windowWidth;
 	static int windowHeight;
 	static Player player;
-	Enemy enemy1;
 	int mouse_position_x;
 	int mouse_position_y;
 	GameObject currentHoveredObject;
@@ -50,7 +51,6 @@ public class Game extends BasicGame
 		//gc.setTargetFrameRate(300);
 		
 		player = new Player();
-		enemy1 = new Enemy(3,1);
 		
 		
 		//Creates different types of terrains
@@ -62,7 +62,8 @@ public class Game extends BasicGame
 		gameLevels[0] = new GameLevel();
 		
 		gameLevels[0].objectsInLevel.add(player);
-		gameLevels[0].objectsInLevel.add(enemy1);
+		gameLevels[0].objectsInLevel.add(new Enemy(3,1));
+		gameLevels[0].objectsInLevel.add(new Enemy(2,1));
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
@@ -93,7 +94,7 @@ public class Game extends BasicGame
 		// PROBLEM WITH POTION. attribute_amount = 0
 		Potion pot1 = Potion.generatePotion();
 		System.out.println(pot1.attribute_description);	
-		System.out.println(pot1.attribute_amount);foanfkweaf 	*/
+		System.out.println(pot1.attribute_amount);*/
 		
 		goToMainMenu(gc);
 		
@@ -103,17 +104,21 @@ public class Game extends BasicGame
 	public void update(GameContainer gc, int i) throws SlickException {
 		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
-		player.getCurrentAnimation().update(i);
-		enemy1.getCurrentAnimation().update(i);
 		
 		//System.out.println("delta: "+i);
 		
 		if(menuId == 2){
 			//movement
-			player.move(i);
-			player.calculateScreenPos();
-			enemy1.move(i);
-			enemy1.calculateScreenPos();
+			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
+				if(gameobj instanceof Character){
+					((Character) gameobj).move(i);
+					((Character) gameobj).calculateScreenPos();
+					gameobj.getCurrentAnimation().update(i);
+				}
+				if(gameobj instanceof Enemy){
+					((Enemy) gameobj).roam();
+				}
+			}
 		}
 		
 	}
@@ -162,7 +167,11 @@ public class Game extends BasicGame
 				
 				//draw the player
 				if(gameobj instanceof Player){
-					gameobj.getCurrentAnimation().draw(windowWidth/2-45, windowHeight/2-86);
+					int translate_x = 0;
+					//fixing attack frames being 128 pixels wide rather than 96 pixels.
+					if(((Player) gameobj).currentAction == Action.ATTACKING)
+						translate_x = ((Player) gameobj).screenPosTranslationWhenAttacking_x;
+					gameobj.getCurrentAnimation().draw(windowWidth/2-45 + translate_x, windowHeight/2-86);
 				}
 				//draw enemies
 				if(gameobj instanceof Enemy){
@@ -185,7 +194,7 @@ public class Game extends BasicGame
 	}
 	
 	public boolean isObjectHovered(GameObject obj){
-		if(Math.abs(obj.screenPosition_x - 5 + obj.frameWidth/2-mouse_position_x) < obj.pixelWidth &&
+		if(Math.abs(obj.screenPosition_x - 5 + obj.getCurrentAnimation().getCurrentFrame().getWidth()/2-mouse_position_x) < obj.pixelWidth &&
 		   Math.abs(obj.screenPosition_y + obj.frameHeight/2-mouse_position_y) < obj.pixelHeight){
 			return true;
 		}

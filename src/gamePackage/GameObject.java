@@ -8,7 +8,7 @@ public class GameObject implements Comparable<GameObject>{
 	public float position_y;
 	public float screenPosition_x;
 	public float screenPosition_y;
-	public int frameWidth;
+	//public int frameWidth;
 	public int frameHeight;
 	public int pixelWidth;
 	public int pixelHeight;

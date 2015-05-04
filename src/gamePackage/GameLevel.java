@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
@@ -30,10 +31,10 @@ public class GameLevel implements TileBasedMap {
 		createRandomMap();
 	}
 
-	public Path getPath(int startX, int startY, int goalX, int goalY){
+	public Path getPath(Mover mover, int startX, int startY, int goalX, int goalY){
 		
 		AStarPathFinder pathFinder = new AStarPathFinder(this, maxPathLength, false);
-        Path path = pathFinder.findPath(null, startX, startY, goalX, goalY);
+        Path path = pathFinder.findPath(mover, startX, startY, goalX, goalY);
         return path;
 	}
 
@@ -71,6 +72,11 @@ public class GameLevel implements TileBasedMap {
 	
 	@Override
 	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
+		Mover mover;
+		if(arg0 != null)
+			mover = arg0.getMover();
+		else
+			mover = Game.player;
 		// TODO Auto-generated method stub
 		//System.out.println("x:"+arg2+"y:"+arg1+" terraintype: "+grid_terrainIDs[arg2][arg1]);
 		if(arg1 < 0 || arg2 < 0 || arg1 > levelHeight-1 || arg2 > levelWidth-1)
@@ -78,9 +84,9 @@ public class GameLevel implements TileBasedMap {
 		
 		//if an enemy occupies the space, and the player is not attacking it, count the tile as blocked, in order to move around it.
 		for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
-			if(gameobj instanceof Enemy){
-				if((int)gameobj.position_x == arg1 && (int)gameobj.position_y == arg2){
-					if(Game.player.attackTarget != gameobj){
+			if(gameobj instanceof Character && gameobj != mover){
+				if(Math.round(gameobj.position_x) == arg1 && Math.round(gameobj.position_y) == arg2){
+					if(((Character)(mover)).attackTarget != gameobj){
 						return true;
 					}
 				}
