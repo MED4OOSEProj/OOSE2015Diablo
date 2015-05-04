@@ -95,7 +95,7 @@ public class Game extends BasicGame
 		Potion pot1 = Potion.generatePotion();
 		System.out.println(pot1.attribute_description);	
 		System.out.println(pot1.attribute_amount);*/
-		
+		MapBlock.generateMapBlock(12, 12);
 		goToMainMenu(gc);
 		
 	}
