@@ -88,8 +88,9 @@ public class Game extends BasicGame
 		gameLevels[0] = new GameLevel();
 		
 		gameLevels[0].objectsInLevel.add(player);
-		gameLevels[0].objectsInLevel.add(new Enemy(3,1));
-		gameLevels[0].objectsInLevel.add(new Enemy(2,1));
+		// gameLevels[0].objectsInLevel.add(new Enemy(3,1));
+		// gameLevels[0].objectsInLevel.add(new Enemy(2,1));
+		gameLevels[0].createEnemies(); 
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");

@@ -2,6 +2,7 @@ package gamePackage;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Mover;
@@ -27,6 +28,7 @@ public class GameLevel implements TileBasedMap {
 
     private static final int goalX = 1;
     private static final int goalY = 6;
+     *  
 	*/
     
 	public GameLevel(){
@@ -42,10 +44,15 @@ public class GameLevel implements TileBasedMap {
 
 	
 	public void createRandomMap(){
-		//temporary map generation
+		//random map generation
 		MapBlock map = new MapBlock(); 
 		levelWidth = 25;
 		levelHeight = 25;
+		//Fill the map with stone. 
+		for(int i = 0; i < levelWidth; i++){
+			for(int j = 0; j < levelHeight; j++)
+				gridTest[i][j] = 1;
+		}
 		map.generateMapBlock(13, 13,1);
 		grid_terrainIDs = gridTest;
 				/*new int[][]{
@@ -60,6 +67,18 @@ public class GameLevel implements TileBasedMap {
 		        {1,0,0,0,0,0,0,0,0,0},
 		        {1,1,1,1,1,1,1,1,1,0}
 		    };*/
+	}
+	public void createEnemies() throws SlickException{
+		int temp = 0;
+		for(int i = 0; i < levelWidth; i++)
+			for(int j = 0; j < levelHeight; j++)
+				if (checklist[j][i] == 1){
+					temp++;
+					if (temp%10 == 0){
+						// System.out.println(j + " " + i);
+						objectsInLevel.add(new Enemy(j,i));
+					}
+				}	
 	}
 	
 	public GameObject collidingObject(Character character, float x, float y){
