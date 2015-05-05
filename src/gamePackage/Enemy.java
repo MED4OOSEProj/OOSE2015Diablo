@@ -42,6 +42,10 @@ public class Enemy extends Character{
 		anim_attacking[1] = new Animation(new SpriteSheet(new Image("Textures/goatman_attacking_1.png"),128,112),150);
 		anim_attacking[2] = new Animation(new SpriteSheet(new Image("Textures/goatman_attacking_2.png"),128,112),150);
 		anim_attacking[3] = new Animation(new SpriteSheet(new Image("Textures/goatman_attacking_3.png"),128,112),150);
+		anim_dying[0] = new Animation(new SpriteSheet(new Image("Textures/goatman_dying_0.png"),128,112),200);
+		anim_dying[1] = new Animation(new SpriteSheet(new Image("Textures/goatman_dying_0.png"),128,112),200);
+		anim_dying[2] = new Animation(new SpriteSheet(new Image("Textures/goatman_dying_0.png"),128,112),200);
+		anim_dying[3] = new Animation(new SpriteSheet(new Image("Textures/goatman_dying_0.png"),128,112),200);
 		attribute_name = "EnemyName";
 		pixelWidth = 30;
 		pixelHeight = 55;
@@ -94,9 +98,5 @@ public class Enemy extends Character{
 				}
 			}
 		}
-	}
-	
-	public void kill(){
-		
 	}
 }

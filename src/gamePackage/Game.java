@@ -40,7 +40,13 @@ public class Game extends BasicGame
 	Image menu2_overlay_right;
 	Image menu2_overlay_extender;
 	Image menu2_overlay_life;
+	Image image_inventory;
+	Image image_charsheet;
+	Image image_mainmenu;
 	float yscale = 0.1f;
+	boolean menu_characterSheet = false;
+	boolean menu_inventory =false;
+	
 	
 	public Game(String gamename)
 	{
@@ -54,6 +60,7 @@ public class Game extends BasicGame
 		windowHeight = gc.getHeight();
 		//gc.setTargetFrameRate(300);
 		
+		gc.setMouseCursor(new Image("Textures/cursor.png"), 0, 0);
 		player = new Player();
 		
 		
@@ -65,6 +72,9 @@ public class Game extends BasicGame
 		menu2_overlay_right = new Image("Textures/menu2_overlay_right.png");
 		menu2_overlay_extender = new Image("Textures/menu2_overlay_extender.png");
 		menu2_overlay_life = new Image("Textures/menu2_overlay_life.png");
+		image_inventory = new Image("Textures/inventory.png");
+		image_charsheet = new Image("Textures/charsheet.png");
+		image_mainmenu = new Image("Textures/mainmenu.jpg");
 		
 		
 		//Creates game levels
@@ -104,8 +114,7 @@ public class Game extends BasicGame
 		Potion pot1 = Potion.generatePotion();
 		System.out.println(pot1.attribute_description);	
 		System.out.println(pot1.attribute_amount);*/
-		MapBlock.generateMapBlock(12, 12);
-		goToMainMenu(gc);
+		goToMainMenu();
 		
 	}
 
@@ -117,16 +126,29 @@ public class Game extends BasicGame
 		//System.out.println("delta: "+i);
 		
 		if(menuId == 2){
-			//movement
+			//update objects
 			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
 				if(gameobj instanceof Character){
-					((Character) gameobj).move(i);
+					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
+						if(gameobj instanceof Enemy){
+							((Enemy) gameobj).roam();
+						}
+						((Character) gameobj).move(i);
+						gameobj.getCurrentAnimation().update(i);
+					}
+					else if(((Character)gameobj).dying){
+						System.out.println("someone dying");
+						gameobj.getCurrentAnimation().update(i);
+						gameobj.getCurrentAnimation().setLooping(false);
+						if(gameobj.getCurrentAnimation().getFrame() == gameobj.getCurrentAnimation().getFrameCount()-1){
+							System.out.println("lastframe");
+							((Character) gameobj).dying = false;
+							((Character) gameobj).dead = true;
+						}
+					}
 					((Character) gameobj).calculateScreenPos();
-					gameobj.getCurrentAnimation().update(i);
 				}
-				if(gameobj instanceof Enemy){
-					((Enemy) gameobj).roam();
-				}
+				
 			}
 		}
 		
@@ -144,21 +166,16 @@ public class Game extends BasicGame
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
 		if (menuId == 0){
+			image_mainmenu.drawCentered(windowWidth/2, windowHeight/2);
+			/*  buttontesting
 			for(Button button : buttons){
 				g.setColor(org.newdawn.slick.Color.darkGray);
 				g.fillRect(button.posX, button.posY, button.width, button.height);
 				g.setColor(org.newdawn.slick.Color.black);
 				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
 			}
+			*/
 		} 
-		else if (menuId == 1){
-			for(Button button : buttons){
-				g.setColor(org.newdawn.slick.Color.darkGray);
-				g.fillRect(button.posX, button.posY, button.width, button.height);
-				g.setColor(org.newdawn.slick.Color.black);
-				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
-			}
-		}
 		else if (menuId == 2){
 			
 			
@@ -178,7 +195,7 @@ public class Game extends BasicGame
 				if(gameobj instanceof Player){
 					int translate_x = 0;
 					//fixing attack frames being 128 pixels wide rather than 96 pixels.
-					if(((Player) gameobj).currentAction == Action.ATTACKING)
+					if(((Player) gameobj).currentAction == Action.ATTACKING || ((Player) gameobj).currentAction == Action.DYING)
 						translate_x = ((Player) gameobj).screenPosTranslationWhenAttacking_x;
 					gameobj.getCurrentAnimation().draw(windowWidth/2-45 + translate_x, windowHeight/2-86);
 				}
@@ -199,6 +216,13 @@ public class Game extends BasicGame
 			currentHoveredObject = tempHoveredObject;
 			
 			//interface
+			if(menu_inventory){
+				image_inventory.draw(windowWidth-image_inventory.getWidth(),windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11);
+			}
+			if(menu_characterSheet){
+				image_charsheet.draw(0,windowHeight-menu2_overlay_right.getHeight()-image_charsheet.getHeight()+11);
+			}
+			
 			yscale = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
 			menu2_overlay_life.draw(93,windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight()*yscale,
 									93+menu2_overlay_life.getWidth(),windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight(),
@@ -209,6 +233,8 @@ public class Game extends BasicGame
 				menu2_overlay_extender.draw(menu2_overlay_left.getWidth()+x*menu2_overlay_extender.getWidth(),windowHeight-menu2_overlay_left.getHeight());
 			}
 			menu2_overlay_right.draw(windowWidth-menu2_overlay_right.getWidth(),windowHeight-menu2_overlay_right.getHeight());
+			
+			
 			
 		}
 	}
@@ -221,18 +247,20 @@ public class Game extends BasicGame
 		return false;
 	}
 	
-	public void goToMainMenu(GameContainer gc){
+	public void goToMainMenu(){
+		menuId = 0;
 		buttons = new ArrayList<Button>();
-		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Start Game", "StartButton"));
-		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/2, 100, 20, "Load Game", "LoadButton"));
-		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3*2, 100, 20, "Quit Game", "QuitButton"));
+		buttons.add(new Button(windowWidth/2-image_mainmenu.getWidth()/2+165, windowHeight/2-image_mainmenu.getHeight()/2+254, 310, 45, "", "StartButton"));
+		buttons.add(new Button(windowWidth/2-image_mainmenu.getWidth()/2+165, windowHeight/2-image_mainmenu.getHeight()/2+310, 310, 45, "", "QuitButton"));
 	}
 	
-	public void goToLoadMenu(GameContainer gc){
+	public void goToGame(){
+		menuId = 2;
 		buttons = new ArrayList<Button>();
-		buttons.add(new Button(gc.getWidth()/3-50, gc.getHeight()/3, 100, 20, "Slot 1", "LoadSlot1"));
-		buttons.add(new Button(gc.getWidth()/2-50, gc.getHeight()/3, 100, 20, "Slot 2", "LoadSlot2"));
-		buttons.add(new Button(gc.getWidth()/3*2-50, gc.getHeight()/3, 100, 20, "Slot 3", "LoadSlot3"));
+		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+22, 74, 20, "", "charsheet"));
+		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory"));
+		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map"));
+		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu"));
 	}
 	
 	
@@ -242,7 +270,7 @@ public class Game extends BasicGame
 		try
 		{
 			AppGameContainer appgc;
-			appgc = new AppGameContainer(new Game("Simple Slick Game"));
+			appgc = new AppGameContainer(new Game("Diablo"));
 			appgc.setDisplayMode(1024, 768, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
@@ -264,7 +292,17 @@ public class Game extends BasicGame
 		//left click
 		if(button == 0){
 			//click a tile
-			if(menuId == 2){
+			if(menuId == 2 && menu_inventory && x > windowWidth-image_inventory.getWidth() && y >windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11){
+				//click inside inventory
+			}
+			else if (menuId == 2 && menu_characterSheet && x < image_charsheet.getWidth() && y >windowHeight - menu2_overlay_left.getHeight()-image_charsheet.getHeight()+11){
+				//click inside charsheet
+			}
+			else if (menuId == 2 && y >windowHeight - menu2_overlay_left.getHeight()+11){
+				//click inside lower interface
+				
+			}
+			else if(menuId ==2){
 				float shifted_x = x-windowWidth/2+80;
 				float shifted_y = y-windowHeight/2+40;
 				System.out.println("player x:"+player.position_x+" player y:"+player.position_y);
@@ -281,14 +319,19 @@ public class Game extends BasicGame
 					}
 				}
 				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
+			
+				
+				
 			}
 			
-			
 			for(Button guibutton : buttons){
-				if(menuId == 0 && guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
+				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
 					buttonClicked(guibutton);
 				}
 			}
+			
+			
+			
 			
 			
 		}
@@ -297,12 +340,61 @@ public class Game extends BasicGame
 	public void buttonClicked(Button clickedbutton){
 		System.out.println(clickedbutton.text + " clicked!");
 		switch(clickedbutton.id){
-		case "StartButton": menuId = 2;
+		case "StartButton": 
+			goToGame();
 			break;
-		case "LoadButton": menuId = 1;
+		case "charsheet": 
+			menu_characterSheet = !menu_characterSheet;
+			break;
+		case "inventory": 
+			menu_inventory = !menu_inventory;
+			break;
+		case "map": 
+			//display map
+			break;
+		case "menu": 
+			goToMainMenu();
 			break;
 		case "QuitButton": //quit?
+			System.exit(0);
 			break;
 		}
 	}
+	
+	public void keyPressed(int key, char c){
+		System.out.println("key pressed:"+key);
+		if(menuId == 2){
+			switch(key){
+				case 1:  goToMainMenu();
+				break;
+				case 2:  player.drinkPotion(0);
+				break;
+				case 3:  player.drinkPotion(1);
+				break;
+				case 4:  player.drinkPotion(2);
+				break;
+				case 5:  player.drinkPotion(3);
+				break;
+				case 6:  player.drinkPotion(4);
+				break;
+				case 7:  player.drinkPotion(5);
+				break;
+				case 8:  player.drinkPotion(6);
+				break;
+				case 9:  player.drinkPotion(7);
+				break;
+				case 15:  //display map
+				break;
+				case 23:  menu_inventory = !menu_inventory;
+				break;
+				case 46:  menu_characterSheet = !menu_characterSheet;
+				break;
+			}
+		}
+		else if(key == 1){
+			//escape pressed during menu
+		}
+	}
+	
+	
 }

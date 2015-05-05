@@ -26,6 +26,10 @@ public class GameObject implements Comparable<GameObject>{
 		if(this instanceof Item){
 			height += 1000;
 		}
+		else if(this instanceof Character){
+			if(((Character)this).dead)
+			height += 1000;
+		}
 		float comparedCharHeight = o.position_y-o.position_x;
 		//return in descending order
 		return (int)(comparedCharHeight*100-height*100);

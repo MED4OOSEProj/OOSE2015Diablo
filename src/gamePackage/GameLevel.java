@@ -43,6 +43,8 @@ public class GameLevel implements TileBasedMap {
 	
 	public void createRandomMap(){
 		//temporary map generation
+		MapBlock map = new MapBlock(); 
+		map.generateMapBlock(13, 13,1);
 		grid_terrainIDs = gridTest; 
 		/* = new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},

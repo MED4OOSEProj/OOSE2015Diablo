@@ -31,6 +31,10 @@ public class Player extends Character{
 			anim_walking[1] = new Animation(new SpriteSheet(new Image("Textures/player_walking_1.png"),96,112),200);
 			anim_walking[2] = new Animation(new SpriteSheet(new Image("Textures/player_walking_2.png"),96,112),200);
 			anim_walking[3] = new Animation(new SpriteSheet(new Image("Textures/player_walking_3.png"),96,112),200);
+			anim_dying[0] = new Animation(new SpriteSheet(new Image("Textures/player_dying_0.png"),128,112),200);
+			anim_dying[1] = new Animation(new SpriteSheet(new Image("Textures/player_dying_1.png"),128,112),200);
+			anim_dying[2] = new Animation(new SpriteSheet(new Image("Textures/player_dying_2.png"),128,112),200);
+			anim_dying[3] = new Animation(new SpriteSheet(new Image("Textures/player_dying_3.png"),128,112),200);
 			position_x = 7;
 			position_y = 4;
 			attribute_name = "PlayerName";
@@ -39,7 +43,7 @@ public class Player extends Character{
 			screenPosTranslationWhenAttacking_x = -16;
 			attribute_strength = 10;
 			attribute_dexterity = 10;
-			attribute_vitality = 10;
+			attribute_vitality = 2;
 			
 			equipment[EquipmentType.WEAPON] = new Weapon();
 			calculateStats();
@@ -68,7 +72,7 @@ public class Player extends Character{
 		
 	}
 	
-	public void kill(){
+	public void drinkPotion(int slotID){
 		
 	}
 }

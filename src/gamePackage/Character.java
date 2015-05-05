@@ -7,13 +7,14 @@ import org.newdawn.slick.util.pathfinding.Path;
 public class Character extends GameObject implements Mover{
 	// variables
 	public Animation[] anim_attacking = new Animation[4];
-	public Animation anim_dying;
+	public Animation[] anim_dying = new Animation[4];;
 	public Animation[] anim_walking = new Animation[4];
 	public Animation[] anim_idle = new Animation[4];
 	public Sound sound_movement;
 	public Sound sound_attacking;
 	public Sound sound_dying;
-	public boolean dead;
+	public boolean dying = false;
+	public boolean dead = false;
 	public int attribute_health_max =5;
 	public int attribute_health_current;
 	public int attribute_damage;
@@ -41,7 +42,10 @@ public class Character extends GameObject implements Mover{
 	
 	// Methods
 	public void kill(){
-		
+		attribute_health_current = 0;
+		setAction(Action.DYING);
+		dying = true;
+		System.out.println("someone died");
 	}
 	
 	public void setAction(Action action){
@@ -117,8 +121,11 @@ public class Character extends GameObject implements Mover{
 			//attack NOT finished
 			if(anim_attacking[direction].getFrame() >= 8 && !damageDealt){
 				//attack animation has reached frame 8 (0 indexed), which is when the character's weapon is furthest away
+				if (attackTarget != null){
 				System.out.println(attribute_name + " attacking " + attackTarget.attribute_name + " for "+ attribute_damage +" dmg");
 				attackTarget.attribute_health_current = attackTarget.attribute_health_current - attribute_damage;
+				if(attackTarget.attribute_health_current <= 0) attackTarget.kill();
+				}
 				damageDealt = true;
 			}
 		}
@@ -209,7 +216,7 @@ public class Character extends GameObject implements Mover{
 		case ATTACKING:
 			return anim_attacking[direction];
 		case DYING:
-			return anim_dying;
+			return anim_dying[direction];
 		case WALKING:
 			return anim_walking[direction];
 		default:
