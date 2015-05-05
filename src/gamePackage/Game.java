@@ -46,6 +46,8 @@ public class Game extends BasicGame
 	float yscale = 0.1f;
 	boolean menu_characterSheet = false;
 	boolean menu_inventory =false;
+	int tilewidth;
+	int tileheight;
 	
 	
 	public Game(String gamename)
@@ -67,6 +69,9 @@ public class Game extends BasicGame
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
 		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
+		
+		tilewidth = terrainTypes[0].terrainImage.getWidth();
+		tileheight = terrainTypes[0].terrainImage.getHeight();
 		
 		menu2_overlay_left = new Image("Textures/menu2_overlay_left.png");
 		menu2_overlay_right = new Image("Textures/menu2_overlay_right.png");
@@ -143,7 +148,6 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
-							System.out.println("someone is dead");
 						}
 					}
 					((Character) gameobj).calculateScreenPos();
@@ -178,12 +182,15 @@ public class Game extends BasicGame
 		} 
 		else if (menuId == 2){
 			
-			
+			int xpos;
+			int ypos;
 			//tiles
 			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80),
-																								   Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40));
+					xpos = Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80);
+					ypos = Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40);
+					if(xpos >= -tilewidth && xpos < windowWidth && ypos > -tileheight && ypos < windowHeight-menu2_overlay_right.getHeight()+11)
+					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(xpos,ypos);
 				}
 			}
 			//sorts the objects by their height position on the screen, so that the objects in front are drawn last
@@ -201,15 +208,17 @@ public class Game extends BasicGame
 				}
 				//draw enemies
 				if(gameobj instanceof Enemy){
-					//draw red edge when hovered
-					if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
-						if(isObjectHovered(gameobj)){
-							gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
-							tempHoveredObject = gameobj;
-						}
-								  
-					//draw
-					gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
+					if(gameobj.screenPosition_x >= -tilewidth && gameobj.screenPosition_x < windowWidth && gameobj.screenPosition_y > -tileheight && gameobj.screenPosition_y < windowHeight-menu2_overlay_right.getHeight()+11){
+						//draw red edge when hovered
+						if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
+							if(isObjectHovered(gameobj)){
+								gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
+								tempHoveredObject = gameobj;
+							}
+									  
+						//draw
+						gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
+					}
 				}
 				
 				
