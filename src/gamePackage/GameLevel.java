@@ -74,7 +74,7 @@ public class GameLevel implements TileBasedMap {
 			for(int j = 0; j < levelHeight; j++)
 				if (!Game.terrainTypes[grid_terrainIDs[j][i]].blocksPath){
 					temp++;
-					if (temp%10 == 0){
+					if (temp%10 == 0 && !(j==13&&i==13)){
 						// System.out.println(j + " " + i);
 						objectsInLevel.add(new Enemy(i,j));
 					}

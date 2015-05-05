@@ -82,8 +82,10 @@ public class Enemy extends Character{
 			else if(currentAction == Action.IDLE && System.currentTimeMillis()-lastIdleTime > roamIdleTime){
 				lastIdleTime = System.currentTimeMillis();
 				roamIdleTime = (int)(roamIdleTimeBase*Math.random());
-				Vector2 movelocation = roamArea.get((int)(Math.random()*roamArea.size()));
-				moveTo(Math.round(position_x), Math.round(position_y), (int)movelocation.getX(), (int)movelocation.getY(), false);
+				if(roamArea.size() >0){
+					Vector2 movelocation = roamArea.get((int)(Math.random()*roamArea.size()));
+					moveTo(Math.round(position_x), Math.round(position_y), (int)movelocation.getX(), (int)movelocation.getY(), false);
+				}
 			}
 			
 	}
