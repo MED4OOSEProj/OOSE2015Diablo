@@ -13,8 +13,8 @@ public class GameLevel implements TileBasedMap {
 	public ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
-	int levelWidth = 10;
-	int levelHeight = 10;
+	int levelWidth = 25;
+	int levelHeight = 25;
 	Mover moverChar;
 	public static int[][] checklist = new int[25][25];
 	public static int[][] gridTest = new int[25][25];
