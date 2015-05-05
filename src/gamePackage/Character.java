@@ -45,7 +45,7 @@ public class Character extends GameObject implements Mover{
 		attribute_health_current = 0;
 		setAction(Action.DYING);
 		dying = true;
-		System.out.println("someone died");
+		System.out.println("someone is being killed");
 	}
 	
 	public void setAction(Action action){

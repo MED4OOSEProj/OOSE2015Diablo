@@ -137,13 +137,13 @@ public class Game extends BasicGame
 						gameobj.getCurrentAnimation().update(i);
 					}
 					else if(((Character)gameobj).dying){
-						System.out.println("someone dying");
 						gameobj.getCurrentAnimation().update(i);
 						gameobj.getCurrentAnimation().setLooping(false);
 						if(gameobj.getCurrentAnimation().getFrame() == gameobj.getCurrentAnimation().getFrameCount()-1){
-							System.out.println("lastframe");
+							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
+							System.out.println("someone is dead");
 						}
 					}
 					((Character) gameobj).calculateScreenPos();
@@ -202,10 +202,11 @@ public class Game extends BasicGame
 				//draw enemies
 				if(gameobj instanceof Enemy){
 					//draw red edge when hovered
-					if(isObjectHovered(gameobj)){
-						gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
-						tempHoveredObject = gameobj;
-					}
+					if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
+						if(isObjectHovered(gameobj)){
+							gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
+							tempHoveredObject = gameobj;
+						}
 								  
 					//draw
 					gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);

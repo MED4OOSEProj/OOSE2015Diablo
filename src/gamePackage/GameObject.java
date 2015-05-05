@@ -24,14 +24,15 @@ public class GameObject implements Comparable<GameObject>{
 	public int compareTo(GameObject o) {
 		float height = position_y-position_x;
 		if(this instanceof Item){
-			height += 1000;
+			height += 1001;
 		}
 		else if(this instanceof Character){
-			if(((Character)this).dead)
-			height += 1000;
+			if(((Character)this).dead){
+				height += 1000;
+			}
 		}
 		float comparedCharHeight = o.position_y-o.position_x;
 		//return in descending order
-		return (int)(comparedCharHeight*100-height*100);
+		return (int)(comparedCharHeight*1000-height*1000);
 	}
 }

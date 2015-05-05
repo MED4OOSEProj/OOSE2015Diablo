@@ -13,8 +13,8 @@ public class GameLevel implements TileBasedMap {
 	public ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
 	public int[][] grid_terrainIDs;
 	public Sound sound_track;
-	int levelWidth = 25;
-	int levelHeight = 25;
+	int levelWidth;
+	int levelHeight;
 	Mover moverChar;
 	public static int[][] checklist = new int[25][25];
 	public static int[][] gridTest = new int[25][25];
@@ -44,9 +44,11 @@ public class GameLevel implements TileBasedMap {
 	public void createRandomMap(){
 		//temporary map generation
 		MapBlock map = new MapBlock(); 
+		levelWidth = 25;
+		levelHeight = 25;
 		map.generateMapBlock(13, 13,1);
-		grid_terrainIDs = gridTest; 
-		/* = new int[][]{
+		grid_terrainIDs = gridTest;
+				/*new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},
 		        {1,0,0,0,0,0,1,1,1,1},
 		        {1,0,0,0,0,0,1,1,1,1},
@@ -64,9 +66,13 @@ public class GameLevel implements TileBasedMap {
 		for(GameObject colliderObject : objectsInLevel){
 			//Exclude the colliding character
 			if(colliderObject != character){
+				
 				//Check if x and y is within another character's collision size
 				if(Math.abs(colliderObject.position_x - x) < colliderObject.collision_size + character.collision_size &&
 				   Math.abs(colliderObject.position_y - y) < colliderObject.collision_size + character.collision_size){
+					if(colliderObject instanceof Character && (((Character)colliderObject).dead || ((Character)colliderObject).dying)){
+						continue;
+					}
 					return colliderObject;
 				}
 			}
@@ -90,9 +96,11 @@ public class GameLevel implements TileBasedMap {
 		//if an enemy occupies the space, and the player is not attacking it, count the tile as blocked, in order to move around it.
 		for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
 			if(gameobj instanceof Character && gameobj != mover){
-				if(Math.round(gameobj.position_x) == arg1 && Math.round(gameobj.position_y) == arg2){
-					if(((Character)(mover)).attackTarget != gameobj){
-						return true;
+				if(!((Character)gameobj).dead && !((Character)gameobj).dying){
+					if(Math.round(gameobj.position_x) == arg1 && Math.round(gameobj.position_y) == arg2){
+						if(((Character)(mover)).attackTarget != gameobj){
+							return true;
+						}
 					}
 				}
 			}

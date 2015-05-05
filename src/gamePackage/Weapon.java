@@ -38,7 +38,7 @@ public class Weapon extends Item {
 		// how much damage per attack: (modifies the character's attackdamage)
 		attribute_attackdmg = rnd.nextInt(10); 
 		// How many attacks per second (modifies the character's attackspeed)
-		attribute_attackspeed = rnd.nextInt(2000); 
+		attribute_attackspeed = rnd.nextInt(1000)+400; 
 		// How many hits you can make with the weapon before it breaks: 
 		attribute_durability_max = rnd.nextInt(10)*2; 
 		attribute_durability_current = attribute_durability_max; 
