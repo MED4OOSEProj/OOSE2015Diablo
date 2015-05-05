@@ -50,20 +50,24 @@ public class MapBlock {
 						GameLevel.gridTest[x+ki][y+kj] = block.size[ki+1][kj+1];
 					
 		// Check if there is an opening in topLeft && is the new block outside the map && is there already a block there?
-		if (block.topLeft == true && block.yCenter-distFromCenterToCenter > 0 && GameLevel.checklist[x][y-distFromCenterToCenter] == 0) {
-			generateMapBlock(x,y-distFromCenterToCenter,0);
+		if (block.topLeft == true && block.xCenter-distFromCenterToCenter > 0 && GameLevel.checklist[x-distFromCenterToCenter][y] == 0) {
+			generateMapBlock(x-distFromCenterToCenter,y,0);
+			GameLevel.gridTest[x-1][y] = 0;
 		}
 		// Check if there is an opening in topRight && is the new block outside the map && is there already a block there?
-		if (block.topRight == true && block.xCenter+distFromCenterToCenter < 24 && GameLevel.checklist[x+distFromCenterToCenter][y] == 0) {
-			generateMapBlock(x+distFromCenterToCenter,y,1);
+		if (block.topRight == true && block.yCenter+distFromCenterToCenter < 24 && GameLevel.checklist[x][y+distFromCenterToCenter] == 0) {
+			generateMapBlock(x,y+distFromCenterToCenter,1);
+			GameLevel.gridTest[x][y+1] = 0;
 		}
 		// Check if there is an opening in bottomLeft && is the new block outside the map && is there already a block there?
-		if (block.bottomLeft == true && block.xCenter-distFromCenterToCenter > 0 && GameLevel.checklist[x-distFromCenterToCenter][y] == 0) {
-			generateMapBlock(x-distFromCenterToCenter,y,2);
+		if (block.bottomLeft == true && block.yCenter-distFromCenterToCenter > 0 && GameLevel.checklist[x][y-distFromCenterToCenter] == 0) {
+			generateMapBlock(x,y-distFromCenterToCenter,2);
+			GameLevel.gridTest[x][y-1] = 0;
 		}
 		// Check if there is an opening in bottomRight && is the new block outside the map && is there already a block there?
-		if (block.bottomRight == true && block.yCenter+distFromCenterToCenter < 24 && GameLevel.checklist[x][y+distFromCenterToCenter] == 0) {
-			generateMapBlock(x,y+distFromCenterToCenter,3);
+		if (block.bottomRight == true && block.xCenter+distFromCenterToCenter < 24 && GameLevel.checklist[x+distFromCenterToCenter][y] == 0) {
+			generateMapBlock(x+distFromCenterToCenter,y,3);
+			GameLevel.gridTest[x+1][y] = 0;
 		}
 		
 		switch (priorBlock){
