@@ -329,7 +329,7 @@ public class Game extends BasicGame
 						player.attackMove((Character)currentHoveredObject);
 					}
 					if(currentHoveredObject instanceof Item){
-						
+						player.moveAndPickUp((Item)currentHoveredObject);
 					}
 				}
 				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);

@@ -29,7 +29,6 @@ public class GameObject implements Comparable<GameObject>{
 		else if(this instanceof Character){
 			if(((Character)this).dead){
 				height += 100;
-				System.out.println(((int)(height*100)));
 			}
 			
 		}
