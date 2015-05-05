@@ -40,6 +40,7 @@ public class Game extends BasicGame
 	Image menu2_overlay_right;
 	Image menu2_overlay_extender;
 	Image menu2_overlay_life;
+	Image menu2_overlay_underlife;
 	Image image_inventory;
 	Image image_charsheet;
 	Image image_mainmenu;
@@ -77,6 +78,7 @@ public class Game extends BasicGame
 		menu2_overlay_right = new Image("Textures/menu2_overlay_right.png");
 		menu2_overlay_extender = new Image("Textures/menu2_overlay_extender.png");
 		menu2_overlay_life = new Image("Textures/menu2_overlay_life.png");
+		menu2_overlay_underlife = new Image("Textures/menu2_overlay_underlife.png");
 		image_inventory = new Image("Textures/inventory.png");
 		image_charsheet = new Image("Textures/charsheet.png");
 		image_mainmenu = new Image("Textures/mainmenu.jpg");
@@ -234,6 +236,7 @@ public class Game extends BasicGame
 			}
 			
 			yscale = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
+			menu2_overlay_underlife.draw(93,windowHeight-menu2_overlay_left.getHeight());
 			menu2_overlay_life.draw(93,windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight()*yscale,
 									93+menu2_overlay_life.getWidth(),windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight(),
 									0,menu2_overlay_life.getHeight()*yscale,
