@@ -43,8 +43,8 @@ public class GameLevel implements TileBasedMap {
 	
 	public void createRandomMap(){
 		//temporary map generation
-		//grid_terrainIDs = gridTest; 
-		grid_terrainIDs = new int[][]{
+		grid_terrainIDs = gridTest; 
+		/* = new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},
 		        {1,0,0,0,0,0,1,1,1,1},
 		        {1,0,0,0,0,0,1,1,1,1},
@@ -55,7 +55,7 @@ public class GameLevel implements TileBasedMap {
 		        {1,0,1,1,1,1,1,1,1,0},
 		        {1,0,0,0,0,0,0,0,0,0},
 		        {1,1,1,1,1,1,1,1,1,0}
-		    };
+		    };*/
 	}
 	
 	public GameObject collidingObject(Character character, float x, float y){
