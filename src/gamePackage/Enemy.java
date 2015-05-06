@@ -5,6 +5,7 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.util.pathfinding.Path;
 
 public class Enemy extends Character{
 	public ArrayList<Item> reward_items = new ArrayList<Item>();
@@ -17,8 +18,8 @@ public class Enemy extends Character{
 	public boolean mouse_hovered = true;
 	private float aggroArea = 3f;
 	boolean areaPulled = false;
-	float spawnpos_x;
-	float spawnpos_y;
+	int spawnpos_x;
+	int spawnpos_y;
 	int roamSize;
 	int roamIdleTime;
 	int roamIdleTimeBase;
@@ -27,8 +28,8 @@ public class Enemy extends Character{
 	public Enemy(float tile_x, float tile_y) throws SlickException{
 		position_x = tile_x;
 		position_y = tile_y;
-		spawnpos_x = position_x;
-		spawnpos_y = position_y;
+		spawnpos_x = (int)position_x;
+		spawnpos_y = (int)position_y;
 		sprite_idle = new SpriteSheet(new Image("Textures/goatman_idle_0.png"),128,112);
 		anim_idle[0] = new Animation(sprite_idle,200);
 		anim_idle[1] = new Animation(new SpriteSheet(new Image("Textures/goatman_idle_1.png"),128,112),200);
@@ -60,26 +61,9 @@ public class Enemy extends Character{
 		lastIdleTime = System.currentTimeMillis();
 	}
 	
-	public void attack(){
-		
-	}
 	public void roam(){
-			if(Math.abs(Game.player.position_x - position_x) <= aggroArea && Math.abs(Game.player.position_y - position_y) <= aggroArea){
-				//pull a monster, and the monsters around that monster
-				attackMove(Game.player);
-				if(!areaPulled){
-					for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
-						if(gameobj instanceof Enemy){
-							if((Math.abs(gameobj.position_x - position_x) <= aggroArea && (Math.abs(gameobj.position_y - position_y) <= aggroArea))){
-								((Enemy) gameobj).attackMove(Game.player);
-							}
-						}
-					}
-					areaPulled = true;
-				}
-				
-			}
-			else if(currentAction == Action.IDLE && System.currentTimeMillis()-lastIdleTime > roamIdleTime){
+			
+			if(currentAction == Action.IDLE && System.currentTimeMillis()-lastIdleTime > roamIdleTime){
 				lastIdleTime = System.currentTimeMillis();
 				roamIdleTime = (int)(roamIdleTimeBase*Math.random());
 				if(roamArea.size() >0){
@@ -87,14 +71,33 @@ public class Enemy extends Character{
 					moveTo(Math.round(position_x), Math.round(position_y), (int)movelocation.getX(), (int)movelocation.getY(), false);
 				}
 			}
+			if(Math.abs(Game.player.position_x - position_x) <= aggroArea && Math.abs(Game.player.position_y - position_y) <= aggroArea){
+				//if there is a path to the player, move there
+				attackTarget = Game.player;
+				if(isThereAPathTo(Math.round(position_x), Math.round(position_y), Math.round(Game.player.position_x),Math.round(Game.player.position_y))){
+					attackMove(Game.player);
+					//pull a monster, and the monsters around that monster
+					if(!areaPulled){
+						for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
+							if(gameobj instanceof Enemy){
+								if((Math.abs(gameobj.position_x - position_x) <= aggroArea && (Math.abs(gameobj.position_y - position_y) <= aggroArea))){
+									((Enemy) gameobj).attackMove(Game.player);
+								}
+							}
+						}
+						areaPulled = true;
+					}
+				}
+			}
+			
 			
 	}
 	
 	void createRoamArea(){
-		for(int x = 0; x < roamSize; x++){
-			for(int y = 0; y < roamSize; y++){
+		for(int x = spawnpos_x; x < spawnpos_x+roamSize; x++){
+			for(int y = spawnpos_y; y < spawnpos_y+roamSize; y++){
 				if(x >= 0 && y >= 0 && x < Game.gameLevels[Game.currentLevel].getWidthInTiles() && y < Game.gameLevels[Game.currentLevel].getHeightInTiles()){
-					if(!Game.terrainTypes[Game.gameLevels[Game.currentLevel].grid_terrainIDs[x][y]].blocksPath){
+					if(!Game.terrainTypes[Game.gameLevels[Game.currentLevel].grid_terrainIDs[y][x]].blocksPath){
 						roamArea.add(new Vector2(x,y));
 					}
 				}

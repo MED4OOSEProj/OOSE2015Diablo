@@ -49,6 +49,8 @@ public class Game extends BasicGame
 	boolean menu_inventory =false;
 	int tilewidth;
 	int tileheight;
+	boolean roamLock = false;
+	int roamtimer = 1000;
 	
 	
 	public Game(String gamename)
@@ -136,11 +138,17 @@ public class Game extends BasicGame
 		if(menuId == 2){
 			//update objects
 			int enemyCount = 0;
+			
 			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
 				if(gameobj instanceof Character){
 					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
 						if(gameobj instanceof Enemy){
-							((Enemy) gameobj).roam();
+							//only do this every x seconds
+							if(!roamLock && System.currentTimeMillis()%roamtimer < 50){
+								((Enemy) gameobj).roam();
+								
+							}
+							
 							enemyCount++;
 						}
 						((Character) gameobj).move(i);
@@ -153,7 +161,6 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
-							enemyCount--;
 							if(enemyCount == 0){
 							//  TESTING MAP CHANGE!
 								// TESTING MAP CHANGE!
@@ -166,6 +173,14 @@ public class Game extends BasicGame
 				}
 				
 			}
+			
+			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
+				if(roamLock){
+					roamLock = false;
+					System.out.println("Enemies left: " + enemyCount);
+				}
+			}
+			else roamLock = true;
 		}
 		
 	}
@@ -294,7 +309,8 @@ public class Game extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new Game("Diablo"));
-			appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
+			//appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
+			appgc.setDisplayMode(800, 600, false);
 			appgc.setAlwaysRender(true);
 			appgc.start();
 			
@@ -334,7 +350,8 @@ public class Game extends BasicGame
 				//enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
 				if(currentHoveredObject != null){
 					if(currentHoveredObject instanceof Enemy){
-						System.out.println("calling attack move");
+						//System.out.println("Enemy roam area: "+((Enemy)currentHoveredObject).roamArea.size());
+						
 						player.attackMove((Character)currentHoveredObject);
 					}
 					if(currentHoveredObject instanceof Item){
@@ -419,12 +436,11 @@ public class Game extends BasicGame
 		}
 	}
 	public void changeMap() throws SlickException{
-		currentLevel++;
 		gameLevels[currentLevel] = new GameLevel();
-		gameLevels[currentLevel].objectsInLevel.add(Game.player);
+		gameLevels[currentLevel].objectsInLevel.add(player);
 		// Change player's position in the new map. NOTE: player.position_x & _y = 12
-		Game.player.position_x = gameLevels[currentLevel].levelWidth/2;
-		Game.player.position_x = gameLevels[currentLevel].levelHeight/2;
+		player.position_x = (int)(gameLevels[currentLevel].levelWidth/2);
+		player.position_y = (int)(gameLevels[currentLevel].levelHeight/2);
 		gameLevels[currentLevel].createEnemies();
 	}
 	/*
