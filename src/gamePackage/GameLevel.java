@@ -80,9 +80,9 @@ public class GameLevel implements TileBasedMap {
 					temp++;
 					if (temp%10 == 0 && !(j==(int)Game.player.position_x&&i==(int)Game.player.position_y)){
 						// System.out.println(j + " " + i);
-						objectsInLevel.add(new Enemy(i,j));
+						objectsInLevel.add(new Enemy(i,j,("Goatman "+(temp+1))));
 					}
-				}	
+				}
 	}
 	
 	public GameObject collidingObject(Character character, float x, float y){
@@ -117,7 +117,7 @@ public class GameLevel implements TileBasedMap {
 			return true;
 		
 		//if an enemy occupies the space, and the player is not attacking it, count the tile as blocked, in order to move around it.
-		for(GameObject gameobj : Game.gameLevels[Game.currentLevel].objectsInLevel){
+		for(GameObject gameobj : Game.gameLevel.objectsInLevel){
 			if(gameobj instanceof Character && gameobj != mover){
 				if(!((Character)gameobj).dead && !((Character)gameobj).dying){
 					if(Math.round(gameobj.position_x) == arg1 && Math.round(gameobj.position_y) == arg2){

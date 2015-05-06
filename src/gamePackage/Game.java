@@ -28,8 +28,8 @@ public class Game extends BasicGame
 	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
 	TrueTypeFont buttonFont;
 	static TerrainType[] terrainTypes = new TerrainType[6];
-	public static GameLevel[] gameLevels = new GameLevel[3];
-	public static int currentLevel = 0;
+	public static GameLevel gameLevel;
+	public int currentLevel = 1;
 	static int windowWidth;
 	static int windowHeight;
 	static Player player;
@@ -51,6 +51,8 @@ public class Game extends BasicGame
 	int tileheight;
 	boolean roamLock = false;
 	int roamtimer = 1000;
+	boolean hoverObjectLock = false;
+	boolean newGamePressed = false;
 	
 	
 	public Game(String gamename)
@@ -87,12 +89,12 @@ public class Game extends BasicGame
 		
 		
 		//Creates game levels
-		gameLevels[currentLevel] = new GameLevel();
+		gameLevel = new GameLevel();
 		
-		gameLevels[currentLevel].objectsInLevel.add(player);
+		gameLevel.objectsInLevel.add(player);
 		// gameLevels[0].objectsInLevel.add(new Enemy(3,1));
 		// gameLevels[0].objectsInLevel.add(new Enemy(2,1));
-		gameLevels[currentLevel].createEnemies(); 
+		gameLevel.createEnemies(); 
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
@@ -139,7 +141,7 @@ public class Game extends BasicGame
 			//update objects
 			int enemyCount = 0;
 			
-			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
+			for(GameObject gameobj : gameLevel.objectsInLevel){
 				if(gameobj instanceof Character){
 					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
 						if(gameobj instanceof Enemy){
@@ -178,7 +180,7 @@ public class Game extends BasicGame
 			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
 				if(roamLock){
 					roamLock = false;
-					System.out.println("Enemies left: " + enemyCount);
+					//System.out.println("Enemies left: " + enemyCount);
 				}
 			}
 			else roamLock = true;
@@ -192,8 +194,6 @@ public class Game extends BasicGame
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
 		//treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
-		
-		
 		
 		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
@@ -213,19 +213,19 @@ public class Game extends BasicGame
 			int xpos;
 			int ypos;
 			//tiles
-			for(int x = 0; x < gameLevels[currentLevel].getWidthInTiles(); x++){
-				for(int y = 0; y < gameLevels[currentLevel].getHeightInTiles(); y++){
+			for(int x = 0; x < gameLevel.getWidthInTiles(); x++){
+				for(int y = 0; y < gameLevel.getHeightInTiles(); y++){
 					xpos = Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80);
 					ypos = Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40);
 					if(xpos >= -tilewidth && xpos < windowWidth && ypos > -tileheight && ypos < windowHeight-menu2_overlay_right.getHeight()+11)
-					terrainTypes[gameLevels[currentLevel].grid_terrainIDs[x][y]].terrainImage.draw(xpos,ypos);
+					terrainTypes[gameLevel.grid_terrainIDs[x][y]].terrainImage.draw(xpos,ypos);
 				}
 			}
 			//sorts the objects by their height position on the screen, so that the objects in front are drawn last
-			Collections.sort(gameLevels[currentLevel].objectsInLevel);
-			GameObject tempHoveredObject = null;
-			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
-				
+			Collections.sort(gameLevel.objectsInLevel);
+			hoverObjectLock = false;
+			currentHoveredObject = null;
+			for(GameObject gameobj : gameLevel.objectsInLevel){
 				//draw the player
 				if(gameobj instanceof Player){
 					int translate_x = 0;
@@ -236,12 +236,13 @@ public class Game extends BasicGame
 				}
 				//draw enemies
 				if(gameobj instanceof Enemy){
-					if(gameobj.screenPosition_x >= -tilewidth && gameobj.screenPosition_x < windowWidth && gameobj.screenPosition_y > -tileheight && gameobj.screenPosition_y < windowHeight-menu2_overlay_right.getHeight()+11){
+					if(gameobj.screenPosition_x >= -gameobj.getCurrentAnimation().getCurrentFrame().getWidth() && gameobj.screenPosition_x < windowWidth && gameobj.screenPosition_y > -gameobj.getCurrentAnimation().getCurrentFrame().getHeight() && gameobj.screenPosition_y < windowHeight-menu2_overlay_right.getHeight()+11){
 						//draw red edge when hovered
-						//if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
-							if(isObjectHovered(gameobj)){
+						if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
+							if(!hoverObjectLock && isObjectHovered(gameobj)){
 								gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
-								tempHoveredObject = gameobj;
+								currentHoveredObject = gameobj;
+								hoverObjectLock = true;
 							}
 									  
 						//draw
@@ -251,7 +252,6 @@ public class Game extends BasicGame
 				
 				
 			}
-			currentHoveredObject = tempHoveredObject;
 			
 			//interface
 			if(menu_inventory){
@@ -352,7 +352,7 @@ public class Game extends BasicGame
 				if(currentHoveredObject != null){
 					if(currentHoveredObject instanceof Enemy){
 						//System.out.println("Enemy roam area: "+((Enemy)currentHoveredObject).roamArea.size());
-						System.out.println("Enemy height: "+((Enemy)currentHoveredObject).compareTo(player));
+						//System.out.println("Enemy height: "+((Enemy)currentHoveredObject).compareTo(player));
 						player.attackMove((Character)currentHoveredObject);
 					}
 					if(currentHoveredObject instanceof Item){
@@ -382,6 +382,7 @@ public class Game extends BasicGame
 		System.out.println(clickedbutton.text + " clicked!");
 		switch(clickedbutton.id){
 		case "StartButton": 
+			newGamePressed = true;
 			goToGame();
 			break;
 		case "charsheet": 
@@ -434,25 +435,18 @@ public class Game extends BasicGame
 		}
 		else if(key == 1){
 			//escape pressed during menu
+			if(newGamePressed)
+				goToGame();
 		}
 	}
 	public void changeMap() throws SlickException{
-		gameLevels[currentLevel] = new GameLevel();
-		gameLevels[currentLevel].objectsInLevel.add(player);
+		currentLevel++;
+		gameLevel = new GameLevel();
+		gameLevel.objectsInLevel.add(player);
 		// Change player's position in the new map. NOTE: player.position_x & _y = 12
-		player.position_x = (int)(gameLevels[currentLevel].levelWidth/2);
-		player.position_y = (int)(gameLevels[currentLevel].levelHeight/2);
-		gameLevels[currentLevel].createEnemies();
+		player.position_x = (int)(gameLevel.levelWidth/2);
+		player.position_y = (int)(gameLevel.levelHeight/2);
+		gameLevel.createEnemies();
 	}
-	/*
-	 * Når en fjende er dræbt
-	 * 		er alle døde?
-	 * hvis ja: 
-	 * 		lav næste bane og ryg spilleren til den 
-	 * 		ny position
-	 * 		rygges over i gameLevels[i]
-	 * Hvis nej: 
-	 * 		do nothing
-	 */
 	
 }

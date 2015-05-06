@@ -22,7 +22,7 @@ public class GameObject implements Comparable<GameObject>{
 
 	@Override
 	public int compareTo(GameObject o) {
-		float height = position_y-position_x;
+		float height = Game.gameLevel.getWidthInTiles()+position_y-position_x;
 		if(this instanceof Item){
 			height += 101;
 		}
@@ -32,7 +32,16 @@ public class GameObject implements Comparable<GameObject>{
 			}
 			
 		}
-		float comparedCharHeight = o.position_y-o.position_x;
+		float comparedCharHeight = Game.gameLevel.getWidthInTiles()+o.position_y-o.position_x;
+		if(o instanceof Item){
+			comparedCharHeight += 101;
+		}
+		else if(o instanceof Character){
+			if(((Character)o).dead){
+				comparedCharHeight += 100;
+			}
+			
+		}
 		//return in descending order
 		if(comparedCharHeight > height) return 1;
 		else if (comparedCharHeight == height) return 0;

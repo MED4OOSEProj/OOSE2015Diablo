@@ -43,7 +43,7 @@ public class Player extends Character{
 			screenPosTranslationWhenAttacking_x = -16;
 			attribute_strength = 10;
 			attribute_dexterity = 10;
-			attribute_vitality = 1000;
+			attribute_vitality = 10;
 			
 			equipment[EquipmentType.WEAPON] = new Weapon();
 			calculateStats();

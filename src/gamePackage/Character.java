@@ -77,7 +77,7 @@ public class Character extends GameObject implements Mover{
 				}
 				else if(position_x < path.getStep(nextStep).getX()){
 					setDirection(0);
-					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x+deltamovespeed, position_y);
+					GameObject collisionObject = Game.gameLevel.collidingObject(this, position_x+deltamovespeed, position_y);
 					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_x += deltamovespeed;
@@ -86,7 +86,7 @@ public class Character extends GameObject implements Mover{
 				}
 				else if(position_x > path.getStep(nextStep).getX()){
 					setDirection(2);
-					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x-deltamovespeed, position_y);
+					GameObject collisionObject = Game.gameLevel.collidingObject(this, position_x-deltamovespeed, position_y);
 					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_x -= deltamovespeed;
@@ -95,7 +95,7 @@ public class Character extends GameObject implements Mover{
 				}
 				else if(position_y < path.getStep(nextStep).getY()){
 					setDirection(3);
-					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y+deltamovespeed);
+					GameObject collisionObject = Game.gameLevel.collidingObject(this, position_x, position_y+deltamovespeed);
 					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_y += deltamovespeed;
@@ -105,7 +105,7 @@ public class Character extends GameObject implements Mover{
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
 					setDirection(1);
-					GameObject collisionObject = Game.gameLevels[Game.currentLevel].collidingObject(this, position_x, position_y-deltamovespeed);
+					GameObject collisionObject = Game.gameLevel.collidingObject(this, position_x, position_y-deltamovespeed);
 					if(collisionObject == null){
 						setAction(Action.WALKING);
 						position_y -= deltamovespeed;
@@ -151,7 +151,7 @@ public class Character extends GameObject implements Mover{
 	
 	public void startAttack(){
 		
-		if(System.currentTimeMillis()-lastAttackTime > attribute_attackSpeed && attackRequested){
+		if(System.currentTimeMillis()-lastAttackTime > attribute_attackSpeed && (attackRequested || this instanceof Enemy)){
 			//System.out.println("attacktimer: "+System.currentTimeMillis());
 			//ATTACK!!
 			int frameduration = (int)(attribute_attackSpeed/anim_attacking[direction].getFrameCount());
@@ -187,7 +187,7 @@ public class Character extends GameObject implements Mover{
 	public void moveTo(int start_x, int start_y, int end_x, int end_y, boolean attacking){
 		if(currentAction != Action.ATTACKING){
 			if(!attacking) attackTarget = null;
-			path = Game.gameLevels[Game.currentLevel].getPath(this, start_x,start_y,end_x,end_y);
+			path = Game.gameLevel.getPath(this, start_x,start_y,end_x,end_y);
 			if(path!= null){
 				//if one player position variable does not change, skip the first move
 				if(position_y == path.getStep(1).getY() || position_x == path.getStep(1).getX())
@@ -202,7 +202,7 @@ public class Character extends GameObject implements Mover{
 				*/
 				
 			}
-			else if(!Game.gameLevels[Game.currentLevel].blockedChar(this, end_x, end_y)){
+			else if(!Game.gameLevel.blockedChar(this, end_x, end_y)){
 				//if the character is moving to the same tile as he is supposedly standing on, create a path of 1 length to it
 					path = new Path();
 					path.appendStep(start_x, start_y);
@@ -212,7 +212,7 @@ public class Character extends GameObject implements Mover{
 	}
 	
 	public boolean isThereAPathTo(int start_x, int start_y, int end_x, int end_y){
-		Path temppath = Game.gameLevels[Game.currentLevel].getPath(this, start_x,start_y,end_x,end_y);
+		Path temppath = Game.gameLevel.getPath(this, start_x,start_y,end_x,end_y);
 		if(temppath!= null){
 			return true;
 		}
