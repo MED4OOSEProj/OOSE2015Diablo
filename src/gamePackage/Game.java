@@ -161,17 +161,18 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
-							if(enemyCount == 0){
-							//  TESTING MAP CHANGE!
-								// TESTING MAP CHANGE!
-								//         TESTING MAP CHANGE!
-								changeMap();
-							}
+							
 						}
 					}
 					((Character) gameobj).calculateScreenPos();
 				}
 				
+			}
+			if(enemyCount == 0){
+				//  TESTING MAP CHANGE!
+					// TESTING MAP CHANGE!
+					//         TESTING MAP CHANGE!
+					changeMap();
 			}
 			
 			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
