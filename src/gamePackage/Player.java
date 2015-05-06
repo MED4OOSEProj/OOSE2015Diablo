@@ -35,15 +35,15 @@ public class Player extends Character{
 			anim_dying[1] = new Animation(new SpriteSheet(new Image("Textures/player_dying_1.png"),128,112),200);
 			anim_dying[2] = new Animation(new SpriteSheet(new Image("Textures/player_dying_2.png"),128,112),200);
 			anim_dying[3] = new Animation(new SpriteSheet(new Image("Textures/player_dying_3.png"),128,112),200);
-			position_x = 13;
-			position_y = 13;
+			position_x = 12;
+			position_y = 12;
 			attribute_name = "PlayerName";
 			pixelTranslation_x = 32;
 			pixelTranslation_y = -48;
 			screenPosTranslationWhenAttacking_x = -16;
 			attribute_strength = 10;
 			attribute_dexterity = 10;
-			attribute_vitality = 2;
+			attribute_vitality = 10;
 			
 			equipment[EquipmentType.WEAPON] = new Weapon();
 			calculateStats();

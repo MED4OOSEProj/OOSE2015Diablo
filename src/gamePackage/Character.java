@@ -23,7 +23,7 @@ public class Character extends GameObject implements Mover{
 	private int direction = 1;
 	public Action currentAction = Action.IDLE;
 	public Character attackTarget;
-	public Item pickupTarget;
+	
 	long lastAttackTime;
 	
 	boolean attackRequested = false;
@@ -169,9 +169,11 @@ public class Character extends GameObject implements Mover{
 	}
 	
 	public void attackMove(Character attackTarget){
-		attackRequested = true;
-		this.attackTarget = attackTarget;
-		moveTo(Math.round(position_x), Math.round(position_y), Math.round(attackTarget.position_x),Math.round(attackTarget.position_y), true);
+		if(currentAction != Action.ATTACKING){
+			attackRequested = true;
+			this.attackTarget = attackTarget;
+			moveTo(Math.round(position_x), Math.round(position_y), Math.round(attackTarget.position_x),Math.round(attackTarget.position_y), true);
+		}
 	}
 	
 	public void calculateScreenPos(){
@@ -183,29 +185,30 @@ public class Character extends GameObject implements Mover{
 	}
 	
 	public void moveTo(int start_x, int start_y, int end_x, int end_y, boolean attacking){
-		if(!attacking) attackTarget = null;
-		path = Game.gameLevels[Game.currentLevel].getPath(this, start_x,start_y,end_x,end_y);
-		if(path!= null){
-			//if one player position variable does not change, skip the first move
-			if(position_y == path.getStep(1).getY() || position_x == path.getStep(1).getX())
-				nextStep = 1;
-			else nextStep = 0;
-			/*
-			System.out.println("Found path of length: " + path.getLength() + ".");
-	
-			for(int i = 0; i < path.getLength(); i++) {
-				System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
-			}
-			*/
-			
-		}
-		else if(!Game.gameLevels[Game.currentLevel].blockedChar(this, end_x, end_y)){
-			//if the character is moving to the same tile as he is supposedly standing on, create a path of 1 length to it
-				path = new Path();
-				path.appendStep(start_x, start_y);
-				nextStep = 0;
-		}
+		if(currentAction != Action.ATTACKING){
+			if(!attacking) attackTarget = null;
+			path = Game.gameLevels[Game.currentLevel].getPath(this, start_x,start_y,end_x,end_y);
+			if(path!= null){
+				//if one player position variable does not change, skip the first move
+				if(position_y == path.getStep(1).getY() || position_x == path.getStep(1).getX())
+					nextStep = 1;
+				else nextStep = 0;
+				/*
+				System.out.println("Found path of length: " + path.getLength() + ".");
 		
+				for(int i = 0; i < path.getLength(); i++) {
+					System.out.println("Move to: " + path.getX(i) + "," + path.getY(i) + ".");          
+				}
+				*/
+				
+			}
+			else if(!Game.gameLevels[Game.currentLevel].blockedChar(this, end_x, end_y)){
+				//if the character is moving to the same tile as he is supposedly standing on, create a path of 1 length to it
+					path = new Path();
+					path.appendStep(start_x, start_y);
+					nextStep = 0;
+			}
+		}
 	}
 	
 	@Override

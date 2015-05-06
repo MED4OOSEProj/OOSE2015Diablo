@@ -294,7 +294,7 @@ public class Game extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new Game("Diablo"));
-			appgc.setDisplayMode(1024, 768, false);
+			appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
 			appgc.setAlwaysRender(true);
 			appgc.start();
 			
