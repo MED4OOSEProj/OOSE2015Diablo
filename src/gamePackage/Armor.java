@@ -7,27 +7,28 @@ import org.newdawn.slick.SlickException;
 
 public class Armor extends Item {
 	
-	public int attribute_damage_reduction;
-	public int attribute_durability_max;
-	public int attribute_durability_current;
-	public int attribute_location;
+	int attribute_damage_reduction;
+	int attribute_durability_max;
+	int attribute_durability_current;
+	int attribute_location;
 	
 	// Don't add more names to the arrays without changing the if-statements.
 	// MUST have an EVEN number of names in the arrays.
-	public String[] prefix = new String[]{"Brunhilde's ","Unbreakable ","Used ","Tattered ","Dirty ","Mighty ","Shining ","Glittering ","Cursed ","Holy "}; 
+	String[] prefix = new String[]{"Brunhilde's ","Unbreakable ","Used ","Tattered ","Dirty ","Mighty ","Shining ","Glittering ","Cursed ","Holy "}; 
 	
 	// armortype
-	public String[] armorType = new String[]{"Breast Plate","Cape","Chain Mail","Cloak","Full Plate Mail","Gothic Plate","Rags","Ring Mail","Robe","Studded Leather Armor"};
+	String[] armorType = new String[]{"Breast Plate","Cape","Chain Mail","Cloak","Full Plate Mail","Gothic Plate","Rags","Ring Mail","Robe","Studded Leather Armor"};
 	
 	// 0-5 are high damage reduction, 6-8 are high durability, 9 is the supposed to be the best 
-	public String[] suffix = new String[]{" of Infinite Durability"," of Protection"," of Fortitude"," of The Lady's Blessing"," of The Everliving"," of Eternity"," of Unparralled Fortitude"," of the Unbreakable Vow"," of Diamond Endurance"," of Godskin"};
+	String[] suffix = new String[]{" of Infinite Durability"," of Protection"," of Fortitude"," of The Lady's Blessing"," of The Everliving"," of Eternity"," of Unparralled Fortitude"," of the Unbreakable Vow"," of Diamond Endurance"," of Godskin"};
 
 	
-	public Armor() throws SlickException{
+	Armor() throws SlickException{
+		// All armors should be random generated
 		generateArmor();
 	}
 
-	public void generateArmor() throws SlickException{
+	void generateArmor() throws SlickException{
 		Random rnd = new Random();
 		
 		// How much does the armor reduce incoming damage?
@@ -36,6 +37,7 @@ public class Armor extends Item {
 		attribute_location = 0;
 		// How many hits can the armor take before it breaks?
 		attribute_durability_max = rnd.nextInt(10)*2;
+		// How many hits does it have left before it breaks?
 		attribute_durability_current = attribute_durability_max;
 		
 		
@@ -46,6 +48,7 @@ public class Armor extends Item {
 		int temp = rnd.nextInt(armorType.length);
 		String b = armorType[temp];
 		
+		// Switch case to choose an icon. 
 		switch (temp){
 		case 0:
 			thumbnail = new Image("Textures/armor_Breast_Plate.png");
@@ -91,6 +94,7 @@ public class Armor extends Item {
 			//nextInt(5)+4 because of five durability related names on 4,5,6,7,8
 			c = suffix[rnd.nextInt(5)+4];
 		} else {
+			// The armor is not special: add nothing. 
 			c = "";
 		}
 		
