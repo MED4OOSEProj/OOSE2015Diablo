@@ -16,7 +16,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.util.FontUtils;
 
 public class Game extends BasicGame
 {
@@ -180,7 +179,7 @@ public class Game extends BasicGame
 				}
 				
 			}
-			if(enemyCount == 0){
+			if(enemyCount == 0 && !completedLevel){
 					completeLevel();
 			}
 			
@@ -262,8 +261,12 @@ public class Game extends BasicGame
 			
 			//interface
 			g.drawString("Level: "+currentLevel, windowWidth-90, 10);
-			if(completedLevel)
+			if(completedLevel){
 				g.fillRect(nextLevelButton.posX, nextLevelButton.posY, nextLevelButton.width, nextLevelButton.height);
+				g.setColor(Color.black);
+				g.drawString(nextLevelButton.text, nextLevelButton.posX+4, nextLevelButton.posY+1);
+				g.setColor(Color.white);
+			}
 			else g.drawString("Monsters remaining: "+enemyCount, windowWidth-210, windowHeight-menu2_overlay_right.getHeight()-9);
 			
 			if(menu_inventory){
@@ -292,6 +295,7 @@ public class Game extends BasicGame
 				g.fillRect(restartButton.posX, restartButton.posY, restartButton.width, restartButton.height);
 				g.setColor(Color.black);
 				g.drawString(restartButton.text, restartButton.posX+4, restartButton.posY+1);
+				g.setColor(Color.white);
 			}
 			if(gameWon){
 				g.drawString("You won the game!", windowWidth/2-40, windowHeight/2);

@@ -31,7 +31,6 @@ public class Jewelry extends Item {
 
 	public void generateJewelry() throws SlickException{
 		Random rnd = new Random(); 
-		boolean isRing = rnd.nextBoolean();
 		boolean strength = rnd.nextBoolean(); 
 		boolean dexterity = rnd.nextBoolean();
 		boolean vitality = rnd.nextBoolean();

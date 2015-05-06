@@ -5,7 +5,6 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.util.pathfinding.Path;
 
 public class Enemy extends Character{
 	public ArrayList<Item> reward_items = new ArrayList<Item>();
