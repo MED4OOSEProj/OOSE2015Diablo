@@ -31,7 +31,7 @@ public class Game extends BasicGame
 	int roamtimer = 1000;
 	int enemyCount = 0;
 	int numberOfLevels = 5;
-	float yscale = 0.1f;
+	float health_percentage;
 	Image menu2_overlay_left;
 	Image menu2_overlay_right;
 	Image menu2_overlay_extender;
@@ -198,11 +198,15 @@ public class Game extends BasicGame
 			
 			int xpos;
 			int ypos;
-			//tiles
+			//draws the tiles
 			for(int x = 0; x < gameLevel.getWidthInTiles(); x++){
 				for(int y = 0; y < gameLevel.getHeightInTiles(); y++){
-					xpos = Math.round(x*80+y*80-(player.position_y*80+player.position_x*80)+windowWidth/2-80);
-					ypos = Math.round(y*40-x*40+(player.position_y*40-player.position_x*40)+windowHeight/2-40);
+					//the position of each tile is calculated by the x and y tile id equally affecting its position: (x*(tilewidth/2)+y*(tilewidth/2))
+					//then translated according to the position of the player, so that the tiles move when the player is supposed to be moving, creating the illusion of the player moving: -(player.position_y*(tilewidth/2)+player.position_x*(tilewidth/2))
+					//and finally the tiles are translated to the center of the screen: +windowWidth/2-tilewidth/2
+					xpos = Math.round(x*(tilewidth/2)+y*(tilewidth/2)-(player.position_y*(tilewidth/2)+player.position_x*(tilewidth/2))+windowWidth/2-tilewidth/2);
+					ypos = Math.round(y*(tileheight/2)-x*(tileheight/2)+(player.position_y*(tileheight/2)-player.position_x*(tileheight/2))+windowHeight/2-tileheight/2);
+					//if the tile is within the visible area, draw it
 					if(xpos >= -tilewidth && xpos < windowWidth && ypos > -tileheight && ypos < windowHeight-menu2_overlay_right.getHeight()+11)
 					terrainTypes[gameLevel.grid_terrainIDs[x][y]].terrainImage.draw(xpos,ypos);
 				}
@@ -211,6 +215,7 @@ public class Game extends BasicGame
 			Collections.sort(gameLevel.objectsInLevel);
 			hoverObjectLock = false;
 			currentHoveredObject = null;
+			//run through all objects in the level
 			for(GameObject gameobj : gameLevel.objectsInLevel){
 				//draw the player
 				if(gameobj instanceof Player){
@@ -222,16 +227,18 @@ public class Game extends BasicGame
 				}
 				//draw enemies
 				if(gameobj instanceof Enemy){
+					//only draw if visible
 					if(gameobj.screenPosition_x >= -gameobj.getCurrentAnimation().getCurrentFrame().getWidth() && gameobj.screenPosition_x < windowWidth && gameobj.screenPosition_y > -gameobj.getCurrentAnimation().getCurrentFrame().getHeight() && gameobj.screenPosition_y < windowHeight-menu2_overlay_right.getHeight()+11){
-						//draw red edge when hovered
+						//draw red edge when living enemy is hovered
 						if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
 							if(!hoverObjectLock && isObjectHovered(gameobj)){
 								gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
+								//setting the object which is hovered here in the render method is not pretty, but makes sure that the item hovered is synchronized to what the player is seeing
 								currentHoveredObject = gameobj;
 								hoverObjectLock = true;
 							}
 									  
-						//draw
+						//draw current enemy's animation frame
 						gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
 					}
 				}
@@ -239,7 +246,7 @@ public class Game extends BasicGame
 				
 			}
 			
-			//interface
+			//Draws the GUI elements on top
 			g.drawString("Level: "+currentLevel, windowWidth-90, 10);
 			if(completedLevel){
 				g.fillRect(nextLevelButton.posX, nextLevelButton.posY, nextLevelButton.width, nextLevelButton.height);
@@ -256,11 +263,11 @@ public class Game extends BasicGame
 				image_charsheet.draw(0,windowHeight-menu2_overlay_right.getHeight()-image_charsheet.getHeight()+11);
 			}
 			
-			yscale = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
+			health_percentage = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
 			menu2_overlay_underlife.draw(93,windowHeight-menu2_overlay_left.getHeight());
-			menu2_overlay_life.draw(93,windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight()*yscale,
+			menu2_overlay_life.draw(93,windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight()*health_percentage,
 									93+menu2_overlay_life.getWidth(),windowHeight-menu2_overlay_left.getHeight()+menu2_overlay_life.getHeight(),
-									0,menu2_overlay_life.getHeight()*yscale,
+									0,menu2_overlay_life.getHeight()*health_percentage,
 									menu2_overlay_life.getWidth(),menu2_overlay_life.getHeight());
 			menu2_overlay_left.draw(0,windowHeight-menu2_overlay_left.getHeight());
 			for(int x = 0; x <= ((windowWidth-menu2_overlay_right.getWidth()-menu2_overlay_left.getWidth())/menu2_overlay_extender.getWidth()); x++){
@@ -287,6 +294,11 @@ public class Game extends BasicGame
 		}
 	}
 	
+	/**
+	 * Checks if an object has the cursor positioned on it
+	 * @param obj The object which is being checked
+	 * @return True if the cursor is within the object's hitbox defined by its pixelWidth and pixelHeight
+	 */
 	public boolean isObjectHovered(GameObject obj){
 		if(Math.abs(obj.screenPosition_x - 5 + obj.getCurrentAnimation().getCurrentFrame().getWidth()/2-mouse_position_x) < obj.pixelWidth &&
 		   Math.abs(obj.screenPosition_y + obj.getCurrentAnimation().getCurrentFrame().getHeight()/2-mouse_position_y) < obj.pixelHeight){
@@ -295,6 +307,9 @@ public class Game extends BasicGame
 		return false;
 	}
 	
+	/**
+	 * Sets the menuId to 0 and enables the buttons start and quit. The game is paused here.
+	 */
 	public void goToMainMenu(){
 		menuId = 0;
 		buttons = new ArrayList<Button>();
@@ -302,6 +317,9 @@ public class Game extends BasicGame
 		buttons.add(new Button(windowWidth/2-image_mainmenu.getWidth()/2+165, windowHeight/2-image_mainmenu.getHeight()/2+310, 310, 45, "", "QuitButton"));
 	}
 	
+	/**
+	 * Sets the menuId to 2 and enables the ingame buttons
+	 */
 	public void goToGame(){
 		menuId = 2;
 		buttons = new ArrayList<Button>();
@@ -315,10 +333,9 @@ public class Game extends BasicGame
 		}
 	}
 	
-	
-	
-	
-	
+	/**
+	 * Enables the button for continuing to the next level
+	 */
 	public void completeLevel(){
 		completedLevel = true;
 		buttons = new ArrayList<Button>();
@@ -329,6 +346,9 @@ public class Game extends BasicGame
 		buttons.add(nextLevelButton);
 	}
 	
+	/**
+	 * Goes to the next level
+	 */
 	public void nextLevel() throws SlickException{
 		if(currentLevel < numberOfLevels){
 		currentLevel++;
@@ -340,7 +360,7 @@ public class Game extends BasicGame
 		buttons.add(menuButton);
 		gameLevel = new GameLevel();
 		gameLevel.objectsInLevel.add(player);
-		// Change player's position in the new map. NOTE: player.position_x & _y = 12
+		// Change player's position in the new map
 		player.position_x = (int)(gameLevel.levelWidth/2);
 		player.position_y = (int)(gameLevel.levelHeight/2);
 		gameLevel.createEnemies();
@@ -348,6 +368,9 @@ public class Game extends BasicGame
 		else winGame();
 	}
 	
+	/**
+	 * Ends the game by winning, displays a reset button
+	 */
 	public void winGame(){
 		buttons = new ArrayList<Button>();
 		buttons.add(restartButton);
@@ -355,12 +378,18 @@ public class Game extends BasicGame
 		gameWon = true;
 	}
 	
+	/**
+	 * Ends the game by losing, displays a reset button
+	 */
 	public void loseGame(){
 		buttons = new ArrayList<Button>();
 		buttons.add(restartButton);
 		gameLost = true;
 	}
 	
+	/**
+	 * Resets everything to start values and goes to the main menu
+	 */
 	public void restart() throws SlickException{
 		player = new Player();
 		gameLevel = new GameLevel();
@@ -379,6 +408,7 @@ public class Game extends BasicGame
 		currentLevel = 1;
 		goToMainMenu();
 	}
+	
 	
 	public void mouseMoved(int oldx, int oldy, int newx, int newy){
 		mouse_position_x = newx;
@@ -401,18 +431,20 @@ public class Game extends BasicGame
 				
 			}
 			else if(menuId ==2){
-				float shifted_x = x-windowWidth/2+80;
-				float shifted_y = y-windowHeight/2+40;
+				float shifted_x = x-windowWidth/2+tilewidth/2;
+				float shifted_y = y-windowHeight/2+tileheight/2;
 				if(currentHoveredObject != null){
 					if(currentHoveredObject instanceof Enemy){
+						//click an enemy
 						player.attackMove((Character)currentHoveredObject);
 					}
 					if(currentHoveredObject instanceof Item){
+						//click an item
 						player.moveAndPickUp((Item)currentHoveredObject);
 					}
 				}
-				//click a tile
-				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
+				//click a tile (reverse engineered draw tile loop in render method)
+				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/(tilewidth/2)+shifted_y/(tileheight/2)-1)/2+player.position_x),(int)((shifted_x/(tilewidth/2)-shifted_y/(tileheight/2)+1)/2+player.position_y), false);
 			
 			}
 		}
@@ -432,6 +464,10 @@ public class Game extends BasicGame
 		}
 	}
 	
+	/**
+	 * Called when a button is clicked
+	 * @param clickedbutton The button being clicked
+	 */
 	public void buttonClicked(Button clickedbutton) throws SlickException{
 		System.out.println(clickedbutton.text + " clicked!");
 		switch(clickedbutton.id){
@@ -467,9 +503,9 @@ public class Game extends BasicGame
 		System.out.println("key pressed:"+key);
 		if(menuId == 2 && !gameWon && !gameLost){
 			switch(key){
-				case 1:  goToMainMenu();
+				case 1:  goToMainMenu(); //esc for main menu
 				break;
-				case 2:  player.drinkPotion(0);
+				case 2:  player.drinkPotion(0); //keys 1-8 to drink potions (not implemented yet)
 				break;
 				case 3:  player.drinkPotion(1);
 				break;
@@ -485,16 +521,16 @@ public class Game extends BasicGame
 				break;
 				case 9:  player.drinkPotion(7);
 				break;
-				case 15:  //display map
+				case 15:  //display map using tab
 				break;
-				case 23:  menu_inventory = !menu_inventory;
+				case 23:  menu_inventory = !menu_inventory; // i for inventory
 				break;
-				case 46:  menu_characterSheet = !menu_characterSheet;
+				case 46:  menu_characterSheet = !menu_characterSheet; //c for character sheet
 				break;
 			}
 		}
 		else if(key == 1 && !gameWon && !gameLost){
-			//escape pressed during menu
+			//escape pressed during menu: go back to the game if it was once started
 			if(newGamePressed)
 				goToGame();
 		}
