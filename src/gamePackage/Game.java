@@ -55,10 +55,14 @@ public class Game extends BasicGame
 	boolean completedLevel = false;
 	Button nextLevelButton;
 	Button restartButton;
+	Button charsheetButton;
+	Button inventoryButton;
+	Button mapButton;
+	Button menuButton;
 	int enemyCount = 0;
 	boolean gameWon = false;
 	boolean gameLost = false;
-	int numberOfLevels = 3;
+	int numberOfLevels = 5;
 	
 	public Game(String gamename)
 	{
@@ -105,34 +109,10 @@ public class Game extends BasicGame
 		
 		nextLevelButton = new Button(windowWidth-75, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Continue", "nextlevel");
 		restartButton = new Button(windowWidth/2-37, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Restart", "restart");
-		
-		/*
-		// Testing generation of weapon:
-		Weapon wep1 = Weapon.generateWeapon();
-		System.out.println(wep1.attribute_description);
-		System.out.println(wep1.attribute_attackdmg);
-		System.out.println(wep1.attribute_attackspeed);
-		System.out.println(wep1.attribute_durability_max);
-		
-		// Testing the generateArmor: 
-		Armor arm1 = Armor.generateArmor();	
-		System.out.println(arm1.attribute_description);	
-		System.out.println(arm1.attribute_damage_reduction);
-		System.out.println(arm1.attribute_durability_max);	
-		
-		// Testing the generateArmor: 
-		Jewelry jew1 = Jewelry.generateJewelry();
-		System.out.println(jew1.attribute_description);	
-		System.out.println(jew1.attribute_strength);	
-		System.out.println(jew1.attribute_dexterity);	
-		System.out.println(jew1.attribute_vitality);	
-		System.out.println(jew1.attribute_damage_reduction);	
-		
-		// Testing the generatePotion: 
-		// PROBLEM WITH POTION. attribute_amount = 0
-		Potion pot1 = Potion.generatePotion();
-		System.out.println(pot1.attribute_description);	
-		System.out.println(pot1.attribute_amount);*/
+		charsheetButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+22, 74, 20, "", "charsheet");
+		inventoryButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory");
+		mapButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map");
+		menuButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu");
 		goToMainMenu();
 		
 	}
@@ -325,10 +305,11 @@ public class Game extends BasicGame
 	public void goToGame(){
 		menuId = 2;
 		buttons = new ArrayList<Button>();
-		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+22, 74, 20, "", "charsheet"));
-		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory"));
-		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map"));
-		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu"));
+		buttons.add(charsheetButton);
+		buttons.add(inventoryButton);
+		buttons.add(mapButton);
+		buttons.add(menuButton);
+		
 		if(completedLevel){
 			buttons.add(nextLevelButton);
 		}
@@ -481,6 +462,11 @@ public class Game extends BasicGame
 	
 	public void completeLevel(){
 		completedLevel = true;
+		buttons = new ArrayList<Button>();
+		buttons.add(charsheetButton);
+		buttons.add(inventoryButton);
+		buttons.add(mapButton);
+		buttons.add(menuButton);
 		buttons.add(nextLevelButton);
 	}
 	
@@ -488,6 +474,11 @@ public class Game extends BasicGame
 		if(currentLevel < numberOfLevels){
 		currentLevel++;
 		completedLevel = false;
+		buttons = new ArrayList<Button>();
+		buttons.add(charsheetButton);
+		buttons.add(inventoryButton);
+		buttons.add(mapButton);
+		buttons.add(menuButton);
 		gameLevel = new GameLevel();
 		gameLevel.objectsInLevel.add(player);
 		// Change player's position in the new map. NOTE: player.position_x & _y = 12
