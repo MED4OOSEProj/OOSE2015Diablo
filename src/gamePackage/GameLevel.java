@@ -78,7 +78,7 @@ public class GameLevel implements TileBasedMap {
 			for(int j = 0; j < levelHeight; j++)
 				if (!Game.terrainTypes[grid_terrainIDs[j][i]].blocksPath){
 					temp++;
-					if (temp%10 == 0 && !(j==(int)Game.player.position_x&&i==(int)Game.player.position_y)){
+					if (temp%10 == 0 && !(Math.abs(j-(int)Game.player.position_x) < 5 && Math.abs(i-(int)Game.player.position_y) < 5)){
 						// System.out.println(j + " " + i);
 						objectsInLevel.add(new Enemy(i,j,("Goatman "+(temp+1))));
 					}

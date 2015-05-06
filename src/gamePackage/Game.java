@@ -53,7 +53,13 @@ public class Game extends BasicGame
 	int roamtimer = 1000;
 	boolean hoverObjectLock = false;
 	boolean newGamePressed = false;
-	
+	boolean completedLevel = false;
+	Button nextLevelButton;
+	Button restartButton;
+	int enemyCount = 0;
+	boolean gameWon = false;
+	boolean gameLost = false;
+	int numberOfLevels = 3;
 	
 	public Game(String gamename)
 	{
@@ -69,7 +75,6 @@ public class Game extends BasicGame
 		
 		gc.setMouseCursor(new Image("Textures/cursor.png"), 0, 0);
 		player = new Player();
-		
 		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
@@ -98,6 +103,9 @@ public class Game extends BasicGame
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
+		
+		nextLevelButton = new Button(windowWidth-75, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Continue", "nextlevel");
+		restartButton = new Button(windowWidth/2-37, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Restart", "restart");
 		
 		/*
 		// Testing generation of weapon:
@@ -137,9 +145,9 @@ public class Game extends BasicGame
 		
 		//System.out.println("delta: "+i);
 		
-		if(menuId == 2){
+		if(menuId == 2 && !gameWon && !gameLost){
 			//update objects
-			int enemyCount = 0;
+			enemyCount = 0;
 			
 			for(GameObject gameobj : gameLevel.objectsInLevel){
 				if(gameobj instanceof Character){
@@ -163,7 +171,9 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
-							
+							if(gameobj instanceof Player){
+								loseGame();
+							}
 						}
 					}
 					((Character) gameobj).calculateScreenPos();
@@ -171,10 +181,7 @@ public class Game extends BasicGame
 				
 			}
 			if(enemyCount == 0){
-				//  TESTING MAP CHANGE!
-					// TESTING MAP CHANGE!
-					//         TESTING MAP CHANGE!
-					changeMap();
+					completeLevel();
 			}
 			
 			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
@@ -254,6 +261,11 @@ public class Game extends BasicGame
 			}
 			
 			//interface
+			g.drawString("Level: "+currentLevel, windowWidth-90, 10);
+			if(completedLevel)
+				g.fillRect(nextLevelButton.posX, nextLevelButton.posY, nextLevelButton.width, nextLevelButton.height);
+			else g.drawString("Monsters remaining: "+enemyCount, windowWidth-210, windowHeight-menu2_overlay_right.getHeight()-9);
+			
 			if(menu_inventory){
 				image_inventory.draw(windowWidth-image_inventory.getWidth(),windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11);
 			}
@@ -273,7 +285,20 @@ public class Game extends BasicGame
 			}
 			menu2_overlay_right.draw(windowWidth-menu2_overlay_right.getWidth(),windowHeight-menu2_overlay_right.getHeight());
 			
-			
+			if(gameWon || gameLost){
+				g.setColor(new Color(0,0,0,0.5f));
+				g.fillRect(20, 20, windowWidth-40, windowHeight-40);
+				g.setColor(Color.white);
+				g.fillRect(restartButton.posX, restartButton.posY, restartButton.width, restartButton.height);
+				g.setColor(Color.black);
+				g.drawString(restartButton.text, restartButton.posX+4, restartButton.posY+1);
+			}
+			if(gameWon){
+				g.drawString("You won the game!", windowWidth/2-40, windowHeight/2);
+			}
+			if(gameLost){
+				g.drawString("You died!", windowWidth/2-40, windowHeight/2);
+			}
 			
 		}
 	}
@@ -300,6 +325,9 @@ public class Game extends BasicGame
 		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory"));
 		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map"));
 		buttons.add(new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu"));
+		if(completedLevel){
+			buttons.add(nextLevelButton);
+		}
 	}
 	
 	
@@ -361,24 +389,25 @@ public class Game extends BasicGame
 				}
 				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
 			
-				
-				
 			}
-			
-			for(Button guibutton : buttons){
-				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
-					buttonClicked(guibutton);
-				}
-			}
-			
-			
-			
-			
-			
 		}
 	}
 	
-	public void buttonClicked(Button clickedbutton){
+	public void mouseClicked(int button, int x, int y, int clickCount){
+		if(button == 0){
+			for(Button guibutton : buttons){
+				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
+					try {
+						buttonClicked(guibutton);
+					} catch (SlickException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	public void buttonClicked(Button clickedbutton) throws SlickException{
 		System.out.println(clickedbutton.text + " clicked!");
 		switch(clickedbutton.id){
 		case "StartButton": 
@@ -400,12 +429,18 @@ public class Game extends BasicGame
 		case "QuitButton": //quit?
 			System.exit(0);
 			break;
+		case "nextlevel":
+			nextLevel();
+			break;
+		case "restart":
+			restart();
+			break;
 		}
 	}
 	
 	public void keyPressed(int key, char c){
 		System.out.println("key pressed:"+key);
-		if(menuId == 2){
+		if(menuId == 2 && !gameWon && !gameLost){
 			switch(key){
 				case 1:  goToMainMenu();
 				break;
@@ -433,20 +468,62 @@ public class Game extends BasicGame
 				break;
 			}
 		}
-		else if(key == 1){
+		else if(key == 1 && !gameWon && !gameLost){
 			//escape pressed during menu
 			if(newGamePressed)
 				goToGame();
 		}
 	}
-	public void changeMap() throws SlickException{
+	
+	public void completeLevel(){
+		completedLevel = true;
+		buttons.add(nextLevelButton);
+	}
+	
+	public void nextLevel() throws SlickException{
+		if(currentLevel < numberOfLevels){
 		currentLevel++;
+		completedLevel = false;
 		gameLevel = new GameLevel();
 		gameLevel.objectsInLevel.add(player);
 		// Change player's position in the new map. NOTE: player.position_x & _y = 12
 		player.position_x = (int)(gameLevel.levelWidth/2);
 		player.position_y = (int)(gameLevel.levelHeight/2);
 		gameLevel.createEnemies();
+		}
+		else winGame();
+	}
+	
+	public void winGame(){
+		buttons = new ArrayList<Button>();
+		buttons.add(restartButton);
+		completedLevel = false;
+		gameWon = true;
+	}
+	
+	public void loseGame(){
+		buttons = new ArrayList<Button>();
+		buttons.add(restartButton);
+		gameLost = true;
+	}
+	
+	public void restart() throws SlickException{
+		player = new Player();
+		gameLevel = new GameLevel();
+		gameLevel.objectsInLevel.add(player);
+		gameLevel.createEnemies(); 
+		completedLevel = false;
+		menu_characterSheet = false;
+		menu_inventory =false;
+		roamLock = false;
+		hoverObjectLock = false;
+		newGamePressed = false;
+		completedLevel = false;
+		enemyCount = 0;
+		gameWon = false;
+		gameLost = false;
+		currentLevel = 1;
+		goToMainMenu();
 	}
 	
 }
