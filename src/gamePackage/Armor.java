@@ -38,13 +38,8 @@ public class Armor extends Item {
 		attribute_durability_max = rnd.nextInt(10)*2;
 		attribute_durability_current = attribute_durability_max;
 		
-		// Where is it placed in the inventory?
-		// NOTICE the attribute location system is not IMPLEMENTED
-		// Diablo 1 only has armor and helmet .. we can implement this if we want to. 
-		// armor.attribute_location = 5;
 		
 		// determine what name the armor should have: 
-		// BEWARE, here be magic numbers:
 		String a = prefix[rnd.nextInt(prefix.length)];
 		
 		// Match icon to armor: 
@@ -84,6 +79,7 @@ public class Armor extends Item {
 			break;
 		}
 			
+		// BEWARE, here be magic numbers:
 		String c;
 		if ( attribute_damage_reduction >= 6 && attribute_durability_max >= 18){
 			//  Is the armor the most powerful possible? Add " of Godskin" 
