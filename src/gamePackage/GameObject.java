@@ -34,6 +34,9 @@ public class GameObject implements Comparable<GameObject>{
 		}
 		float comparedCharHeight = o.position_y-o.position_x;
 		//return in descending order
-		return (int)(comparedCharHeight*100-height*100);
+		if(comparedCharHeight > height) return 1;
+		else if (comparedCharHeight == height) return 0;
+		else if(comparedCharHeight < height) return -1;
+		return 0;
 	}
 }

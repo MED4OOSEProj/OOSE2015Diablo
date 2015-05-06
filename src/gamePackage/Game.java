@@ -237,7 +237,7 @@ public class Game extends BasicGame
 				if(gameobj instanceof Enemy){
 					if(gameobj.screenPosition_x >= -tilewidth && gameobj.screenPosition_x < windowWidth && gameobj.screenPosition_y > -tileheight && gameobj.screenPosition_y < windowHeight-menu2_overlay_right.getHeight()+11){
 						//draw red edge when hovered
-						if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
+						//if(!((Enemy)gameobj).dead && !((Enemy)gameobj).dying)
 							if(isObjectHovered(gameobj)){
 								gameobj.getCurrentAnimation().drawFlash(gameobj.screenPosition_x,gameobj.screenPosition_y,gameobj.getCurrentAnimation().getWidth()*1.05f, gameobj.getCurrentAnimation().getHeight()*1.04f, Color.red);
 								tempHoveredObject = gameobj;
@@ -351,7 +351,7 @@ public class Game extends BasicGame
 				if(currentHoveredObject != null){
 					if(currentHoveredObject instanceof Enemy){
 						//System.out.println("Enemy roam area: "+((Enemy)currentHoveredObject).roamArea.size());
-						
+						System.out.println("Enemy height: "+((Enemy)currentHoveredObject).compareTo(player));
 						player.attackMove((Character)currentHoveredObject);
 					}
 					if(currentHoveredObject instanceof Item){
