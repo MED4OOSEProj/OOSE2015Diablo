@@ -7,16 +7,17 @@ import org.newdawn.slick.SlickException;
 
 public class Potion extends Item{
 	
-	public int attribute_amount;
+	int attribute_amount;
 	Image[] potionIcons;
 	
-	public Potion () throws SlickException{
+	Potion () throws SlickException{
 		generatePotion();
 	}
 
-	public void generatePotion() throws SlickException{
+	void generatePotion() throws SlickException{
 		Random rnd = new Random();
 		
+		// Is the potion of medium healing or greater healing. 
 		boolean temp = rnd.nextBoolean(); 
 		if (temp == true){
 			// Should set the player's health to max: Game.player.attribute_health_current = the line below. 
