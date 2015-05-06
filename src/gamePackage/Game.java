@@ -85,12 +85,12 @@ public class Game extends BasicGame
 		
 		
 		//Creates game levels
-		gameLevels[0] = new GameLevel();
+		gameLevels[currentLevel] = new GameLevel();
 		
-		gameLevels[0].objectsInLevel.add(player);
+		gameLevels[currentLevel].objectsInLevel.add(player);
 		// gameLevels[0].objectsInLevel.add(new Enemy(3,1));
 		// gameLevels[0].objectsInLevel.add(new Enemy(2,1));
-		gameLevels[0].createEnemies(); 
+		gameLevels[currentLevel].createEnemies(); 
 		
 		buttonFont = new TrueTypeFont(awtFont, false);
 		treeimg = new Image("Textures/tree1.png");
@@ -151,6 +151,13 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
+							gameLevels[currentLevel].enemyCount--;
+							if(gameLevels[currentLevel].enemyCount == 0){
+							//  TESTING MAP CHANGE!
+								// TESTING MAP CHANGE!
+								//         TESTING MAP CHANGE!
+								changeMap();
+							}
 						}
 					}
 					((Character) gameobj).calculateScreenPos();
@@ -409,6 +416,24 @@ public class Game extends BasicGame
 			//escape pressed during menu
 		}
 	}
-	
+	public void changeMap() throws SlickException{
+		currentLevel++;
+		gameLevels[currentLevel] = new GameLevel();
+		gameLevels[currentLevel].objectsInLevel.add(Game.player);
+		// Change player's position in the new map. NOTE: player.position_x & _y = 12
+		Game.player.position_x = gameLevels[currentLevel].levelWidth/2;
+		Game.player.position_x = gameLevels[currentLevel].levelHeight/2;
+		gameLevels[currentLevel].createEnemies();
+	}
+	/*
+	 * Når en fjende er dræbt
+	 * 		er alle døde?
+	 * hvis ja: 
+	 * 		lav næste bane og ryg spilleren til den 
+	 * 		ny position
+	 * 		rygges over i gameLevels[i]
+	 * Hvis nej: 
+	 * 		do nothing
+	 */
 	
 }

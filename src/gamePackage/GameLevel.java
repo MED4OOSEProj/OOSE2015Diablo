@@ -19,6 +19,7 @@ public class GameLevel implements TileBasedMap {
 	Mover moverChar;
 	public static int[][] checklist = new int[25][25];
 	public static int[][] gridTest = new int[25][25];
+	int enemyCount;
 	// Stops the function from making infinite paths. (not incredibly important for such a small game)
     private static final int maxPathLength = 100;
 
@@ -48,12 +49,16 @@ public class GameLevel implements TileBasedMap {
 		MapBlock map = new MapBlock(); 
 		levelWidth = 25;
 		levelHeight = 25;
+		// reset checklist
+				for(int i = 0; i < levelWidth; i++)
+					for(int j = 0; j < levelHeight; j++)
+						checklist[i][j] = 0;
 		//Fill the map with stone. 
 		for(int i = 0; i < levelWidth; i++){
 			for(int j = 0; j < levelHeight; j++)
 				gridTest[i][j] = 1;
 		}
-		map.generateMapBlock(13, 13,1);
+		map.generateMapBlock(levelWidth/2, levelHeight/2,1);
 		grid_terrainIDs = gridTest;
 				/*new int[][]{
 		        {1,1,1,1,1,1,1,1,1,1},
@@ -77,6 +82,7 @@ public class GameLevel implements TileBasedMap {
 					if (temp%10 == 0 && !(j==13&&i==13)){
 						// System.out.println(j + " " + i);
 						objectsInLevel.add(new Enemy(i,j));
+						enemyCount++;
 					}
 				}	
 	}
