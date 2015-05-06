@@ -210,14 +210,6 @@ public class Character extends GameObject implements Mover{
 			}
 		}
 	}
-	
-	public boolean isThereAPathTo(int start_x, int start_y, int end_x, int end_y){
-		Path temppath = Game.gameLevel.getPath(this, start_x,start_y,end_x,end_y);
-		if(temppath!= null){
-			return true;
-		}
-		return false;
-	}
 
 	
 	@Override

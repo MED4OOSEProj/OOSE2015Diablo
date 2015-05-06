@@ -16,7 +16,6 @@ import org.newdawn.slick.SlickException;
 
 public class Game extends BasicGame
 {
-	
 	private GameObject currentHoveredObject;
 	static GameLevel gameLevel;
 	static TerrainType[] terrainTypes = new TerrainType[6];
@@ -57,6 +56,24 @@ public class Game extends BasicGame
 	Button mapButton;
 	Button menuButton;
 	
+	public static void main(String[] args)
+	{
+		try
+		{
+			AppGameContainer appgc;
+			appgc = new AppGameContainer(new Game("Diablo"));
+			//appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
+			appgc.setDisplayMode(800, 600, false);
+			appgc.setAlwaysRender(true);
+			appgc.start();
+			
+		}
+		catch (SlickException ex)
+		{
+			Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
 	Game(String gamename)
 	{
 		super(gamename);
@@ -65,6 +82,8 @@ public class Game extends BasicGame
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
+		
+		//Saves the window sizes, so that the methods that need the screen size do not need the gamecontainer
 		windowWidth = gc.getWidth();
 		windowHeight = gc.getHeight();
 		
@@ -108,43 +127,54 @@ public class Game extends BasicGame
 		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
 		
+		//If the game is not supposed to be paused
 		if(menuId == 2 && !gameWon && !gameLost){
 			enemyCount = 0;
 			
+			//run through each object in the level
 			for(GameObject gameobj : gameLevel.objectsInLevel){
 				if(gameobj instanceof Character){
+					//if the object is a character
 					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
+						//and is not dead
 						if(gameobj instanceof Enemy){
-							//only do this every roamtimer milliseconds
+							//make enemies roam every roamtimer milliseconds
 							if(!roamLock && System.currentTimeMillis()%roamtimer < 50){
 								((Enemy) gameobj).roam();
 							}
 							
 							enemyCount++;
 						}
+						//call the character's move method to move it along its path, possibly colliding and attacking others
 						((Character) gameobj).move(i);
+						//make sure the animation is synchronized correctly, using time between each update (i)
 						gameobj.getCurrentAnimation().update(i);
 					}
 					else if(((Character)gameobj).dying){
+						//if the character is dying, make sure the animation only runs till its end
 						gameobj.getCurrentAnimation().update(i);
 						gameobj.getCurrentAnimation().setLooping(false);
 						if(gameobj.getCurrentAnimation().getFrame() == gameobj.getCurrentAnimation().getFrameCount()-1){
-							
+							//and when the animation is over, tag the character as dead
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
 							if(gameobj instanceof Player){
+								//if the dead character is the player, lose the game
 								loseGame();
 							}
 						}
 					}
+					//after moving, calculate the new position in pixel coordinates for drawing later
 					((Character) gameobj).calculateScreenPos();
 				}
 				
 			}
+			//after running through each object, the number of living enemies have been counted
 			if(enemyCount == 0 && !completedLevel){
+				//and the level can be completed, giving access to the next
 					completeLevel();
 			}
-			
+			//roamtimer mechanics. Turn off the lock at the end of the timer, and turn it on in the beginning of the timer.
 			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
 				if(roamLock){
 					roamLock = false;
@@ -160,7 +190,7 @@ public class Game extends BasicGame
 	{
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 
-		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
+		// menuId == 0 gives mainMenu, menuId == 1 gives loadMenu (to be implemented in the future), menuId == 2 shows the game
 		if (menuId == 0){
 			image_mainmenu.drawCentered(windowWidth/2, windowHeight/2);
 		} 
@@ -287,23 +317,7 @@ public class Game extends BasicGame
 	
 	
 	
-	public static void main(String[] args)
-	{
-		try
-		{
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new Game("Diablo"));
-			//appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
-			appgc.setDisplayMode(800, 600, false);
-			appgc.setAlwaysRender(true);
-			appgc.start();
-			
-		}
-		catch (SlickException ex)
-		{
-			Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+	
 	
 	public void completeLevel(){
 		completedLevel = true;
