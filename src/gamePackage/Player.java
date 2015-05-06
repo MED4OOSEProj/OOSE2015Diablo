@@ -6,15 +6,15 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 public class Player extends Character{
-	public Item[][] inventory = new Item[6][4];
-	public Item[] equipment = new Item[4];
-	public int gold;
-	public int attribute_level;
-	public int attribute_experience;
-	public int attribute_strength;
-	public int attribute_dexterity;
-	public int attribute_vitality;
-	public int attributepoints;
+	Item[][] inventory = new Item[6][4];
+	Item[] equipment = new Item[4];
+	int gold;
+	int attribute_level;
+	int attribute_experience;
+	int attribute_strength;
+	int attribute_dexterity;
+	int attribute_vitality;
+	int attributepoints;
 
 	public Player() throws SlickException{
 		//Sets the player attributes

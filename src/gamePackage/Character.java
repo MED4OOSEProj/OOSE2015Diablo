@@ -6,23 +6,23 @@ import org.newdawn.slick.util.pathfinding.Path;
 
 public class Character extends GameObject implements Mover{
 	// variables
-	public Animation[] anim_attacking = new Animation[4];
-	public Animation[] anim_dying = new Animation[4];;
-	public Animation[] anim_walking = new Animation[4];
-	public Animation[] anim_idle = new Animation[4];
-	public Sound sound_movement;
-	public Sound sound_attacking;
-	public Sound sound_dying;
-	public boolean dying = false;
-	public boolean dead = false;
-	public int attribute_health_max =5;
-	public int attribute_health_current;
-	public int attribute_damage;
-	public int attribute_attackSpeed = 1000;
-	public String attribute_name;
+	Animation[] anim_attacking = new Animation[4];
+	Animation[] anim_dying = new Animation[4];;
+	Animation[] anim_walking = new Animation[4];
+	Animation[] anim_idle = new Animation[4];
+	Sound sound_movement;
+	Sound sound_attacking;
+	Sound sound_dying;
+	boolean dying = false;
+	boolean dead = false;
+	int attribute_health_max =5;
+	int attribute_health_current;
+	int attribute_damage;
+	int attribute_attackSpeed = 1000;
+	String attribute_name;
 	private int direction = 1;
-	public Action currentAction = Action.IDLE;
-	public Character attackTarget;
+	Action currentAction = Action.IDLE;
+	Character attackTarget;
 	
 	long lastAttackTime;
 	

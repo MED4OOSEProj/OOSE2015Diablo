@@ -7,14 +7,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 public class Enemy extends Character{
-	public ArrayList<Item> reward_items = new ArrayList<Item>();
-	public ArrayList<Vector2> roamArea = new ArrayList<Vector2>();
-	public int reward_gold;
-	public int reward_experience;
-	public int attributepoints;
-	public Armor gear_armor;
-	public Weapon gear_weapon;
-	public boolean mouse_hovered = true;
+	ArrayList<Item> reward_items = new ArrayList<Item>();
+	ArrayList<Vector2> roamArea = new ArrayList<Vector2>();
+	int reward_gold;
+	int reward_experience;
+	int attributepoints;
+	Armor gear_armor;
+	Weapon gear_weapon;
+	boolean mouse_hovered = true;
 	private float aggroArea = 3f;
 	boolean areaPulled = false;
 	int spawnpos_x;

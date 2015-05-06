@@ -1,8 +1,6 @@
 package gamePackage;
 
 import gamePackage.Character.Action;
-
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -15,26 +13,26 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 
 public class Game extends BasicGame
 {
-	Image treeimg;
-	String str;
-	GameLevel gamelevel;
-	ArrayList<Button> buttons = new ArrayList<Button>();
-	int menuId = 0;
-	Font awtFont = new Font("Times New Roman", Font.TRUETYPE_FONT, 18);
-	TrueTypeFont buttonFont;
+	
+	private GameObject currentHoveredObject;
+	static GameLevel gameLevel;
 	static TerrainType[] terrainTypes = new TerrainType[6];
-	public static GameLevel gameLevel;
-	public int currentLevel = 1;
+	static Player player;
+	private int currentLevel = 1;
 	static int windowWidth;
 	static int windowHeight;
-	static Player player;
+	int menuId = 0;
 	int mouse_position_x;
 	int mouse_position_y;
-	GameObject currentHoveredObject;
+	int tilewidth;
+	int tileheight;
+	int roamtimer = 1000;
+	int enemyCount = 0;
+	int numberOfLevels = 5;
+	float yscale = 0.1f;
 	Image menu2_overlay_left;
 	Image menu2_overlay_right;
 	Image menu2_overlay_extender;
@@ -43,28 +41,23 @@ public class Game extends BasicGame
 	Image image_inventory;
 	Image image_charsheet;
 	Image image_mainmenu;
-	float yscale = 0.1f;
 	boolean menu_characterSheet = false;
 	boolean menu_inventory =false;
-	int tilewidth;
-	int tileheight;
+	boolean gameWon = false;
+	boolean gameLost = false;
 	boolean roamLock = false;
-	int roamtimer = 1000;
 	boolean hoverObjectLock = false;
 	boolean newGamePressed = false;
 	boolean completedLevel = false;
+	ArrayList<Button> buttons = new ArrayList<Button>();
 	Button nextLevelButton;
 	Button restartButton;
 	Button charsheetButton;
 	Button inventoryButton;
 	Button mapButton;
 	Button menuButton;
-	int enemyCount = 0;
-	boolean gameWon = false;
-	boolean gameLost = false;
-	int numberOfLevels = 5;
 	
-	public Game(String gamename)
+	Game(String gamename)
 	{
 		super(gamename);
 	}
@@ -74,7 +67,6 @@ public class Game extends BasicGame
 		//Called once, upon starting the program
 		windowWidth = gc.getWidth();
 		windowHeight = gc.getHeight();
-		//gc.setTargetFrameRate(300);
 		
 		gc.setMouseCursor(new Image("Textures/cursor.png"), 0, 0);
 		player = new Player();
@@ -98,14 +90,8 @@ public class Game extends BasicGame
 		
 		//Creates game levels
 		gameLevel = new GameLevel();
-		
 		gameLevel.objectsInLevel.add(player);
-		// gameLevels[0].objectsInLevel.add(new Enemy(3,1));
-		// gameLevels[0].objectsInLevel.add(new Enemy(2,1));
 		gameLevel.createEnemies(); 
-		
-		buttonFont = new TrueTypeFont(awtFont, false);
-		treeimg = new Image("Textures/tree1.png");
 		
 		nextLevelButton = new Button(windowWidth-75, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Continue", "nextlevel");
 		restartButton = new Button(windowWidth/2-37, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Restart", "restart");
@@ -113,8 +99,8 @@ public class Game extends BasicGame
 		inventoryButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory");
 		mapButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map");
 		menuButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu");
-		goToMainMenu();
 		
+		goToMainMenu();
 	}
 
 	@Override
@@ -122,20 +108,16 @@ public class Game extends BasicGame
 		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
 		
-		//System.out.println("delta: "+i);
-		
 		if(menuId == 2 && !gameWon && !gameLost){
-			//update objects
 			enemyCount = 0;
 			
 			for(GameObject gameobj : gameLevel.objectsInLevel){
 				if(gameobj instanceof Character){
 					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
 						if(gameobj instanceof Enemy){
-							//only do this every x seconds
+							//only do this every roamtimer milliseconds
 							if(!roamLock && System.currentTimeMillis()%roamtimer < 50){
 								((Enemy) gameobj).roam();
-								
 							}
 							
 							enemyCount++;
@@ -166,7 +148,6 @@ public class Game extends BasicGame
 			if(System.currentTimeMillis()%roamtimer > roamtimer-50){
 				if(roamLock){
 					roamLock = false;
-					//System.out.println("Enemies left: " + enemyCount);
 				}
 			}
 			else roamLock = true;
@@ -178,21 +159,10 @@ public class Game extends BasicGame
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
 		//Is called every time a render has completed, so as fast as the hardware can do it.
-		//g.drawString("Hello World!", 250+(System.currentTimeMillis()/10)%50, 200);
-		//treeimg.draw(250+(System.currentTimeMillis()/10)%50, 200);
-		
-		// change loadMenu to mainMenu to see the mainMenu buttons. Next step?> If statement
+
 		// menuId == 0 gives mainMenu, menuId == 1, gives loadMenu, menuId == 2 shows the game
 		if (menuId == 0){
 			image_mainmenu.drawCentered(windowWidth/2, windowHeight/2);
-			/*  buttontesting
-			for(Button button : buttons){
-				g.setColor(org.newdawn.slick.Color.darkGray);
-				g.fillRect(button.posX, button.posY, button.width, button.height);
-				g.setColor(org.newdawn.slick.Color.black);
-				FontUtils.drawCenter(buttonFont, button.text, button.posX, button.posY, button.width);
-			}
-			*/
 		} 
 		else if (menuId == 2){
 			
@@ -335,131 +305,6 @@ public class Game extends BasicGame
 		}
 	}
 	
-	public void mouseMoved(int oldx, int oldy, int newx, int newy){
-		mouse_position_x = newx;
-		mouse_position_y = newy;
-	}
-	
-	public void mousePressed(int button,int x,int y){
-		
-		//left click
-		if(button == 0){
-			//click a tile
-			if(menuId == 2 && menu_inventory && x > windowWidth-image_inventory.getWidth() && y >windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11){
-				//click inside inventory
-			}
-			else if (menuId == 2 && menu_characterSheet && x < image_charsheet.getWidth() && y >windowHeight - menu2_overlay_left.getHeight()-image_charsheet.getHeight()+11){
-				//click inside charsheet
-			}
-			else if (menuId == 2 && y >windowHeight - menu2_overlay_left.getHeight()+11){
-				//click inside lower interface
-				
-			}
-			else if(menuId ==2){
-				float shifted_x = x-windowWidth/2+80;
-				float shifted_y = y-windowHeight/2+40;
-				System.out.println("player x:"+player.position_x+" player y:"+player.position_y);
-				//playerpos_x = (int)((shifted_x/80+shifted_y/40-1)/2+playerpos_x);
-				//playerpos_y = (int)((shifted_x/80-shifted_y/40+1)/2+playerpos_y);
-				//enemy1.moveTo(Math.round(enemy1.position_x),Math.round(enemy1.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y));
-				if(currentHoveredObject != null){
-					if(currentHoveredObject instanceof Enemy){
-						//System.out.println("Enemy roam area: "+((Enemy)currentHoveredObject).roamArea.size());
-						//System.out.println("Enemy height: "+((Enemy)currentHoveredObject).compareTo(player));
-						player.attackMove((Character)currentHoveredObject);
-					}
-					if(currentHoveredObject instanceof Item){
-						player.moveAndPickUp((Item)currentHoveredObject);
-					}
-				}
-				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
-			
-			}
-		}
-	}
-	
-	public void mouseClicked(int button, int x, int y, int clickCount){
-		if(button == 0){
-			for(Button guibutton : buttons){
-				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
-					try {
-						buttonClicked(guibutton);
-					} catch (SlickException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-	
-	public void buttonClicked(Button clickedbutton) throws SlickException{
-		System.out.println(clickedbutton.text + " clicked!");
-		switch(clickedbutton.id){
-		case "StartButton": 
-			newGamePressed = true;
-			goToGame();
-			break;
-		case "charsheet": 
-			menu_characterSheet = !menu_characterSheet;
-			break;
-		case "inventory": 
-			menu_inventory = !menu_inventory;
-			break;
-		case "map": 
-			//display map
-			break;
-		case "menu": 
-			goToMainMenu();
-			break;
-		case "QuitButton": //quit?
-			System.exit(0);
-			break;
-		case "nextlevel":
-			nextLevel();
-			break;
-		case "restart":
-			restart();
-			break;
-		}
-	}
-	
-	public void keyPressed(int key, char c){
-		System.out.println("key pressed:"+key);
-		if(menuId == 2 && !gameWon && !gameLost){
-			switch(key){
-				case 1:  goToMainMenu();
-				break;
-				case 2:  player.drinkPotion(0);
-				break;
-				case 3:  player.drinkPotion(1);
-				break;
-				case 4:  player.drinkPotion(2);
-				break;
-				case 5:  player.drinkPotion(3);
-				break;
-				case 6:  player.drinkPotion(4);
-				break;
-				case 7:  player.drinkPotion(5);
-				break;
-				case 8:  player.drinkPotion(6);
-				break;
-				case 9:  player.drinkPotion(7);
-				break;
-				case 15:  //display map
-				break;
-				case 23:  menu_inventory = !menu_inventory;
-				break;
-				case 46:  menu_characterSheet = !menu_characterSheet;
-				break;
-			}
-		}
-		else if(key == 1 && !gameWon && !gameLost){
-			//escape pressed during menu
-			if(newGamePressed)
-				goToGame();
-		}
-	}
-	
 	public void completeLevel(){
 		completedLevel = true;
 		buttons = new ArrayList<Button>();
@@ -521,4 +366,123 @@ public class Game extends BasicGame
 		goToMainMenu();
 	}
 	
+	public void mouseMoved(int oldx, int oldy, int newx, int newy){
+		mouse_position_x = newx;
+		mouse_position_y = newy;
+	}
+	
+	public void mousePressed(int button,int x,int y){
+		
+		//left click
+		if(button == 0){
+			
+			if(menuId == 2 && menu_inventory && x > windowWidth-image_inventory.getWidth() && y >windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11){
+				//click inside inventory
+			}
+			else if (menuId == 2 && menu_characterSheet && x < image_charsheet.getWidth() && y >windowHeight - menu2_overlay_left.getHeight()-image_charsheet.getHeight()+11){
+				//click inside charsheet
+			}
+			else if (menuId == 2 && y >windowHeight - menu2_overlay_left.getHeight()+11){
+				//click inside lower interface
+				
+			}
+			else if(menuId ==2){
+				float shifted_x = x-windowWidth/2+80;
+				float shifted_y = y-windowHeight/2+40;
+				if(currentHoveredObject != null){
+					if(currentHoveredObject instanceof Enemy){
+						player.attackMove((Character)currentHoveredObject);
+					}
+					if(currentHoveredObject instanceof Item){
+						player.moveAndPickUp((Item)currentHoveredObject);
+					}
+				}
+				//click a tile
+				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/80+shifted_y/40-1)/2+player.position_x),(int)((shifted_x/80-shifted_y/40+1)/2+player.position_y), false);
+			
+			}
+		}
+	}
+	
+	public void mouseClicked(int button, int x, int y, int clickCount){
+		if(button == 0){
+			for(Button guibutton : buttons){
+				if(guibutton.posX <= x && guibutton.posX + guibutton.width >= x && guibutton.posY <= y && guibutton.posY+guibutton.height >= y){
+					try {
+						buttonClicked(guibutton);
+					} catch (SlickException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	public void buttonClicked(Button clickedbutton) throws SlickException{
+		System.out.println(clickedbutton.text + " clicked!");
+		switch(clickedbutton.id){
+		case "StartButton": 
+			newGamePressed = true;
+			goToGame();
+			break;
+		case "charsheet": 
+			menu_characterSheet = !menu_characterSheet;
+			break;
+		case "inventory": 
+			menu_inventory = !menu_inventory;
+			break;
+		case "map": 
+			//display map
+			break;
+		case "menu": 
+			goToMainMenu();
+			break;
+		case "QuitButton":
+			System.exit(0);
+			break;
+		case "nextlevel":
+			nextLevel();
+			break;
+		case "restart":
+			restart();
+			break;
+		}
+	}
+	
+	public void keyPressed(int key, char c){
+		System.out.println("key pressed:"+key);
+		if(menuId == 2 && !gameWon && !gameLost){
+			switch(key){
+				case 1:  goToMainMenu();
+				break;
+				case 2:  player.drinkPotion(0);
+				break;
+				case 3:  player.drinkPotion(1);
+				break;
+				case 4:  player.drinkPotion(2);
+				break;
+				case 5:  player.drinkPotion(3);
+				break;
+				case 6:  player.drinkPotion(4);
+				break;
+				case 7:  player.drinkPotion(5);
+				break;
+				case 8:  player.drinkPotion(6);
+				break;
+				case 9:  player.drinkPotion(7);
+				break;
+				case 15:  //display map
+				break;
+				case 23:  menu_inventory = !menu_inventory;
+				break;
+				case 46:  menu_characterSheet = !menu_characterSheet;
+				break;
+			}
+		}
+		else if(key == 1 && !gameWon && !gameLost){
+			//escape pressed during menu
+			if(newGamePressed)
+				goToGame();
+		}
+	}
 }
