@@ -135,11 +135,13 @@ public class Game extends BasicGame
 		
 		if(menuId == 2){
 			//update objects
+			int enemyCount = 0;
 			for(GameObject gameobj : gameLevels[currentLevel].objectsInLevel){
 				if(gameobj instanceof Character){
 					if(!((Character)gameobj).dead && !((Character)gameobj).dying){
 						if(gameobj instanceof Enemy){
 							((Enemy) gameobj).roam();
+							enemyCount++;
 						}
 						((Character) gameobj).move(i);
 						gameobj.getCurrentAnimation().update(i);
@@ -151,8 +153,8 @@ public class Game extends BasicGame
 							
 							((Character) gameobj).dying = false;
 							((Character) gameobj).dead = true;
-							gameLevels[currentLevel].enemyCount--;
-							if(gameLevels[currentLevel].enemyCount == 0){
+							enemyCount--;
+							if(enemyCount == 0){
 							//  TESTING MAP CHANGE!
 								// TESTING MAP CHANGE!
 								//         TESTING MAP CHANGE!

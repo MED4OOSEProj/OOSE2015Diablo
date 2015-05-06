@@ -19,7 +19,6 @@ public class GameLevel implements TileBasedMap {
 	Mover moverChar;
 	public static int[][] checklist = new int[25][25];
 	public static int[][] gridTest = new int[25][25];
-	int enemyCount;
 	// Stops the function from making infinite paths. (not incredibly important for such a small game)
     private static final int maxPathLength = 100;
 
@@ -82,7 +81,6 @@ public class GameLevel implements TileBasedMap {
 					if (temp%10 == 0 && !(j==13&&i==13)){
 						// System.out.println(j + " " + i);
 						objectsInLevel.add(new Enemy(i,j));
-						enemyCount++;
 					}
 				}	
 	}
