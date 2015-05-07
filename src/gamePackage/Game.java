@@ -351,6 +351,7 @@ public class Game extends BasicGame
 	 */
 	public void nextLevel() throws SlickException{
 		if(currentLevel < numberOfLevels){
+		player.path = null;
 		currentLevel++;
 		completedLevel = false;
 		buttons = new ArrayList<Button>();

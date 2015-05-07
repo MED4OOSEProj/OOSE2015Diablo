@@ -62,11 +62,9 @@ public class Enemy extends Character{
 	
 	public void roam(){
 			if(Math.abs(Game.player.position_x - position_x) <= aggroArea && Math.abs(Game.player.position_y - position_y) <= aggroArea){
-				//if there is a path to the player, move there
-				//attackTarget = Game.player;
-				//if(isThereAPathTo(Math.round(position_x), Math.round(position_y), Math.round(Game.player.position_x),Math.round(Game.player.position_y))){
+				//if the player is within the enemy's aggroArea, the enemy will attack move
 					attackMove(Game.player);
-					//pull a monster, and the monsters around that monster
+					//pull the enemies around the enemy (only once)
 					if(!areaPulled){
 						for(GameObject gameobj : Game.gameLevel.objectsInLevel){
 							if(gameobj instanceof Enemy){
@@ -77,7 +75,6 @@ public class Enemy extends Character{
 						}
 						areaPulled = true;
 					}
-				//}
 			}
 			if(currentAction == Action.IDLE && System.currentTimeMillis()-lastIdleTime > roamIdleTime){
 				lastIdleTime = System.currentTimeMillis();
