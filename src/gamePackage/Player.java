@@ -50,6 +50,9 @@ public class Player extends Character{
 			attribute_health_current = attribute_health_max;
 	}
 	
+	/**
+	 * Updates the player health, damage and attackspeed. Based on his stats and equipment.
+	 */
 	public void calculateStats(){
 		attribute_health_max = attribute_vitality*5;
 		attribute_damage = ((Weapon)equipment[EquipmentType.WEAPON]).attribute_attackdmg +(int)(attribute_strength/4);
@@ -57,7 +60,6 @@ public class Player extends Character{
 	}
 	
 	public void moveAndPickUp(Item target){
-		//Player.equipment[EquipmentType.FEET] = 
 	}
 	
 	public void moveAndAttack(Enemy target){

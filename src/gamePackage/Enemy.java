@@ -25,6 +25,7 @@ public class Enemy extends Character{
 	long lastIdleTime;
 	
 	public Enemy(float tile_x, float tile_y, String name) throws SlickException{
+		//Sets the enemy attributes. Should be defined as parameters in its constructor when more enemies are implemented.
 		position_x = tile_x;
 		position_y = tile_y;
 		spawnpos_x = (int)position_x;
@@ -60,6 +61,9 @@ public class Enemy extends Character{
 		lastIdleTime = System.currentTimeMillis();
 	}
 	
+	/**
+	 * Makes the enemy check if the player is inside its aggroArea. If yes, attack him, if no, move to a random tile near its spawn position.
+	 */
 	public void roam(){
 			if(Math.abs(Game.player.position_x - position_x) <= aggroArea && Math.abs(Game.player.position_y - position_y) <= aggroArea){
 				//if the player is within the enemy's aggroArea, the enemy will attack move
@@ -89,6 +93,9 @@ public class Enemy extends Character{
 			
 	}
 	
+	/**
+	 * Adds unblocked tiles to the area which the enemy can decide to move to while idle.
+	 */
 	void createRoamArea(){
 		for(int x = spawnpos_x; x < spawnpos_x+roamSize; x++){
 			for(int y = spawnpos_y; y < spawnpos_y+roamSize; y++){
