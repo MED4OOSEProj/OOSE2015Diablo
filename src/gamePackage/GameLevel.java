@@ -11,30 +11,26 @@ import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 public class GameLevel implements TileBasedMap {
-	public ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
-	public int[][] grid_terrainIDs;
-	public Sound sound_track;
+	ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
+	int[][] grid_terrainIDs;
+	Sound sound_track;
 	int levelWidth;
 	int levelHeight;
 	Mover moverChar;
-	public static int[][] checklist = new int[25][25];
-	public static int[][] gridTest = new int[25][25];
-	// Stops the function from making infinite paths. (not incredibly important for such a small game)
+	static int[][] checklist = new int[25][25];
+	static int[][] gridTest = new int[25][25];
+	// Stops the function from making infinite paths.
     private static final int maxPathLength = 100;
-
-    /**
-    private static final int startX = 1;
-    private static final int startY = 1;
-
-    private static final int goalX = 1;
-    private static final int goalY = 6;
-     *  
-	*/
     
 	public GameLevel(){
 		createRandomMap();
 	}
 
+	/**
+	 * Gets a path from the start position to the goal position
+	 * @param mover The mover object moving along the path (a Character is a Mover)
+	 * @return The path to the destination goalX and goalY. Null if no path is found.
+	 */
 	public Path getPath(Mover mover, int startX, int startY, int goalX, int goalY){
 		
 		AStarPathFinder pathFinder = new AStarPathFinder(this, maxPathLength, false);
@@ -42,7 +38,9 @@ public class GameLevel implements TileBasedMap {
         return path;
 	}
 
-	
+	/**
+	 * Fills the grid_terrainIDs array with 0's and 1's to make a new random map
+	 */
 	public void createRandomMap(){
 		//random map generation
 		MapBlock map = new MapBlock(); 
@@ -59,19 +57,11 @@ public class GameLevel implements TileBasedMap {
 		}
 		map.generateMapBlock(levelWidth/2, levelHeight/2,1);
 		grid_terrainIDs = gridTest;
-				/*new int[][]{
-		        {1,1,1,1,1,1,1,1,1,1},
-		        {1,0,0,0,0,0,1,1,1,1},
-		        {1,0,0,0,0,0,1,1,1,1},
-		        {1,0,0,0,1,0,0,0,1,1},
-		        {1,0,0,0,1,1,1,0,1,1},
-		        {1,1,1,0,1,1,1,0,0,0},
-		        {1,0,1,0,0,0,0,0,1,0},
-		        {1,0,1,1,1,1,1,1,1,0},
-		        {1,0,0,0,0,0,0,0,0,0},
-		        {1,1,1,1,1,1,1,1,1,0}
-		    };*/
 	}
+	
+	/**
+	 * Fills map with enemies.
+	 */
 	public void createEnemies() throws SlickException{
 		int temp = 0;
 		for(int i = 0; i < levelWidth; i++)
@@ -79,12 +69,19 @@ public class GameLevel implements TileBasedMap {
 				if (!Game.terrainTypes[grid_terrainIDs[j][i]].blocksPath){
 					temp++;
 					if (temp%10 == 0 && !(Math.abs(j-(int)Game.player.position_x) < 5 && Math.abs(i-(int)Game.player.position_y) < 5)){
-						// System.out.println(j + " " + i);
+						//place an enemy every 10 unblocked tile, but not within 5 tiles of the player
 						objectsInLevel.add(new Enemy(i,j,("Goatman "+(temp+1))));
 					}
 				}
 	}
 	
+	/**
+	 * Checks if the given position will make the character collide with another object
+	 * @param character The character checking if there will be a collision with it
+	 * @param x The x tile position to be checked
+	 * @param y The y tile position to be checked
+	 * @return The object which the character will collide with. Null if no collision will occur.
+	 */
 	public GameObject collidingObject(Character character, float x, float y){
 		for(GameObject colliderObject : objectsInLevel){
 			//Exclude the colliding character
@@ -104,15 +101,24 @@ public class GameLevel implements TileBasedMap {
 		return null;
 	}
 	
+	
+	/**
+	 * Checks if the given tile is passable by a mover.
+	 * @param arg0 The context in which the passability is being used. Has a mover object. If null, uses moverChar in GameLevel as mover.
+	 * @param arg1 The x tile position to be checked
+	 * @param arg2 The y tile position to be checked
+	 * @return True if the tile is blocked, false if it is passable.
+	 */
 	@Override
 	public boolean blocked(PathFindingContext arg0, int arg1, int arg2) {
+		//Because pathfindingcontext cannot be instantiated, a workaround to call this method with a specific character is implemented
+		//If arg0 is null, use the moverChar as mover instead.
 		Mover mover;
 		if(arg0 != null)
 			mover = arg0.getMover();
 		else
 			mover = moverChar;
-		// TODO Auto-generated method stub
-		//System.out.println("x:"+arg2+"y:"+arg1+" terraintype: "+grid_terrainIDs[arg2][arg1]);
+		//If the tile is out of bounds, the path is blocked
 		if(arg1 < 0 || arg2 < 0 || arg1 > levelHeight-1 || arg2 > levelWidth-1)
 			return true;
 		
@@ -129,9 +135,17 @@ public class GameLevel implements TileBasedMap {
 			}
 		}
 		
+		//grid_terrainIDs is [y][x], which is why arg2 and arg1 are swapped when returning the blocked boolean
 		return Game.terrainTypes[grid_terrainIDs[arg2][arg1]].blocksPath;
 	}
 	
+	/**
+	 * Checks if the given tile is passable by a character.
+	 * @param character The character which will move to the tile.
+	 * @param end_x The x tile position to be checked
+	 * @param end_y The y tile position to be checked
+	 * @return True if the tile is blocked, false if it is passable.
+	 */
 	public boolean blockedChar(Character character, int end_x, int end_y) {
 		moverChar = character;
 		return blocked(null, end_x, end_y);
