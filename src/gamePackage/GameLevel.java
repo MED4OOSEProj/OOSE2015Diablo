@@ -10,6 +10,7 @@ import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
+//implements tilebasedmap in order for the slick pathfinding library to use the map.
 public class GameLevel implements TileBasedMap {
 	ArrayList<GameObject> objectsInLevel = new ArrayList<GameObject>();
 	int[][] grid_terrainIDs;
