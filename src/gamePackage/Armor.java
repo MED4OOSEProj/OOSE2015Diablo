@@ -7,17 +7,21 @@ import org.newdawn.slick.SlickException;
 
 public class Armor extends Item {
 	
+	
 	int attribute_damage_reduction;
 	int attribute_durability_max;
 	int attribute_durability_current;
 	int attribute_location;
 	
+	
 	// Don't add more names to the arrays without changing the if-statements.
 	// MUST have an EVEN number of names in the arrays.
 	String[] prefix = new String[]{"Brunhilde's ","Unbreakable ","Used ","Tattered ","Dirty ","Mighty ","Shining ","Glittering ","Cursed ","Holy "}; 
 	
+	
 	// armortype
 	String[] armorType = new String[]{"Breast Plate","Cape","Chain Mail","Cloak","Full Plate Mail","Gothic Plate","Rags","Ring Mail","Robe","Studded Leather Armor"};
+	
 	
 	// 0-5 are high damage reduction, 6-8 are high durability, 9 is the supposed to be the best 
 	String[] suffix = new String[]{" of Infinite Durability"," of Protection"," of Fortitude"," of The Lady's Blessing"," of The Everliving"," of Eternity"," of Unparralled Fortitude"," of the Unbreakable Vow"," of Diamond Endurance"," of Godskin"};
@@ -28,8 +32,10 @@ public class Armor extends Item {
 		generateArmor();
 	}
 
+	
 	void generateArmor() throws SlickException{
 		Random rnd = new Random();
+	
 		
 		// How much does the armor reduce incoming damage?
 		attribute_damage_reduction = rnd.nextInt(5)+2;
@@ -44,9 +50,11 @@ public class Armor extends Item {
 		// determine what name the armor should have: 
 		String a = prefix[rnd.nextInt(prefix.length)];
 		
+		
 		// Match icon to armor: 
 		int temp = rnd.nextInt(armorType.length);
 		String b = armorType[temp];
+		
 		
 		// Switch case to choose an icon. 
 		switch (temp){
@@ -82,6 +90,7 @@ public class Armor extends Item {
 			break;
 		}
 			
+		
 		// BEWARE, here be magic numbers:
 		String c;
 		if ( attribute_damage_reduction >= 6 && attribute_durability_max >= 18){
@@ -98,7 +107,10 @@ public class Armor extends Item {
 			c = "";
 		}
 		
+		
 		// Combine strings to make the name: 
 		attribute_description = a + b + c;
 	}
 }
+
+

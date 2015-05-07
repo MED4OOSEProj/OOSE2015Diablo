@@ -14,7 +14,9 @@ public class GameObject implements Comparable<GameObject>{
 	public int pixelTranslation_y;
 	float collision_size = 0.30f;
 	
+	
 	public GameObject(){}
+	
 	
 	/**
 	 * Gets the Animation which this object is performing
@@ -23,6 +25,7 @@ public class GameObject implements Comparable<GameObject>{
 	public Animation getCurrentAnimation(){
 			return new Animation(sprite_idle,200);
 	}
+	
 	
 	@Override
 	public int compareTo(GameObject o) {
@@ -56,3 +59,4 @@ public class GameObject implements Comparable<GameObject>{
 		return 0;
 	}
 }
+

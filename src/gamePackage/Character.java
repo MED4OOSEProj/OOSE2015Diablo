@@ -33,9 +33,11 @@ public class Character extends GameObject implements Mover{
 	Path path;
 	float movespeed = 0.002f;
 	
+	
 	public enum Action{
 		IDLE,ATTACKING,DYING,WALKING
 	}
+	
 	
 	/**
 	 * Starts the dying animation and sets health to zero
@@ -45,6 +47,7 @@ public class Character extends GameObject implements Mover{
 		setAction(Action.DYING);
 		dying = true;
 	}
+	
 	
 	/**
 	 * Sets the current action of the character to something else
@@ -56,6 +59,7 @@ public class Character extends GameObject implements Mover{
 		}
 	}
 	
+	
 	/**
 	 * Sets the current direction of the character to something else
 	 * @param direction The new direction which the character should face, 0 = southeast, 1 = southwest, 2 = northwest, 3 = northeast
@@ -64,6 +68,7 @@ public class Character extends GameObject implements Mover{
 		if(direction != this.direction)
 		this.direction = direction;
 	}
+	
 	
 	/**
 	 * Makes the character move one movespeed along its path, per millisecond. If it collides with something, attack it if it is the attacktarget
@@ -116,6 +121,7 @@ public class Character extends GameObject implements Mover{
 					}
 					else if(collisionObject == attackTarget) startAttack();
 					
+	
 				}
 				else if(position_y > path.getStep(nextStep).getY()){
 					//moving southwest
@@ -167,6 +173,7 @@ public class Character extends GameObject implements Mover{
 		
 	}
 	
+	
 	/**
 	 * The character performs an attack towards its attackTarget
 	 */
@@ -184,7 +191,9 @@ public class Character extends GameObject implements Mover{
 			setAction(Action.ATTACKING);
 		}
 
+		
 	}
+	
 	
 	/**
 	 * Request the character to start moving towards a target, and attack it if it collides
@@ -198,15 +207,18 @@ public class Character extends GameObject implements Mover{
 		}
 	}
 	
+	
 	public void calculateScreenPos(){
 		screenPosition_x = Math.round(position_x*80+position_y*80-(Game.player.position_y*80+Game.player.position_x*80)+Game.windowWidth/2-80)+pixelTranslation_x;
 		//fixing attack frames being 128 pixels wide rather than 96 pixels.
 		if(currentAction == Action.ATTACKING) screenPosition_x += screenPosTranslationWhenAttacking_x;
 		screenPosition_y = Math.round(position_x*40-position_y*40+(Game.player.position_y*40-Game.player.position_x*40)+Game.windowHeight/2-40)+pixelTranslation_y;
+	
 		
 	}
 	
-	/**
+	
+	/** 
 	 * Request the character to start moving towards a destination. This creates a path for the character, but does not make it move.
 	 * @param start_x Current X tile position of the character which should move
 	 * @param start_y Current Y tile position of the character which should move
@@ -235,6 +247,7 @@ public class Character extends GameObject implements Mover{
 	}
 
 	
+	
 	@Override
 	public Animation getCurrentAnimation(){
 		switch(currentAction){
@@ -251,3 +264,5 @@ public class Character extends GameObject implements Mover{
 		}
 	}
 }
+
+

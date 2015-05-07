@@ -8,11 +8,13 @@ import org.newdawn.slick.Sound;
 
 class Item extends GameObject {
 	
+	
 	Image thumbnail;
 	int attribute_value;
 	String attribute_description;
 	Sound sound_drop;
 
+	
 	// generate a random item of the types armor, potion, weapon or jewelry.
 	Item generateItem() throws SlickException{
 		Item returnitem = null;
@@ -37,3 +39,4 @@ class Item extends GameObject {
 		return returnitem;
 	}
 }
+

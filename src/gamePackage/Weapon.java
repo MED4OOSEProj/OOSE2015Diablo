@@ -7,18 +7,22 @@ import org.newdawn.slick.SlickException;
 
 public class Weapon extends Item {
 	
+	
 	int attribute_attackdmg;
 	int attribute_attackspeed;
 	int attribute_durability_max;
 	int attribute_durability_current;
 	int attribute_location;
 	
+	
 	// Don't add more names to the arrays without changing the if-statements.
 	// MUST have an EVEN number of names in the arrays.
 	String[] prefix = new String[]{"Brunhilde's ","The Powerful ","Unyielding ","The Monsterbane ","Death's ","Skullsplitter ","Spinecracking ","The Seagold ","Cursed ","Holy "}; 
 	
+	
 	// weapontype, all are melee
 	String[] weaponType = new String[]{"Axe","Sword","Mace","Club","War Staff","Great Axe","Flail","Warhammer","Falchion","Dagger"};
+	
 	
 	// 0-2 are high dmg, 3-5 are fast weapons, 6-8 are durable, 10 is the most powerful EVeR! 
 	String[] suffix = new String[]{" of Mightiness"," of Slaying"," of Great Strength"," of Swiftslaying"," of Quicksilver"," of Quickness"," of Unreliable Power"," of the Unbreakable Vow"," of Diamond Endurance"," of Godslaying"};
@@ -32,6 +36,7 @@ public class Weapon extends Item {
 	
 	void generateWeapon() throws SlickException{
 		Random rnd = new Random();
+	
 		
 		// Where should it be placed on the body?
 		attribute_location = 3;
@@ -42,6 +47,7 @@ public class Weapon extends Item {
 		// How many hits you can make with the weapon before it breaks: 
 		attribute_durability_max = rnd.nextInt(10)*2; 
 		attribute_durability_current = attribute_durability_max; 
+		
 		
 		// determine what name the weapon should have: 
 		// BEWARE, here be magic numbers:
@@ -85,6 +91,7 @@ public class Weapon extends Item {
 			break;
 		}
 		
+		
 		String c;
 		if (attribute_attackdmg >= 9 && attribute_attackspeed >= 0.40f){
 			//  Is the weapon the most powerful possible? Add " of Godslaying" 
@@ -102,6 +109,10 @@ public class Weapon extends Item {
 			c = "";
 		}
 		
+		
 		attribute_description = a + b + c;
 	}
 }
+
+
+

@@ -7,15 +7,19 @@ import org.newdawn.slick.SlickException;
 
 public class Potion extends Item{
 	
+	
 	int attribute_amount;
 	Image[] potionIcons;
+	
 	
 	Potion () throws SlickException{
 		generatePotion();
 	}
 
+	
 	void generatePotion() throws SlickException{
 		Random rnd = new Random();
+	
 		
 		// Is the potion of medium healing or greater healing. 
 		boolean temp = rnd.nextBoolean(); 
@@ -32,5 +36,10 @@ public class Potion extends Item{
 			thumbnail = new Image("Textures/potion_health_potion_minor.png");
 		} 
 
+		
 	}
+
 }
+
+
+

@@ -56,6 +56,7 @@ public class Game extends BasicGame
 	Button mapButton;
 	Button menuButton;
 	
+	
 	public static void main(String[] args)
 	{
 		try
@@ -74,28 +75,35 @@ public class Game extends BasicGame
 		}
 	}
 	
+	
 	Game(String gamename)
 	{
 		super(gamename);
 	}
 
+	
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		//Called once, upon starting the program
+		
 		
 		//Saves the window sizes, so that the methods that need the screen size do not need the gamecontainer
 		windowWidth = gc.getWidth();
 		windowHeight = gc.getHeight();
 		
+		
 		gc.setMouseCursor(new Image("Textures/cursor.png"), 0, 0);
 		player = new Player();
+		
 		
 		//Creates different types of terrains
 		terrainTypes[0] = new TerrainType("Wood floorboards",1,"The boards creak a little", new Image("Textures/tile_ground.png"),false);
 		terrainTypes[1] = new TerrainType("Stone Wall",1,"The wall blocks your path", new Image("Textures/tile_wall.png"),true);
 		
+		
 		tilewidth = terrainTypes[0].terrainImage.getWidth();
 		tileheight = terrainTypes[0].terrainImage.getHeight();
+		
 		
 		menu2_overlay_left = new Image("Textures/menu2_overlay_left.png");
 		menu2_overlay_right = new Image("Textures/menu2_overlay_right.png");
@@ -112,12 +120,14 @@ public class Game extends BasicGame
 		gameLevel.objectsInLevel.add(player);
 		gameLevel.createEnemies(); 
 		
+		
 		nextLevelButton = new Button(windowWidth-75, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Continue", "nextlevel");
 		restartButton = new Button(windowWidth/2-37, windowHeight-menu2_overlay_left.getHeight()-9, 74, 20, "Restart", "restart");
 		charsheetButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+22, 74, 20, "", "charsheet");
 		inventoryButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+48, 74, 20, "", "inventory");
 		mapButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+88, 74, 20, "", "map");
 		menuButton = new Button(8, windowHeight-menu2_overlay_left.getHeight()+114, 74, 20, "", "menu");
+		
 		
 		goToMainMenu();
 	}
@@ -127,10 +137,12 @@ public class Game extends BasicGame
 		//Makes changes to models, is called once per i milliseconds
 		//updates stuff
 		
+		
 		//If the game is not supposed to be paused
 		if(menuId == 2 && !gameWon && !gameLost){
 			enemyCount = 0;
 			
+		
 			//run through each object in the level
 			for(GameObject gameobj : gameLevel.objectsInLevel){
 				if(gameobj instanceof Character){
@@ -143,6 +155,7 @@ public class Game extends BasicGame
 								((Enemy) gameobj).roam();
 							}
 							
+			
 							enemyCount++;
 						}
 						//call the character's move method to move it along its path, possibly colliding and attacking others
@@ -185,16 +198,19 @@ public class Game extends BasicGame
 		
 	}
 
+	
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
 		//Is called every time a render has completed, so as fast as the hardware can do it.
 
+		
 		// menuId == 0 gives mainMenu, menuId == 1 gives loadMenu (to be implemented in the future), menuId == 2 shows the game
 		if (menuId == 0){
 			image_mainmenu.drawCentered(windowWidth/2, windowHeight/2);
 		} 
 		else if (menuId == 2){
+		
 			
 			int xpos;
 			int ypos;
@@ -237,7 +253,8 @@ public class Game extends BasicGame
 								currentHoveredObject = gameobj;
 								hoverObjectLock = true;
 							}
-									  
+			
+						
 						//draw current enemy's animation frame
 						gameobj.getCurrentAnimation().draw(gameobj.screenPosition_x+3,gameobj.screenPosition_y+3);
 					}
@@ -245,6 +262,7 @@ public class Game extends BasicGame
 				
 				
 			}
+			
 			
 			//Draws the GUI elements on top
 			g.drawString("Level: "+currentLevel, windowWidth-90, 10);
@@ -256,12 +274,14 @@ public class Game extends BasicGame
 			}
 			else g.drawString("Monsters remaining: "+enemyCount, windowWidth-210, windowHeight-menu2_overlay_right.getHeight()-9);
 			
+			
 			if(menu_inventory){
 				image_inventory.draw(windowWidth-image_inventory.getWidth(),windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11);
 			}
 			if(menu_characterSheet){
 				image_charsheet.draw(0,windowHeight-menu2_overlay_right.getHeight()-image_charsheet.getHeight()+11);
 			}
+			
 			
 			health_percentage = 1-((float)(player.attribute_health_current)/(float)(player.attribute_health_max));
 			menu2_overlay_underlife.draw(93,windowHeight-menu2_overlay_left.getHeight());
@@ -274,6 +294,7 @@ public class Game extends BasicGame
 				menu2_overlay_extender.draw(menu2_overlay_left.getWidth()+x*menu2_overlay_extender.getWidth(),windowHeight-menu2_overlay_left.getHeight());
 			}
 			menu2_overlay_right.draw(windowWidth-menu2_overlay_right.getWidth(),windowHeight-menu2_overlay_right.getHeight());
+			
 			
 			if(gameWon || gameLost){
 				g.setColor(new Color(0,0,0,0.5f));
@@ -291,6 +312,7 @@ public class Game extends BasicGame
 				g.drawString("You died!", windowWidth/2-40, windowHeight/2);
 			}
 			
+			
 		}
 	}
 	
@@ -307,6 +329,7 @@ public class Game extends BasicGame
 		return false;
 	}
 	
+	
 	/**
 	 * Sets the menuId to 0 and enables the buttons start and quit. The game is paused here.
 	 */
@@ -316,6 +339,7 @@ public class Game extends BasicGame
 		buttons.add(new Button(windowWidth/2-image_mainmenu.getWidth()/2+165, windowHeight/2-image_mainmenu.getHeight()/2+254, 310, 45, "", "StartButton"));
 		buttons.add(new Button(windowWidth/2-image_mainmenu.getWidth()/2+165, windowHeight/2-image_mainmenu.getHeight()/2+310, 310, 45, "", "QuitButton"));
 	}
+	
 	
 	/**
 	 * Sets the menuId to 2 and enables the ingame buttons
@@ -328,10 +352,12 @@ public class Game extends BasicGame
 		buttons.add(mapButton);
 		buttons.add(menuButton);
 		
+		
 		if(completedLevel){
 			buttons.add(nextLevelButton);
 		}
 	}
+	
 	
 	/**
 	 * Enables the button for continuing to the next level
@@ -345,6 +371,7 @@ public class Game extends BasicGame
 		buttons.add(menuButton);
 		buttons.add(nextLevelButton);
 	}
+	
 	
 	/**
 	 * Goes to the next level
@@ -369,6 +396,7 @@ public class Game extends BasicGame
 		else winGame();
 	}
 	
+	
 	/**
 	 * Ends the game by winning, displays a reset button
 	 */
@@ -379,6 +407,7 @@ public class Game extends BasicGame
 		gameWon = true;
 	}
 	
+	
 	/**
 	 * Ends the game by losing, displays a reset button
 	 */
@@ -387,6 +416,7 @@ public class Game extends BasicGame
 		buttons.add(restartButton);
 		gameLost = true;
 	}
+	
 	
 	/**
 	 * Resets everything to start values and goes to the main menu
@@ -416,10 +446,13 @@ public class Game extends BasicGame
 		mouse_position_y = newy;
 	}
 	
+	
 	public void mousePressed(int button,int x,int y){
+	
 		
 		//left click
 		if(button == 0){
+		
 			
 			if(menuId == 2 && menu_inventory && x > windowWidth-image_inventory.getWidth() && y >windowHeight-menu2_overlay_right.getHeight()-image_inventory.getHeight()+11){
 				//click inside inventory
@@ -447,9 +480,11 @@ public class Game extends BasicGame
 				//click a tile (reverse engineered draw tile loop in render method)
 				else player.moveTo(Math.round(player.position_x),Math.round(player.position_y),(int)((shifted_x/(tilewidth/2)+shifted_y/(tileheight/2)-1)/2+player.position_x),(int)((shifted_x/(tilewidth/2)-shifted_y/(tileheight/2)+1)/2+player.position_y), false);
 			
+				
 			}
 		}
 	}
+	
 	
 	public void mouseClicked(int button, int x, int y, int clickCount){
 		if(button == 0){
@@ -464,6 +499,7 @@ public class Game extends BasicGame
 			}
 		}
 	}
+	
 	
 	/**
 	 * Called when a button is clicked
@@ -499,6 +535,7 @@ public class Game extends BasicGame
 			break;
 		}
 	}
+	
 	
 	public void keyPressed(int key, char c){
 		System.out.println("key pressed:"+key);
@@ -537,3 +574,4 @@ public class Game extends BasicGame
 		}
 	}
 }
+

@@ -12,21 +12,26 @@ class Jewelry extends Item {
 	int attribute_damage_reduction; 
 	int attribute_location;
 	
+	
 	// Don't add more names to the arrays without changing the if-statements.
 	// MUST have an EVEN number of names in the arrays.
 	// 0-1 = good, 2-3 = bad, 4-9 = generic
 	static String[] prefix = new String[]{"Blessed ","Holy ","Cursed ","Defect ","Enchanted ","Beautiful ","Shining ","Glittering ","Burning ","Magical "}; 
 	
+	
 	// jewelryType
 	static String[] jewelryType = new String[]{"Ring","Amulet"};
 	
+	
 	// 0-1 are high strength, 2-3 are high dexterity, 4-5 are vitality, 6-7 is high damage reduction, 8 is the worst, 9 is the BEST 
 	static String[] suffix = new String[]{" of Strength"," of Might"," of Speed"," of Dexterity"," of Vitality"," of Fortitude"," of Steel Flesh"," of Shielding"," of Crap"," of Godblood"};
-		
+	
+	
 	Jewelry() throws SlickException{
 		// generate a jewelry object on creation
 		generateJewelry();
 	}
+
 
 
 	void generateJewelry() throws SlickException{
@@ -39,11 +44,13 @@ class Jewelry extends Item {
 		String a; 
 		String b =""; 
 		String c; 
+
 		
 		if (strength == true){
 			attribute_strength = rnd.nextInt(10)-5; // 10 is a PLACEHOLDER, can be negative!
 		} else 
 			attribute_strength = 0; 
+		
 		
 		if (dexterity == true){
 			attribute_dexterity = rnd.nextInt(10)-5; // 10 is a PLACEHOLDER, can be negative!
@@ -71,6 +78,7 @@ class Jewelry extends Item {
 		// If the item's stats added up are 0 exactly, it gets a generic name:
 			a = prefix[rnd.nextInt(6)+4];
 		
+		
 		// If the item the most effective possible? 
 		if (attribute_strength >= 4 && attribute_dexterity >= 4 && attribute_vitality >= 4 && attribute_damage_reduction >= 4) 
 			c = suffix[9];
@@ -96,6 +104,7 @@ class Jewelry extends Item {
 		// A temporary variable so the item kan be matched with the right icon. 
 		int temptype = rnd.nextInt(4);
 		
+		
 		switch(temptype){
 		case 0:
 			attribute_location = 2;	
@@ -120,5 +129,6 @@ class Jewelry extends Item {
 		}
 		attribute_description = a + b + c;
 	}
+	
 	
 }
